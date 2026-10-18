@@ -1,0 +1,37 @@
+import type { GameState, HubNode } from '../engine/types';
+import { visibleHotspots, ambientLine } from '../engine/core';
+import { useGame } from '../store/gameStore';
+import { applyHotspot } from './scene/Stage';
+import { useUiSfx } from './useUiSfx';
+import { arNum } from '../util/ar';
+
+export function HubPanel({ node, s }: { node: HubNode; s: GameState }) {
+  const act = useGame((g) => g.act);
+  const tick = useUiSfx();
+  const spots = visibleHotspots(node, s);
+  const ambient = ambientLine(node, s);
+  const left = Math.max(0, 5 - s.slot);
+  const timed = spots.some((h) => h.takesTime);
+  return (
+    <div className="paper paper-edge rounded-2xl p-3 sm:p-4 fade-in" data-hub={node.id}>
+      {ambient && <p className="text-[16px] sm:text-[17px] leading-8 text-[#4a392c] mb-1" aria-live="polite">{ambient}</p>}
+      <p className="text-sm text-ink/60 mb-3">
+        {node.hint}
+        {timed && <> <span className="whitespace-nowrap">— فاضل وقت لـ <b className="text-rust">{arNum(left)}</b> {left === 1 ? 'حاجة' : 'حاجات'}.</span></>}
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+        {spots.map((h) => (
+          <button
+            key={h.id}
+            className="choice-btn flex items-center justify-between gap-2 !py-2.5"
+            data-hotspot={h.id}
+            onClick={() => { tick(); act((ic, st) => applyHotspot(ic, st, node, h.id)); }}
+          >
+            <span className="text-[16px]">{h.label}</span>
+            {h.takesTime && <span className="text-xs px-2 py-0.5 rounded-full bg-rust/10 text-rust shrink-0" aria-label="بياخد وقت">⏳ وقت</span>}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
