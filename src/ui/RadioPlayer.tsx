@@ -7,6 +7,7 @@ import { arabicDate } from '../engine/calendar';
 import { arNum } from '../util/ar';
 
 const BADGE: Record<string, string> = {
+  'local-only': 'bg-[#a33] text-white',
   'authentic-archival': 'bg-[#3d6b47] text-white',
   'unverified-archival': 'bg-[#8a6d2c] text-white',
   'modern-recreation': 'bg-[#7a4f6a] text-white',
@@ -34,6 +35,9 @@ export function RadioPlayer({ gameDate }: { gameDate: string | null }) {
 
   return (
     <div className="absolute inset-x-2 bottom-2 sm:inset-x-auto sm:left-3 sm:bottom-3 sm:w-[min(420px,60%)] pointer-events-auto fade-in" data-radio dir="rtl">
+      {settings.subtitles && !cue && source && source.transcript.length === 0 && (
+        <p className="mb-1.5 mx-auto w-fit max-w-full rounded-md bg-black/60 px-3 py-1 text-white/80 text-[13px]">(مافيش ترجمة للتسجيل ده لسه)</p>
+      )}
       {settings.subtitles && cue && (
         <p className="mb-1.5 mx-auto w-fit max-w-full rounded-md bg-black/70 px-3 py-1 text-white text-[15px] leading-7 text-center" aria-live="polite" data-radio-subtitle>{cue}</p>
       )}
@@ -43,7 +47,12 @@ export function RadioPlayer({ gameDate }: { gameDate: string | null }) {
             <div className="text-sm font-semibold truncate">📻 {broadcastTitle(broadcast)}</div>
             <div className="text-[11px] text-white/60">{gameDate ? arabicDate(gameDate).replace(/\d+/g, (d) => arNum(d)) : ''} · البرنامج العام</div>
           </div>
-          {source && <span className={`shrink-0 text-[11px] px-2 py-0.5 rounded-full ${BADGE[source.authenticity]}`} data-radio-auth={source.authenticity}>{AUTH_LABEL[source.authenticity]}</span>}
+          {source && (
+            <div className="shrink-0 flex flex-col items-end gap-1">
+              <span className={`text-[11px] px-2 py-0.5 rounded-full ${BADGE[source.authenticity]}`} data-radio-auth={source.authenticity}>{AUTH_LABEL[source.authenticity]}</span>
+              {source.license.status === 'local-only' && <span className={`text-[10px] px-2 py-0.5 rounded-full ${BADGE['local-only']}`} data-radio-local>نسخة محلية · الحقوق مش مؤكدة</span>}
+            </div>
+          )}
         </div>
         {status === 'unavailable' && <p className="text-xs text-amber-200 mt-1">مافيش تسجيل مسموح بتشغيله للبث ده لسه.</p>}
         <div className="flex items-center gap-1.5 mt-2">

@@ -72,3 +72,28 @@ describe('story never tunes in before a broadcast aired', () => {
     for (const r of refs) expect(live.broadcasts[r], r).toBeTruthy();
   });
 });
+
+import { mergeOverlay } from '../../radio/registry';
+describe('local archive (unconfirmed rights)', () => {
+  it('the committed public registry never contains local-only sources', () => {
+    for (const b of Object.values(live.broadcasts)) for (const s of b.sources) expect(s.license.status).not.toBe('local-only');
+  });
+  it('public/local-archive is git-ignored', () => {
+    expect(fs.readFileSync(path.join(root, '.gitignore'), 'utf8')).toMatch(/^public\/local-archive\/$/m);
+  });
+  const overlay = { broadcasts: { news_1973_10_27: { sources: [
+    { id: 'loc', type: 'archival', title: 't', sourceUrl: 'u', historicalDate: '1973-10-27', authenticity: 'unverified-archival', license: { status: 'local-only', label: 'Local only', holder: null, terms: null, verifiedBy: null, verifiedOn: null }, attribution: null, file: 'local-archive/x.mp3', transcript: [] },
+    { id: 'bad', type: 'archival', title: 't', sourceUrl: 'u', historicalDate: null, authenticity: 'unverified-archival', license: { status: 'pending', label: 'p', holder: null, terms: null, verifiedBy: null, verifiedOn: null }, attribution: null, file: 'local-archive/y.mp3', transcript: [] },
+  ] } } } as never;
+  it('local-only recordings play only in the local build', () => {
+    const merged = mergeOverlay(live, overlay);
+    expect(playableSource('news_1973_10_27', merged, false)?.id).toBe('ph_news_1973_10_27');   // public build → placeholder
+    expect(playableSource('news_1973_10_27', merged, true)?.id).toBe('loc');                  // local build → archive copy
+  });
+  it('overlay sources still marked pending are ignored, even with a file', () => {
+    expect(mergeOverlay(live, overlay).broadcasts.news_1973_10_27.sources.some((s) => s.id === 'bad')).toBe(false);
+  });
+  it('date gating still applies to local recordings', () => {
+    expect(aired('news_1973_10_27', '1973-11-03', mergeOverlay(live, overlay))).toBe(false);
+  });
+});

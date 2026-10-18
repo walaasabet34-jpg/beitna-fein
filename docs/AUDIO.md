@@ -57,6 +57,12 @@ The test `radio.test.ts` currently asserts that **no** archival source is cleare
 ### Placeholder broadcasts
 `tools/audio/radio_placeholders.py` generates `public/radio/ph_news.mp3`, `ph_kids.mp3`, `ph_song.mp3`. The "voices" are intentionally unintelligible synthetic murmur through an AM-radio filter: they cannot be mistaken for a real announcer, and they do not imitate Abla Fadila or anyone else. The words come from the subtitles, which are labelled as rewritten text.
 
+## 2b. Local experimental archive build
+Recordings without confirmed rights can be tried privately: `npm run dev:archive` (or `build:archive`, then `preview:archive`).
+They live in git-ignored `public/local-archive/`, and the normal build (`npm run build`, used by Vercel) deletes that folder from its output.
+The local build shows a red warning banner, and each such recording gets a "نسخة محلية · الحقوق مش مؤكدة" (local copy, rights unconfirmed) badge.
+Full source and rights research: **docs/ARCHIVE-SOURCES.md**. Setup: `local-archive-template/README.md`.
+
 ## 3. What has and hasn't been verified
 
 | Check | How | Result |

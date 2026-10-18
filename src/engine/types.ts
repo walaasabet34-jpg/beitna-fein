@@ -176,6 +176,8 @@ export interface Chapter {
   dayNames: string[];
   /** In-game calendar: chapter day → ISO date. Gates historical radio broadcasts. */
   calendar?: Record<string, string>;
+  /** 'provisional' until the dates are historically verified. */
+  calendarStatus?: 'provisional' | 'verified';
   nodes: StoryNode[];
 }
 

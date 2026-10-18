@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "_readme": "Local-only overlay. Sources here are added IN FRONT of the public registry's sources for the same broadcast id, and only load in `npm run dev:archive` / `npm run build:archive`.",
+  "broadcasts": {
+    "news_1973_10_27": {
+      "sources": [
+        {
+          "id": "local_news_1973_10_27",
+          "type": "archival",
+          "title": "اسم التسجيل كما في المصدر",
+          "sourceUrl": "https://… (where you got it)",
+          "historicalDate": "1973-10-27",
+          "authenticity": "unverified-archival",
+          "license": { "status": "local-only", "label": "Local only — rights not confirmed", "holder": null, "terms": null, "verifiedBy": null, "verifiedOn": null },
+          "attribution": "Name the recordist / archive exactly as the source requires",
+          "file": "local-archive/news_1973_10_27.mp3",
+          "transcript": [ { "t": 0, "text": "اكتبي الترجمة هنا مع التوقيت بالثواني" } ]
+        }
+      ]
+    }
+  }
+}

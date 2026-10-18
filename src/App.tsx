@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { unlock } from './audio/engine';
+import { LOCAL_ARCHIVE } from './radio/registry';
 import { useGame } from './store/gameStore';
 import { TitleScreen } from './ui/screens/TitleScreen';
 import { GameScreen } from './ui/screens/GameScreen';
@@ -16,10 +17,20 @@ export default function App() {
     window.addEventListener('touchend', go, true);
     return () => { window.removeEventListener('pointerdown', go, true); window.removeEventListener('keydown', go, true); window.removeEventListener('touchend', go, true); };
   }, []);
+  useEffect(() => { document.documentElement.classList.toggle('local-archive', LOCAL_ARCHIVE); }, []);
   useEffect(() => {
     const el = document.documentElement;
     el.classList.toggle('rm', rm === true);
     el.classList.toggle('rm-off', rm === false);
   }, [rm]);
-  return screen === 'game' && hasState ? <GameScreen /> : <TitleScreen />;
+  return (
+    <>
+      {LOCAL_ARCHIVE && (
+        <div className="fixed top-0 inset-x-0 z-50 bg-[#a33] text-white text-center text-xs py-1 px-3" role="status" data-local-archive>
+          نسخة محلية تجريبية: فيها تسجيلات أرشيفية حقوقها مش مؤكدة. للاستماع على جهازك بس، ماتتنشرش.
+        </div>
+      )}
+      {screen === 'game' && hasState ? <GameScreen /> : <TitleScreen />}
+    </>
+  );
 }
