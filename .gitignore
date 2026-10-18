@@ -3,3 +3,6 @@ dist
 dist-single
 artifact
 e2e-shots
+# Recordings without confirmed reuse rights: local experimental build only, never committed or deployed
+public/local-archive/
+dist-archive
