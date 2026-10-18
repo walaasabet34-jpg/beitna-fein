@@ -1,10 +1,13 @@
 import type { EndNode, GameState } from '../../engine/types';
 import { evaluate } from '../../engine/core';
 import { useGame } from '../../store/gameStore';
+import { CHAPTERS } from '../../content';
 
 export function EndScreen({ node, s }: { node: EndNode; s: GameState }) {
   const toTitle = useGame((g) => g.toTitle);
   const restart = useGame((g) => g.restartChapter);
+  const goNext = useGame((g) => g.nextChapter);
+  const next = node.nextChapter && CHAPTERS[node.nextChapter] ? CHAPTERS[node.nextChapter] : null;
   const text = node.variants?.find((v) => evaluate(v.if, s))?.text ?? node.text;
   const memories = (node.memories ?? []).filter((m) => evaluate(m.if, s));
   return (
@@ -15,7 +18,7 @@ export function EndScreen({ node, s }: { node: EndNode; s: GameState }) {
           <p className="text-[18px] leading-9 text-ink mb-6">{text}</p>
           {memories.length > 0 && (
             <>
-              <div className="font-ruqaa text-xl text-rust mb-2">حاجات فضلت من الليلة دي</div>
+              <div className="font-ruqaa text-xl text-rust mb-2">حاجات فضلت من أول يوم</div>
               <ul className="space-y-1.5 mb-6">
                 {memories.map((m, i) => <li key={i} className="text-[16px] text-[#4a392c] leading-8 flex gap-2"><span aria-hidden="true">✦</span>{m.text}</li>)}
               </ul>
@@ -24,7 +27,14 @@ export function EndScreen({ node, s }: { node: EndNode; s: GameState }) {
           {node.nextChapterTitle && <p className="text-sm text-ink/55 mb-6">{node.nextChapterTitle}</p>}
           <div className="flex flex-wrap gap-2 justify-end">
             <button className="rounded-full px-5 py-2 border border-ink/25 text-ink hover:bg-white/60" onClick={restart} data-restart>العبي الفصل من الأول</button>
-            <button className="rounded-full px-5 py-2 bg-rust text-paper font-semibold" onClick={toTitle} data-to-title>الشاشة الرئيسية</button>
+            {next ? (
+              <>
+                <button className="rounded-full px-5 py-2 border border-ink/25 text-ink hover:bg-white/60" onClick={toTitle} data-to-title>الشاشة الرئيسية</button>
+                <button className="rounded-full px-5 py-2 bg-rust text-paper font-semibold" onClick={() => goNext(next.id)} data-next-chapter>كمّلي: {next.title}</button>
+              </>
+            ) : (
+              <button className="rounded-full px-5 py-2 bg-rust text-paper font-semibold" onClick={toTitle} data-to-title>الشاشة الرئيسية</button>
+            )}
           </div>
         </div>
       </div>

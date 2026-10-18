@@ -16,14 +16,14 @@ const score = (e?: { vars?: Partial<Record<string, number>>; flags?: Record<stri
   (e?.vars?.trust ?? 0) + (e?.vars?.safety ?? 0) + (e?.vars?.openness ?? 0) - (e?.vars?.distress ?? 0)
   - (Object.keys(e?.flags ?? {}).some((f) => BAD_FLAGS.includes(f)) ? 8 : 0);
 
-export function simulate(ic: IndexedChapter, seed: number, maxSteps = 2000, policy: Policy = 'random') {
+export function simulate(ic: IndexedChapter, seed: number, maxSteps = 2000, policy: Policy = 'random', start?: GameState, onStep?: (s: GameState) => void) {
   const r = rng(seed);
   const pick = <T extends { effects?: any },>(a: T[]): T => {
     if (policy === 'random') return a[Math.floor(r() * a.length)];
     const sorted = [...a].sort((x, y) => score(y.effects) - score(x.effects) || r() - 0.5);
     return policy === 'kind' ? sorted[0] : sorted[sorted.length - 1];
   };
-  let s: GameState = newGame(ic);
+  let s: GameState = start ?? newGame(ic);
   const path: string[] = [s.node];
   for (let i = 0; i < maxSteps; i++) {
     const n = getNode(ic, s.node);
@@ -42,6 +42,7 @@ export function simulate(ic: IndexedChapter, seed: number, maxSteps = 2000, poli
       s = runActivity(ic, s, n, r);
     }
     path.push(s.node);
+    onStep?.(s);
   }
   throw new Error(`No ending after ${maxSteps} steps (seed ${seed}); stuck near ${s.node}`);
 }

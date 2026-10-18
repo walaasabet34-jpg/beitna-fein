@@ -1,5 +1,5 @@
 import type { GameState, HubNode } from '../engine/types';
-import { visibleHotspots, ambientLine } from '../engine/core';
+import { visibleHotspots, ambientLine, NIGHT_SLOT } from '../engine/core';
 import { useGame } from '../store/gameStore';
 import { applyHotspot } from './scene/Stage';
 import { useUiSfx } from './useUiSfx';
@@ -10,7 +10,9 @@ export function HubPanel({ node, s }: { node: HubNode; s: GameState }) {
   const tick = useUiSfx();
   const spots = visibleHotspots(node, s);
   const ambient = ambientLine(node, s);
-  const left = Math.max(0, 5 - s.slot);
+  // Periods left before this hub ends: its own slot limit if it has one (e.g. Hoda back at العصر), else night.
+  const ex = node.exitWhen as { slot?: { gte?: number } } | undefined;
+  const left = Math.max(0, (ex?.slot?.gte ?? NIGHT_SLOT) - s.slot);
   const timed = spots.some((h) => h.takesTime);
   return (
     <div className="paper paper-edge rounded-2xl p-3 sm:p-4 fade-in" data-hub={node.id}>

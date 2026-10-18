@@ -1,7 +1,29 @@
 {
-  "narrator": { "name": "" },
-  "fatma": { "name": "فاطمة", "color": "#9c4a33" },
-  "hoda": { "name": "هدى", "color": "#b8862e" },
-  "naima": { "name": "الحاجة نعيمة", "color": "#5d6b5a" },
-  "radio": { "name": "الراديو", "color": "#4f6f6a" }
+  "narrator": {
+    "name": ""
+  },
+  "fatma": {
+    "name": "فاطمة",
+    "color": "#9c4a33"
+  },
+  "hoda": {
+    "name": "هدى",
+    "color": "#b8862e"
+  },
+  "naima": {
+    "name": "الحاجة نعيمة",
+    "color": "#5d6b5a"
+  },
+  "radio": {
+    "name": "الراديو",
+    "color": "#4f6f6a"
+  },
+  "teacher": {
+    "name": "الأبلة سميرة",
+    "color": "#3f5a7a"
+  },
+  "ummnadia": {
+    "name": "أم نادية",
+    "color": "#7a4f6a"
+  }
 }

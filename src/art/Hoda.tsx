@@ -148,9 +148,12 @@ export function Doll({ x = 0, y = 0, s = 1 }: { x?: number; y?: number; s?: numb
 export type HodaPose = 'stand' | 'sit' | 'draw' | 'bust';
 
 /** Full Hoda. Local box: 160 × 320 (stand) – callers translate/scale. */
-export function Hoda({ expr = 'neutral', pose = 'stand', bag = false, doll = false, animate = true }:
-  { expr?: Expr; pose?: HodaPose; bag?: boolean; doll?: boolean; animate?: boolean }) {
-  const c = HODA;
+export type Outfit = 'mustard' | 'navy';
+const NAVY = { dress: '#33426a', dressShade: '#26314f' };
+
+export function Hoda({ expr = 'neutral', pose = 'stand', bag = false, doll = false, animate = true, outfit = 'mustard', schoolbag = false }:
+  { expr?: Expr; pose?: HodaPose; bag?: boolean; doll?: boolean; animate?: boolean; outfit?: Outfit; schoolbag?: boolean }) {
+  const c = outfit === 'navy' ? { ...HODA, ...NAVY } : HODA;
   const body = (
     <g className={animate ? 'breathe' : undefined}>
       <Braids long={pose !== 'bust'} />
@@ -171,7 +174,7 @@ export function Hoda({ expr = 'neutral', pose = 'stand', bag = false, doll = fal
       {/* buttons */}
       {[122, 138, 154].map((by) => <circle key={by} cx="80" cy={by} r="2" fill={c.collar} opacity=".8" />)}
       {/* dust on the hem */}
-      {pose === 'stand' && <g fill="#8a7458" opacity=".28"><ellipse cx="58" cy="222" rx="14" ry="5" /><ellipse cx="104" cy="226" rx="10" ry="4" /></g>}
+      {pose === 'stand' && outfit === 'mustard' && <g fill="#8a7458" opacity=".28"><ellipse cx="58" cy="222" rx="14" ry="5" /><ellipse cx="104" cy="226" rx="10" ry="4" /></g>}
     </g>
   );
 
@@ -209,6 +212,13 @@ export function Hoda({ expr = 'neutral', pose = 'stand', bag = false, doll = fal
           </>
         )}
         {doll && !bag && <Doll x={100} y={180} s={1.1} />}
+        {schoolbag && (
+          <g>
+            <path d="M60 104 L118 196" stroke="#8a6a44" strokeWidth="5" />
+            <path d="M104 186 h40 l-4 46 h-32 z" fill="#b9a27a" stroke="#8a6a44" strokeWidth="2" />
+            <path d="M108 196 h32" stroke="#8a6a44" strokeWidth="1.5" opacity=".7" />
+          </g>
+        )}
         <Head expr={expr} />
       </g>
     );
@@ -247,12 +257,12 @@ export function Hoda({ expr = 'neutral', pose = 'stand', bag = false, doll = fal
 }
 
 /** Dialogue portrait (bust in its own svg). */
-export function HodaPortrait({ expr }: { expr: Expr }) {
+export function HodaPortrait({ expr, outfit = 'mustard' }: { expr: Expr; outfit?: Outfit }) {
   return (
     <svg viewBox="30 12 100 120" className="w-full h-full" aria-hidden="true">
       <defs><radialGradient id="pbg" cx="50%" cy="40%" r="70%"><stop offset="0" stopColor="#f0dcb4" /><stop offset="1" stopColor="#c9a57a" /></radialGradient></defs>
       <rect x="30" y="12" width="100" height="120" fill="url(#pbg)" />
-      <Hoda expr={expr} pose="bust" />
+      <Hoda expr={expr} pose="bust" outfit={outfit} />
     </svg>
   );
 }

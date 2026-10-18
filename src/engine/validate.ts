@@ -2,18 +2,18 @@ import type { Chapter, Condition, Effect, StoryNode } from './types';
 import { indexChapter } from './core';
 
 /** Static checks on chapter content. Returns errors (blocking) and warnings. */
-export function validateChapter(ch: Chapter): { errors: string[]; warnings: string[] } {
+export function validateChapter(ch: Chapter, inherited: Iterable<string> = []): { errors: string[]; warnings: string[]; setFlags: Set<string> } {
   const errors: string[] = [];
   const warnings: string[] = [];
   let ic;
-  try { ic = indexChapter(ch); } catch (e) { return { errors: [(e as Error).message], warnings }; }
+  try { ic = indexChapter(ch); } catch (e) { return { errors: [(e as Error).message], warnings, setFlags: new Set<string>() }; }
   const ids = new Set(ch.nodes.map((n) => n.id));
   const need = (from: string, to: string | undefined, what: string) => {
     if (!to) errors.push(`${from}: missing ${what}`);
     else if (!ids.has(to)) errors.push(`${from}: ${what} → unknown node "${to}"`);
   };
 
-  const setFlags = new Set<string>(['cooked', 'used_basket', 'meal_score', 'bed_done']);
+  const setFlags = new Set<string>(['cooked', 'used_basket', 'meal_score', 'bed_done', ...inherited]);
   const usedFlags = new Map<string, string>();
   const addEffect = (e?: Effect) => {
     if (!e) return;
@@ -47,6 +47,7 @@ export function validateChapter(ch: Chapter): { errors: string[]; warnings: stri
         addCond(n.exitWhen, n.id);
         n.ambient?.forEach((a) => addCond(a.if, n.id));
         n.hotspots.forEach((h) => { need(n.id, h.goto, `hotspot ${h.id}`); addEffect(h.effects); addCond(h.if, n.id); });
+        n.events?.forEach((e) => { need(n.id, e.goto, `event ${e.id}`); addCond(e.if, n.id); });
         if (!n.exitWhen) warnings.push(`${n.id}: hub without exitWhen`);
         break;
       case 'branch':
@@ -72,5 +73,5 @@ export function validateChapter(ch: Chapter): { errors: string[]; warnings: stri
     }
   }
   for (const [f, at] of usedFlags) if (!setFlags.has(f)) errors.push(`${at}: flag "${f}" is read but never set`);
-  return { errors, warnings };
+  return { errors, warnings, setFlags };
 }

@@ -49,21 +49,34 @@ for (const run of RUNS.slice(0, Number(process.env.E2E_RUNS ?? RUNS.length))) {
 
   const shot = new Set();
   let hubVisits = 0;
+  let rtlOk = true;
   let steps = 0, reloadOk = null, overflow = false, ended = false;
   const visited = [];
-  while (steps < 600) {
+  let chapter1Done = false;
+  while (steps < 1200) {
     steps++;
     await new Promise((res) => setTimeout(res, 40));
-    if (await page.$('[data-screen="end"]')) { ended = true; break; }
+    if (await page.$('[data-screen="end"]')) {
+      if (!chapter1Done && (await page.$('[data-next-chapter]'))) {
+        chapter1Done = true;
+        await page.screenshot({ path: `${OUT}/${tag}-50-ch1-end.png` });
+        await page.click('[data-next-chapter]'); continue;
+      }
+      ended = true; break;
+    }
     const info = await page.evaluate(() => {
       const g = document.querySelector('[data-screen="game"]');
-      return g ? { id: g.getAttribute('data-node-id'), type: g.getAttribute('data-node-type'), sw: document.documentElement.scrollWidth, iw: window.innerWidth } : null;
+      const panel = document.querySelector('[data-panel]');
+      const btn = document.querySelector('[data-choice], [data-hub] [data-hotspot]');
+      const rtl = document.documentElement.dir === 'rtl' && (!panel || getComputedStyle(panel).direction === 'rtl') && (!btn || ['right', 'start'].includes(getComputedStyle(btn).textAlign) || getComputedStyle(btn).justifyContent !== '');
+      return g ? { id: g.getAttribute('data-node-id'), type: g.getAttribute('data-node-type'), sw: document.documentElement.scrollWidth, iw: window.innerWidth, rtl } : null;
     });
     if (!info) throw new Error(`${tag}: game screen missing at step ${steps}`);
     visited.push(info.id);
     if (info.sw > info.iw + 1) overflow = true;
+    if (!info.rtl) rtlOk = false;
 
-    const key = info.type + (info.id.startsWith('c1_draw') ? '-draw' : '') + (info.id.startsWith('c1_m') ? '-morning' : '') + (info.id.startsWith('c1_d') && info.type === 'line' ? '-door' : '') + (info.id.startsWith('c1_night') ? '-night' : '');
+    const key = info.id.slice(0, 2) + '-' + info.type + (/draw|hw/.test(info.id) ? '-pad' : '') + (/_m|_d2|_out/.test(info.id) ? '-day2' : '') + (/_d\d|_leave|_return|_naima|_un\d/.test(info.id) && info.type === 'line' ? '-door' : '') + (/night|cert|sleep/.test(info.id) ? '-night' : '') + (/teacher/.test(info.id) ? '-school' : '') + (/radio|r_news|r_kids|kids/.test(info.id) ? '-radio' : '');
     if (!shot.has(key)) { shot.add(key); await new Promise((res) => setTimeout(res, 900)); await page.screenshot({ path: `${OUT}/${tag}-${String(shot.size).padStart(2, '0')}-${key}-${info.id}.png` }); }
 
     if (run.reloadAt && steps === run.reloadAt) {
@@ -141,12 +154,12 @@ for (const run of RUNS.slice(0, Number(process.env.E2E_RUNS ?? RUNS.length))) {
     menuOk = await page.$eval('[data-save]', (e) => e.textContent.includes('اتحفظت'));
     await page.screenshot({ path: `${OUT}/${tag}-98-menu.png` });
   }
-  const res = { tag, ended, steps, reloadOk, overflow, menuOk, errors: [...new Set(errors)], uniqueNodes: new Set(visited).size };
+  const res = { tag, ended, reachedCh2: chapter1Done, steps, reloadOk, overflow, rtlOk, menuOk, errors: [...new Set(errors)], uniqueNodes: new Set(visited).size };
   results.push(res);
   console.log('RUN', JSON.stringify(res));
   await ctx.close();
 }
 await browser.close();
 console.log(JSON.stringify(results, null, 2));
-const bad = results.filter((x) => 'ended' in x && (!x.ended || x.errors.length || x.overflow || x.reloadOk === false || !x.menuOk));
+const bad = results.filter((x) => 'ended' in x && (!x.ended || x.errors.length || x.overflow || !x.rtlOk || x.reloadOk === false || !x.menuOk));
 process.exit(bad.length ? 1 : 0);

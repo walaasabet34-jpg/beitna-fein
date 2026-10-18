@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import type { GameState, HubNode } from '../../engine/types';
 import { visibleHotspots, getNode, hodaSpot, useHotspot as pickHotspot, IndexedChapter } from '../../engine/core';
-import { ArtDefs, LivingRoom, DoorScene, NightScene, DrawingScene, livingTargets, drawingTargets, Rect } from '../../art/scenes';
+import { ArtDefs, LivingRoom, DoorScene, NightScene, DrawingScene, SchoolScene, HomeworkScene, livingTargets, drawingTargets, homeworkTargets, Rect } from '../../art/scenes';
 import { currentExpr, useGame } from '../../store/gameStore';
 import { useUiSfx } from '../useUiSfx';
 
@@ -34,6 +34,8 @@ export function Stage({ ic, s, children }: { ic: IndexedChapter; s: GameState; c
   if (scene === 'door') art = <DoorScene s={s} expr={expr} />;
   else if (scene === 'night') art = <NightScene s={s} expr={expr} />;
   else if (scene === 'drawing') { art = <DrawingScene s={s} />; targets = drawingTargets(s); }
+  else if (scene === 'school') art = <SchoolScene s={s} expr={expr} />;
+  else if (scene === 'homework') { art = <HomeworkScene s={s} />; targets = homeworkTargets(); }
   else { art = <LivingRoom s={s} expr={expr} morning={scene === 'morning'} />; targets = livingTargets(s); }
 
   // ── viewport onto the canvas ──
@@ -42,7 +44,7 @@ export function Stage({ ic, s, children }: { ic: IndexedChapter; s: GameState; c
   const spot = hodaSpot(s);
   const focus = scene === 'living' || scene === 'morning'
     ? (() => { const t = targets.hoda; return t ? t[0] + t[2] / 2 : 760; })()
-    : scene === 'night' ? 700 : 600;
+    : scene === 'night' ? 700 : scene === 'homework' ? 650 : 600;
   const [pan, setPan] = useState(0);
   useLayoutEffect(() => setPan(0), [scene, spot, portrait]);
   const maxOx = W - vw;
@@ -111,5 +113,5 @@ export function Stage({ ic, s, children }: { ic: IndexedChapter; s: GameState; c
 }
 
 function sceneLabel(scene: string) {
-  return ({ door: 'باب الشقة', living: 'صالة شقة فاطمة', morning: 'الصالة الصبح', night: 'الأوضة بالليل', drawing: 'كراسة هدى' } as Record<string, string>)[scene] ?? '';
+  return ({ door: 'باب الشقة', living: 'صالة شقة فاطمة', morning: 'الصالة الصبح', night: 'الأوضة بالليل', drawing: 'كراسة هدى', school: 'باب المدرسة', homework: 'كراسة الواجب' } as Record<string, string>)[scene] ?? '';
 }

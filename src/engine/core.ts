@@ -5,8 +5,10 @@ import type {
 
 export const VAR_KEYS: VarKey[] = ['trust', 'safety', 'openness', 'autonomy', 'distress'];
 export const DEFAULT_VARS: Vars = { trust: 15, safety: 20, openness: 10, autonomy: 50, distress: 60 };
-export const SAVE_VERSION = 1;
-const MAX_SLOT = 5;
+import { CURRENT_SAVE_VERSION as SAVE_VERSION } from './migrate';
+export { SAVE_VERSION };
+/** One day = 4 playable periods (0 الصبح · 1 الضهر · 2 العصر · 3 المغرب) + night (4), which is story-only. */
+export const NIGHT_SLOT = 4;
 
 const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
 
@@ -40,7 +42,7 @@ export function applyEffect(s: GameState, e?: Effect): GameState {
   if (e.flags) Object.assign(n.flags, e.flags);
   if (e.inc) for (const [k, d] of Object.entries(e.inc)) n.flags[k] = (typeof n.flags[k] === 'number' ? (n.flags[k] as number) : 0) + d;
   if (e.money) n.money = Math.max(0, n.money + e.money);
-  if (e.slots) n.slot = Math.min(MAX_SLOT, n.slot + e.slots);
+  if (e.slots) n.slot = Math.min(NIGHT_SLOT, n.slot + e.slots);
   if (e.setTime) {
     if (e.setTime.day !== undefined) n.day = e.setTime.day;
     if (e.setTime.slot !== undefined) n.slot = e.setTime.slot;
@@ -95,6 +97,22 @@ export function newGame(ic: IndexedChapter, carry?: Partial<GameState>): GameSta
   return enter(ic, base, ic.chapter.start);
 }
 
+/**
+ * Start the next chapter, carrying Hoda's memory of how she was treated:
+ * hidden variables, every flag, what Fatma learned about her tastes, and the money left.
+ * Time, place, music and who is on stage reset to the new chapter's opening.
+ */
+export function continueToChapter(next: IndexedChapter, prev: GameState): GameState {
+  return newGame(next, {
+    vars: { ...prev.vars, ...(next.chapter.init.vars ?? {}) },
+    flags: { ...prev.flags },
+    likes: prev.likes,
+    dislikes: prev.dislikes,
+    money: prev.money + (next.chapter.init.money ?? 0),
+    completed: [...(prev.completed ?? []), prev.chapter],
+  });
+}
+
 // ── Navigation ──────────────────────────────────────────────
 /** Enter a node: apply its effects, switch scene, auto-resolve branches/hub exits. */
 export function enter(ic: IndexedChapter, s: GameState, id: string, depth = 0): GameState {
@@ -102,6 +120,9 @@ export function enter(ic: IndexedChapter, s: GameState, id: string, depth = 0): 
   const node = getNode(ic, id);
   let n: GameState = { ...s, node: id, visited: s.visited.includes(id) ? s.visited : [...s.visited, id] };
   if (node.scene) n.scene = node.scene;
+  if (node.music !== undefined) n.music = node.music;
+  if (node.ambience !== undefined) n.ambience = node.ambience;
+  if (node.cast !== undefined) n.cast = node.cast;
   n = applyEffect(n, node.effects);
 
   if (node.type === 'branch') {
@@ -113,6 +134,10 @@ export function enter(ic: IndexedChapter, s: GameState, id: string, depth = 0): 
   if (node.type === 'hub' && node.exitWhen && evaluate(node.exitWhen, n)) {
     return enter(ic, n, node.exit, depth + 1);
   }
+  if (node.type === 'hub' && node.events) {
+    const ev = node.events.find((e) => !n.flags[`ev:${e.id}`] && evaluate(e.if, n));
+    if (ev) return enter(ic, { ...applyEffect(n, { flags: { [`ev:${ev.id}`]: true } }), lastLine: undefined }, ev.goto, depth + 1);
+  }
   if (node.type === 'line') n.lastExpr = resolveLine(node, n).expr ?? n.lastExpr;
   return n;
 }
@@ -123,12 +148,12 @@ export function advance(ic: IndexedChapter, s: GameState): GameState {
   const next = ic.nextOf.get(node.id);
   if (!next) throw new Error(`Node ${node.id} has no next`);
   const said = node.type === 'line' ? resolveLine(node, s) : undefined;
-  return enter(ic, { ...s, lastLine: said ? { speaker: said.speaker, text: said.text } : undefined }, next);
+  return enter(ic, { ...s, lastLine: said ? { speaker: said.speaker, text: said.text, expr: said.expr } : undefined }, next);
 }
 
-export function visibleOptions(node: StoryNode, s: GameState): Option[] {
+export function visibleOptions(node: StoryNode, s: GameState, aired?: (broadcast: string) => boolean): Option[] {
   if (node.type !== 'choice') return [];
-  return node.options.filter((o) => evaluate(o.if, s) && !(o.once && s.flags[`once:${o.once}`]));
+  return node.options.filter((o) => evaluate(o.if, s) && !(o.once && s.flags[`once:${o.once}`]) && (!o.broadcast || !aired || aired(o.broadcast)));
 }
 
 export function choose(ic: IndexedChapter, s: GameState, option: Option): GameState {

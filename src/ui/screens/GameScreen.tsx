@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useGame } from '../../store/gameStore';
 import { getNode, resolveLine, visibleOptions, advance, choose, moodExpr } from '../../engine/core';
 import type { ActivityNode, BedParams, KitchenParams } from '../../engine/types';
@@ -13,6 +13,13 @@ import { CardScreen } from './CardScreen';
 import { EndScreen } from './EndScreen';
 import { PauseMenu } from './PauseMenu';
 import { CHAPTERS } from '../../content';
+import { outfitOf } from '../../art/scenes';
+import { setLoop, stopLongSfx } from '../../audio/engine';
+import { ambienceFor } from '../../audio/sceneAudio';
+import { RadioPlayer } from '../RadioPlayer';
+import { useRadio } from '../../radio/player';
+import { aired, loadRegistry } from '../../radio/registry';
+import { gameDate } from '../../engine/calendar';
 
 export function GameScreen() {
   const s = useGame((g) => g.state)!;
@@ -24,6 +31,25 @@ export function GameScreen() {
   const node = getNode(ic, s.node);
   const next = useCallback(() => act((i, st) => advance(i, st)), [act]);
 
+  // Music follows the story (content sets it); ambience follows the place and the hour.
+  useEffect(() => { setLoop('music', s.music ?? null); }, [s.music]);
+  const amb = ambienceFor(s);
+  useEffect(() => { setLoop('ambience', amb); }, [amb]);
+  useEffect(() => { stopLongSfx(0.5); }, [s.scene, s.day]);
+
+  // Radio: a node can tune in (broadcast id) or switch off (null). Leaving the scene switches it off.
+  const date = gameDate(CHAPTERS[s.chapter], s.day);
+  const tune = useRadio((r) => r.tune);
+  const stopRadioUi = useRadio((r) => r.stop);
+  const [, setRegReady] = useState(0);
+  useEffect(() => { void loadRegistry().then(() => setRegReady((n) => n + 1)); }, []);
+  useEffect(() => {
+    if (node.broadcast === null) stopRadioUi();
+    else if (typeof node.broadcast === 'string') tune(node.broadcast, date);
+  }, [node.id]);
+  useEffect(() => () => stopRadioUi(), [s.scene, stopRadioUi]);
+  const isAired = (b: string) => aired(b, date);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenu(!useGame.getState().menuOpen); };
     window.addEventListener('keydown', onKey);
@@ -33,12 +59,12 @@ export function GameScreen() {
   let panel: React.ReactNode = null;
   if (node.type === 'line') {
     const r = resolveLine(node, s);
-    panel = <DialogueBox nodeId={node.id} speaker={r.speaker} text={r.text} expr={r.expr ?? moodExpr(s.vars)} onNext={next} />;
+    panel = <DialogueBox nodeId={node.id} speaker={r.speaker} text={r.text} expr={r.expr ?? moodExpr(s.vars)} onNext={next} outfit={outfitOf(s)} />;
   } else if (node.type === 'choice') {
-    const opts = visibleOptions(node, s);
+    const opts = visibleOptions(node, s, isAired);
     panel = (
       <ChoiceList nodeId={node.id} prompt={node.prompt} context={s.lastLine} items={opts.map((o, i) => ({ key: node.id + i, text: o.text }))}
-        onPick={(i) => act((icx, st) => { const o = visibleOptions(getNode(icx, st.node), st)[i]; return o ? choose(icx, st, o) : st; })} />
+        onPick={(i) => act((icx, st) => { const o = visibleOptions(getNode(icx, st.node), st, isAired)[i]; return o ? choose(icx, st, o) : st; })} />
     );
   } else if (node.type === 'hub') {
     panel = <HubPanel node={node} s={s} />;
@@ -52,6 +78,7 @@ export function GameScreen() {
       <div className="stage-col flex flex-col gap-3 flex-1 min-h-0">
         <Stage ic={ic} s={s}>
           <Hud s={s} chapter={CHAPTERS[s.chapter]} />
+          <RadioPlayer gameDate={date} />
         </Stage>
         <div className="px-2 sm:px-0 pb-4 flex-1 min-h-0 overflow-y-auto scroll-soft" key={node.type === 'line' ? 'line' : node.id} data-panel>{panel}</div>
       </div>

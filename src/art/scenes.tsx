@@ -1,9 +1,13 @@
 // TEMP ART — original placeholder scenes, drawn in code (SVG). All coordinates use a 1200 × 800 canvas.
 import type { GameState, Expr } from '../engine/types';
 import { hodaSpot } from '../engine/core';
-import { Hoda, Suitcase, Doll, HODA } from './Hoda';
+import { Hoda, Suitcase, Doll, HODA, type Outfit } from './Hoda';
 
 export type Rect = [number, number, number, number]; // x, y, w, h in the 1200×800 canvas
+
+export const outfitOf = (s: GameState): Outfit => (s.chapter !== 'ch1' && s.flags.c2_outfit === 'navy' ? 'navy' : 'mustard');
+/** Is a character physically on stage? `cast` (set by story nodes) wins; without it Hoda is always home. */
+export const onStage = (s: GameState, who: string) => (s.cast ? s.cast.includes(who) : who === 'hoda');
 
 const P = {
   wall: '#d9bd92', wallDark: '#bf9b6c', wainscot: '#b88e5c', floorA: '#c7ae8c', floorB: '#a9906f',
@@ -225,9 +229,9 @@ function Tabliya({ meal }: { meal: 'none' | 'dinner' | 'breakfast' }) {
 }
 
 // ── Living room (afternoon → night, and the next morning) ────
+// 0 الصبح · 1 الضهر · 2 العصر · 3 المغرب · 4 بالليل
 const TINTS: Record<number, [string, number]> = {
-  0: ['#fff2d8', 0.06], 1: ['#ffe2a8', 0.04], 2: ['#ffb46a', 0.10], 3: ['#e3784a', 0.22],
-  4: ['#3a4a7a', 0.32], 5: ['#0e1626', 0.55],
+  0: ['#fff2d8', 0.06], 1: ['#ffe2a8', 0.04], 2: ['#ffb46a', 0.12], 3: ['#d9704a', 0.26], 4: ['#0e1626', 0.55],
 };
 
 export function LivingRoom({ s, expr, morning = false }: { s: GameState; expr: Expr; morning?: boolean }) {
@@ -237,7 +241,8 @@ export function LivingRoom({ s, expr, morning = false }: { s: GameState; expr: E
   const spot = hodaSpot(s);
   const doll = !!s.flags.made_doll;
   const meal = morning ? 'breakfast' : s.flags.cooked && slot >= 3 ? 'dinner' : 'none';
-  const bagOnTop = !!s.flags.bag_on_closet && !s.flags.bag_returned && !morning;
+  const bagOnTop = !!s.flags.bag_on_closet && !s.flags.bag_returned && !morning && s.chapter === 'ch1';
+  const outfit = outfitOf(s);
 
   return (
     <g>
@@ -267,25 +272,26 @@ export function LivingRoom({ s, expr, morning = false }: { s: GameState; expr: E
 
       {/* Hoda & the suitcase: placement itself is the feedback */}
       {bagOnTop && <Suitcase x={556} y={92} s={0.85} />}
-      {spot === 'underCloset' && (
-        <g transform="translate(528 548) scale(1)"><Hoda pose="sit" expr={expr} doll={doll} /></g>
+      {!onStage(s, 'hoda') && <Suitcase x={930} y={700} s={0.9} />}
+      {onStage(s, 'hoda') && spot === 'underCloset' && (
+        <g transform="translate(528 548) scale(1)"><Hoda pose="sit" expr={expr} doll={doll} outfit={outfit} /></g>
       )}
-      {spot === 'corner' && (
+      {onStage(s, 'hoda') && spot === 'corner' && (
         <g>
           <Suitcase x={930} y={700} s={0.9} />
-          <g transform="translate(1015 560) scale(1)"><Hoda pose="sit" expr={expr} doll={doll} /></g>
+          <g transform="translate(1015 560) scale(1)"><Hoda pose="sit" expr={expr} doll={doll} outfit={outfit} /></g>
         </g>
       )}
-      {spot === 'sofa' && (
+      {onStage(s, 'hoda') && spot === 'sofa' && (
         <g>
           <Suitcase x={1060} y={556} s={0.8} />
-          <g transform="translate(910 330) scale(1)"><Hoda pose="sit" expr={expr} doll={doll} /></g>
+          <g transform="translate(910 330) scale(1)"><Hoda pose="sit" expr={expr} doll={doll} outfit={outfit} /></g>
         </g>
       )}
-      {spot === 'sewing' && (
+      {onStage(s, 'hoda') && spot === 'sewing' && (
         <g>
           {!morning || !s.flags.bag_peeked ? <Suitcase x={1060} y={556} s={0.8} /> : null}
-          <g transform="translate(360 470) scale(0.95)"><Hoda pose="stand" expr={expr} doll={doll} /></g>
+          <g transform="translate(360 470) scale(0.95)"><Hoda pose="stand" expr={expr} doll={doll} outfit={outfit} /></g>
         </g>
       )}
 
@@ -301,12 +307,14 @@ export function LivingRoom({ s, expr, morning = false }: { s: GameState; expr: E
 
 export function livingTargets(s: GameState): Record<string, Rect> {
   const spot = hodaSpot(s);
-  const bagOnTop = !!s.flags.bag_on_closet && !s.flags.bag_returned;
+  const bagOnTop = !!s.flags.bag_on_closet && !s.flags.bag_returned && s.chapter === 'ch1';
   const hoda: Rect = spot === 'underCloset' ? [540, 560, 140, 220] : spot === 'corner' ? [1030, 570, 150, 220]
     : spot === 'sofa' ? [920, 340, 140, 220] : [370, 470, 150, 300];
   const suitcase: Rect = bagOnTop ? [550, 80, 90, 72] : spot === 'corner' ? [924, 686, 90, 70] : [1052, 540, 84, 64];
+  const present = onStage(s, 'hoda');
   return {
-    hoda, suitcase,
+    ...(present ? { hoda } : {}),
+    suitcase: present ? suitcase : [924, 686, 90, 70],
     table: [450, 640, 300, 90],
     doorway: [384, 190, 116, 270],
     radio: [700, 380, 104, 110],
@@ -318,8 +326,11 @@ export function livingTargets(s: GameState): Record<string, Rect> {
 
 // ── Entrance ───────────────────────────────────────────────
 export function DoorScene({ s, expr }: { s: GameState; expr: Expr }) {
-  const open = !!s.flags.door_open;
-  const naimaGone = !!s.flags.naima_left;
+  const castMode = !!s.cast;
+  const open = castMode || !!s.flags.door_open;
+  const naimaGone = castMode ? !onStage(s, 'naima') : !!s.flags.naima_left;
+  const showHoda = castMode ? onStage(s, 'hoda') : open;
+  const outfit = outfitOf(s);
   return (
     <g>
       <g>
@@ -360,8 +371,9 @@ export function DoorScene({ s, expr }: { s: GameState; expr: Expr }) {
           <path d="M72 76 Q80 81 88 76" stroke="#2b1d14" strokeWidth="2" fill="none" />
         </g>
       )}
-      {open && (
-        <g transform="translate(470 330) scale(0.95)"><Hoda pose="stand" bag expr={expr} /></g>
+      {open && onStage(s, 'ummnadia') && <NeighbourWoman x={600} y={240} />}
+      {showHoda && (
+        <g transform="translate(470 330) scale(0.95)">{castMode ? <Hoda pose="stand" expr={expr} outfit={outfit} schoolbag /> : <Hoda pose="stand" bag expr={expr} />}</g>
       )}
       <rect width="1200" height="800" fill="#ffb46a" opacity=".08" style={{ mixBlendMode: 'multiply' }} />
       <rect width="1200" height="800" fill="url(#vignette)" />
@@ -512,4 +524,93 @@ export function drawingTargets(s: GameState): Record<string, Rect> {
     sea: [90, 620, 900, 110],
     cat: [840, 490, 120, 90],
   };
+}
+
+// ── Chapter 2 additions (TEMP ART) ─────────────────────────
+function NeighbourWoman({ x, y }: { x: number; y: number }) {
+  // أم نادية: rose galabeya, patterned headscarf, a toddler on her hip
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <path d="M40 70 Q80 40 120 70 L150 380 L10 380Z" fill="#8a4f62" />
+      <path d="M40 70 Q80 40 120 70 L126 120 L34 120Z" fill="#6f3e4f" opacity=".5" />
+      <path d="M44 60 Q46 16 80 16 Q114 16 116 60 Q120 94 132 118 L28 118 Q40 94 44 60Z" fill="#c9a65a" />
+      <path d="M50 40 q30 -20 60 0" stroke="#8a6d2c" strokeWidth="3" fill="none" strokeDasharray="4 4" />
+      <ellipse cx="80" cy="66" rx="24" ry="28" fill="#b88660" />
+      <path d="M68 62 h8 M86 62 h8" stroke="#2b1d14" strokeWidth="2.4" />
+      <path d="M72 82 Q80 79 88 82" stroke="#2b1d14" strokeWidth="2" fill="none" />
+      <g transform="translate(108 160)"><ellipse cx="20" cy="20" rx="17" ry="18" fill="#c48d64" /><path d="M2 36 Q20 26 38 36 L40 80 L0 80Z" fill="#7b9a6a" /><path d="M6 14 q14 -14 28 0" stroke="#2a1a12" strokeWidth="6" fill="none" /></g>
+    </g>
+  );
+}
+
+function Teacher({ x, y }: { x: number; y: number }) {
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <path d="M38 96 Q80 80 122 96 L140 330 L20 330Z" fill="#5d6f7f" />
+      <path d="M50 96 L80 150 L110 96" fill="#e9e1cf" />
+      <rect x="54" y="330" width="16" height="50" fill="#c48d64" /><rect x="90" y="330" width="16" height="50" fill="#c48d64" />
+      <ellipse cx="80" cy="60" rx="30" ry="34" fill="#c99b74" />
+      <path d="M48 56 Q50 16 80 18 Q110 16 112 56 Q100 34 80 34 Q60 34 48 56Z" fill="#3a2a20" />
+      <g fill="none" stroke="#2b1d14" strokeWidth="2.4"><circle cx="69" cy="62" r="8" /><circle cx="91" cy="62" r="8" /><path d="M77 62 h6" /></g>
+      <path d="M72 82 Q80 86 88 82" stroke="#2b1d14" strokeWidth="2" fill="none" />
+      <rect x="112" y="190" width="44" height="34" rx="4" fill="#6b4a2f" />
+    </g>
+  );
+}
+
+export function SchoolScene({ s, expr }: { s: GameState; expr: Expr }) {
+  return (
+    <g>
+      <rect width="1200" height="800" fill="#cfe0ea" />
+      <rect y="560" width="1200" height="240" fill="#bfae8f" />
+      {/* school wall, gate, sign */}
+      <rect x="0" y="230" width="1200" height="340" fill="#d8b98a" />
+      {Array.from({ length: 12 }, (_, i) => <rect key={i} x={i * 100} y="230" width="98" height="16" fill="#c4a274" />)}
+      <rect x="420" y="250" width="360" height="320" fill="#4a4a46" />
+      <g stroke="#2b2b28" strokeWidth="8">{Array.from({ length: 10 }, (_, i) => <line key={i} x1={440 + i * 36} y1="260" x2={440 + i * 36} y2="570" />)}</g>
+      <rect x="430" y="190" width="340" height="56" rx="6" fill="#f3ead6" stroke="#6b4a2f" strokeWidth="4" />
+      <text x="600" y="228" textAnchor="middle" fontFamily="'Noto Naskh Arabic', serif" fontSize="28" fill="#2b2118">مدرسة البنات الابتدائية</text>
+      {/* tree + girls in the yard beyond the gate */}
+      <circle cx="1040" cy="200" r="120" fill="#7f9a62" /><rect x="1028" y="250" width="24" height="320" fill="#6b4a2f" />
+      {[480, 560, 690].map((gx, i) => <g key={i} opacity=".55"><circle cx={gx} cy="430" r="16" fill="#2a1a12" /><path d={`M${gx - 18} 448 h36 l8 70 h-52z`} fill={i === 1 ? '#c49a3c' : '#33426a'} /></g>)}
+      <rect width="1200" height="800" fill="#ffe2a8" opacity=".08" />
+      <Teacher x={820} y={250} />
+      {onStage(s, 'hoda') && <g transform="translate(250 330) scale(0.95)"><Hoda pose="stand" expr={expr} outfit={outfitOf(s)} schoolbag /></g>}
+      <rect width="1200" height="800" fill="url(#vignette)" />
+    </g>
+  );
+}
+
+const pencil = { fontFamily: "'Aref Ruqaa', 'Noto Naskh Arabic', serif", fill: '#3d3d3d' };
+function wrap(text: string, max = 34): string[] {
+  const out: string[] = []; let line = '';
+  for (const w of text.split(' ')) { if ((line + ' ' + w).trim().length > max) { out.push(line.trim()); line = w; } else line += ' ' + w; }
+  if (line.trim()) out.push(line.trim());
+  return out;
+}
+export function HomeworkScene({ s }: { s: GameState }) {
+  const word = (flag: string, wrong: string, right: string) => (s.flags[flag] === 'fixed' ? right : wrong);
+  const fam = typeof s.flags.c2_fam_line === 'string' ? (s.flags.c2_fam_line as string) : '';
+  return (
+    <g>
+      <rect width="1200" height="800" fill="#2a2018" />
+      <g transform="rotate(1 600 400)">
+        <rect x="70" y="40" width="1060" height="720" rx="6" fill="#f6efdc" />
+        {Array.from({ length: 22 }, (_, i) => <line key={i} x1="90" x2="1110" y1={86 + i * 31} y2={86 + i * 31} stroke="#a9c0d3" strokeWidth="1.4" />)}
+        <line x1="1040" x2="1040" y1="40" y2="760" stroke="#d48a8a" strokeWidth="1.8" />
+        <text x="1010" y="140" textAnchor="start" direction="rtl" {...pencil} fontSize="40">إملاء</text>
+        <text x="1000" y="234" textAnchor="start" direction="rtl" {...pencil} fontSize="46">{word('c2_w_tree', 'شجره', 'شجرة')}</text>
+        <text x="760" y="234" textAnchor="start" direction="rtl" {...pencil} fontSize="46">{word('c2_w_school', 'مدرسه', 'مدرسة')}</text>
+        <text x="480" y="234" textAnchor="start" direction="rtl" {...pencil} fontSize="46">بحر</text>
+        {s.flags.c2_w_tree === 'fixed' && <circle cx="918" cy="214" r="6" fill="#c0392b" opacity=".8" />}
+        {s.flags.c2_w_school === 'fixed' && <circle cx="678" cy="214" r="6" fill="#c0392b" opacity=".8" />}
+        <text x="1010" y="360" textAnchor="start" direction="rtl" {...pencil} fontSize="40">عيلتي:</text>
+        {fam ? wrap(fam).map((l, i) => <text key={i} x="1000" y={430 + i * 62} textAnchor="start" direction="rtl" {...pencil} fontSize="38" className="fade-in">{l}</text>)
+             : <text x="1000" y="430" textAnchor="start" direction="rtl" fontFamily="'Noto Naskh Arabic', serif" fontSize="26" fill="#9a8a76">(لسه ماكتبتش)</text>}
+      </g>
+    </g>
+  );
+}
+export function homeworkTargets(): Record<string, Rect> {
+  return { tree: [850, 180, 170, 80], school: [600, 180, 180, 80], sea: [370, 180, 130, 80], family: [140, 320, 900, 260] };
 }

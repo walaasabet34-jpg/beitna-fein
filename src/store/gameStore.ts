@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import type { GameState, Expr } from '../engine/types';
 import { CHAPTERS, FIRST_CHAPTER } from '../content';
-import { indexChapter, newGame as engineNew, getNode, resolveLine, moodExpr, IndexedChapter } from '../engine/core';
+import { indexChapter, newGame as engineNew, getNode, resolveLine, moodExpr, continueToChapter, IndexedChapter } from '../engine/core';
 import { saveGame, loadGame, clearSave, loadSettings, saveSettings, Settings } from '../engine/save';
-import { play, setSoundEnabled } from '../audio/sfx';
+import { play, setPrefs } from '../audio/sfx';
 
 const indexed: Record<string, IndexedChapter> = Object.fromEntries(
   Object.entries(CHAPTERS).map(([id, ch]) => [id, indexChapter(ch)]),
@@ -26,6 +26,8 @@ interface Store {
   manualSave: () => void;
   toTitle: () => void;
   restartChapter: () => void;
+  /** End screen → next chapter, carrying everything Hoda remembers. */
+  nextChapter: (id: string) => void;
   setMenu: (v: boolean) => void;
   updateSettings: (p: Partial<Settings>) => void;
 }
@@ -37,7 +39,7 @@ function cueFor(ic: IndexedChapter, s: GameState) {
 
 export const useGame = create<Store>((set, get) => {
   const settings = loadSettings();
-  setSoundEnabled(settings.sound);
+  setPrefs({ enabled: settings.sound, music: settings.musicVolume, sfx: settings.sfxVolume, radio: settings.radioVolume, radioMuted: settings.radioMuted });
   return {
     screen: 'title',
     state: null,
@@ -70,12 +72,24 @@ export const useGame = create<Store>((set, get) => {
     },
     manualSave: () => { const s = get().state; if (s && saveGame(s)) set({ savedFlash: Date.now(), hasSave: true }); },
     toTitle: () => set({ screen: 'title', menuOpen: false, hasSave: !!loadGame() }),
-    restartChapter: () => { clearSave(); get().startNew(); },
+    restartChapter: () => {
+      const s = get().state;
+      // Replay the current chapter from the state it was entered with (Ch1: fresh game).
+      if (s && s.chapter !== FIRST_CHAPTER && s.chapterStart) { const st = s.chapterStart as GameState; saveGame(st); set({ state: st, menuOpen: false }); return; }
+      clearSave(); get().startNew();
+    },
+    nextChapter: (id) => {
+      const s = get().state; const ic = indexed[id]; if (!s || !ic) return;
+      let next = continueToChapter(ic, s);
+      next = { ...next, chapterStart: next };
+      saveGame(next); set({ state: next, menuOpen: false });
+      cueFor(ic, next);
+    },
     setMenu: (v) => set({ menuOpen: v }),
     updateSettings: (p) => {
       const settings = { ...get().settings, ...p };
       saveSettings(settings);
-      setSoundEnabled(settings.sound);
+      setPrefs({ enabled: settings.sound, music: settings.musicVolume, sfx: settings.sfxVolume, radio: settings.radioVolume, radioMuted: settings.radioMuted });
       set({ settings });
     },
   };
@@ -88,6 +102,8 @@ export function currentExpr(ic: IndexedChapter, s: GameState): Expr {
     const r = resolveLine(n, s);
     if (r.expr) return r.expr;
   }
+  // During a choice Hoda keeps the face of the line she just said.
+  if (n.type === 'choice' && s.lastLine?.speaker === 'hoda' && s.lastLine.expr) return s.lastLine.expr;
   if (s.scene === 'night' || s.scene === 'drawing') return s.flags.hoda_asleep ? 'sleepy' : 'focused';
   return moodExpr(s.vars);
 }

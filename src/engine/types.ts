@@ -42,7 +42,16 @@ export interface Variant {
 interface NodeBase {
   id: string;
   scene?: string;
-  sfx?: 'knock' | 'radio' | 'sewing' | 'latch' | 'page' | 'basket';
+  /** One-shot sound cue (see src/audio/manifest.json). */
+  sfx?: string;
+  /** Music loop to switch to (null = silence). Omitted = keep current. */
+  music?: string | null;
+  /** Ambience override (null = back to the scene's default). */
+  ambience?: string | null;
+  /** Radio broadcast (registry id) that starts playing on this node; null stops the radio. */
+  broadcast?: string | null;
+  /** Who is physically present on stage from here on (e.g. Hoda absent while at school). */
+  cast?: string[] | null;
   effects?: Effect;
 }
 
@@ -61,6 +70,8 @@ export interface Option {
   effects?: Effect;
   goto: string;
   once?: string;
+  /** Radio broadcast this option tunes to; hidden if it hasn't aired by the in-game date. */
+  broadcast?: string;
 }
 
 export interface ChoiceNode extends NodeBase {
@@ -82,9 +93,13 @@ export interface Hotspot {
 
 export interface AmbientLine { if?: Condition; text: string }
 
+/** Something Hoda starts on her own when the player returns to the room (fires once). */
+export interface HubEvent { id: string; if?: Condition; goto: string }
+
 export interface HubNode extends NodeBase {
   type: 'hub';
   hint: string;
+  events?: HubEvent[];
   ambient?: AmbientLine[];
   hotspots: Hotspot[];
   exitWhen?: Condition;
@@ -118,6 +133,8 @@ export interface EndNode extends NodeBase {
   variants?: Variant[];
   memories?: AmbientLine[];
   nextChapterTitle?: string;
+  /** Chapter id to continue into (must exist in content). */
+  nextChapter?: string;
 }
 
 export type StoryNode = LineNode | ChoiceNode | HubNode | ActivityNode | BranchNode | CardNode | EndNode;
@@ -157,6 +174,8 @@ export interface Chapter {
   init: { day: number; slot: number; money: number; scene: string; vars?: Partial<Vars> };
   slotNames: string[];
   dayNames: string[];
+  /** In-game calendar: chapter day → ISO date. Gates historical radio broadcasts. */
+  calendar?: Record<string, string>;
   nodes: StoryNode[];
 }
 
@@ -178,6 +197,13 @@ export interface GameState {
   visited: string[];
   lastExpr?: Expr;
   /** The line just before a choice, so the choice keeps its context on screen. */
-  lastLine?: { speaker: string; text: string };
+  lastLine?: { speaker: string; text: string; expr?: Expr };
+  music?: string | null;
+  ambience?: string | null;
+  /** Chapters finished, in order (carried across chapters). */
+  completed?: string[];
+  cast?: string[] | null;
+  /** Snapshot taken when this chapter began (lets the player replay just this chapter). */
+  chapterStart?: GameState;
   savedAt?: number;
 }

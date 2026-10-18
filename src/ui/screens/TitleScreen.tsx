@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { setLoop } from '../../audio/engine';
 import { useGame } from '../../store/gameStore';
 import { loadGame } from '../../engine/save';
 import { CHAPTERS } from '../../content';
@@ -10,6 +11,8 @@ const preview = (() => { const s = newGame(indexChapter(CHAPTERS.ch1)); return {
 export function TitleScreen() {
   const { startNew, continueGame, hasSave } = useGame();
   const [confirm, setConfirm] = useState(false);
+  // Gentle theme on the title (starts only once the player has tapped something).
+  useEffect(() => { setLoop('music', 'music_home'); setLoop('ambience', null); }, []);
   const save = hasSave ? loadGame() : null;
   const ch = save ? CHAPTERS[save.chapter] : null;
   return (

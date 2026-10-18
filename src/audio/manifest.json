@@ -1,0 +1,146 @@
+{
+  "music_home": {
+    "file": "audio/music_home.mp3",
+    "bus": "music",
+    "loop": true,
+    "gain": 0.55,
+    "duration": 45.0,
+    "exclusive": false
+  },
+  "music_night": {
+    "file": "audio/music_night.mp3",
+    "bus": "music",
+    "loop": true,
+    "gain": 0.5,
+    "duration": 35.667,
+    "exclusive": false
+  },
+  "music_play": {
+    "file": "audio/music_play.mp3",
+    "bus": "music",
+    "loop": true,
+    "gain": 0.45,
+    "duration": 19.2,
+    "exclusive": false
+  },
+  "amb_day": {
+    "file": "audio/amb_day.mp3",
+    "bus": "ambience",
+    "loop": true,
+    "gain": 0.6,
+    "duration": 46.0,
+    "exclusive": false
+  },
+  "amb_night": {
+    "file": "audio/amb_night.mp3",
+    "bus": "ambience",
+    "loop": true,
+    "gain": 0.6,
+    "duration": 38.0,
+    "exclusive": false
+  },
+  "amb_stair": {
+    "file": "audio/amb_stair.mp3",
+    "bus": "ambience",
+    "loop": true,
+    "gain": 0.6,
+    "duration": 28.0,
+    "exclusive": false
+  },
+  "knock": {
+    "file": "audio/knock.mp3",
+    "bus": "sfx",
+    "loop": false,
+    "gain": 0.8,
+    "duration": 1.4,
+    "exclusive": false
+  },
+  "tick": {
+    "file": "audio/tick.mp3",
+    "bus": "sfx",
+    "loop": false,
+    "gain": 0.35,
+    "duration": 0.08,
+    "exclusive": false
+  },
+  "latch": {
+    "file": "audio/latch.mp3",
+    "bus": "sfx",
+    "loop": false,
+    "gain": 0.7,
+    "duration": 0.4,
+    "exclusive": false
+  },
+  "page": {
+    "file": "audio/page.mp3",
+    "bus": "sfx",
+    "loop": false,
+    "gain": 0.5,
+    "duration": 0.7,
+    "exclusive": false
+  },
+  "radio": {
+    "file": "audio/radio.mp3",
+    "bus": "sfx",
+    "loop": false,
+    "gain": 0.5,
+    "duration": 2.2,
+    "exclusive": true
+  },
+  "sewing": {
+    "file": "audio/sewing.mp3",
+    "bus": "sfx",
+    "loop": false,
+    "gain": 0.6,
+    "duration": 2.4,
+    "exclusive": true
+  },
+  "basket": {
+    "file": "audio/basket.mp3",
+    "bus": "sfx",
+    "loop": false,
+    "gain": 0.6,
+    "duration": 1.6,
+    "exclusive": true
+  },
+  "coins": {
+    "file": "audio/coins.mp3",
+    "bus": "sfx",
+    "loop": false,
+    "gain": 0.5,
+    "duration": 1.0,
+    "exclusive": false
+  },
+  "pencil": {
+    "file": "audio/pencil.mp3",
+    "bus": "sfx",
+    "loop": false,
+    "gain": 0.6,
+    "duration": 1.3,
+    "exclusive": false
+  },
+  "door": {
+    "file": "audio/door.mp3",
+    "bus": "sfx",
+    "loop": false,
+    "gain": 0.7,
+    "duration": 1.2,
+    "exclusive": false
+  },
+  "clink": {
+    "file": "audio/clink.mp3",
+    "bus": "sfx",
+    "loop": false,
+    "gain": 0.45,
+    "duration": 0.6,
+    "exclusive": false
+  },
+  "steps": {
+    "file": "audio/steps.mp3",
+    "bus": "sfx",
+    "loop": false,
+    "gain": 0.6,
+    "duration": 2.4,
+    "exclusive": true
+  }
+}

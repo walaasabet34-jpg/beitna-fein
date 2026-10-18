@@ -6,8 +6,8 @@ import { useGame } from '../../store/gameStore';
 
 const SPEED = { slow: 45, normal: 24, instant: 0 } as const;
 
-export function DialogueBox({ speaker, text, expr, onNext, nodeId }:
-  { speaker: string; text: string; expr?: Expr; onNext: () => void; nodeId: string }) {
+export function DialogueBox({ speaker, text, expr, onNext, nodeId, outfit }:
+  { speaker: string; text: string; expr?: Expr; onNext: () => void; nodeId: string; outfit?: 'mustard' | 'navy' }) {
   const speed = useGame((g) => SPEED[g.settings.textSpeed]);
   const [shown, setShown] = useState(speed === 0 ? text.length : 0);
   const done = shown >= text.length;
@@ -37,8 +37,9 @@ export function DialogueBox({ speaker, text, expr, onNext, nodeId }:
     >
       <div className="flex gap-3 items-start">
         {isHoda && (
-          <div className="shrink-0 w-16 h-20 sm:w-20 sm:h-24 rounded-xl overflow-hidden ring-2 ring-[#b8862e]/60 -mt-10 bg-[#e8d6b6] shadow-lg">
-            <HodaPortrait expr={expr ?? 'neutral'} />
+          <div className="relative shrink-0 w-16 h-20 sm:w-20 sm:h-24 rounded-xl overflow-hidden ring-2 ring-[#b8862e]/60 -mt-10 bg-[#e8d6b6] shadow-lg">
+            <HodaPortrait expr={expr ?? 'neutral'} outfit={outfit} />
+            <span className="absolute bottom-0 inset-x-0 text-[8px] leading-3 text-center bg-black/45 text-white/80" dir="ltr">TEMP</span>
           </div>
         )}
         <div className="flex-1 min-w-0">
@@ -46,10 +47,8 @@ export function DialogueBox({ speaker, text, expr, onNext, nodeId }:
             <div className="font-ruqaa text-lg sm:text-xl mb-0.5" style={{ color: ch.color }}>{ch.name}</div>
           )}
           <p className={`text-[17px] sm:text-[19px] leading-[1.95] ${narrator ? 'text-[#4a392c]' : 'text-ink'}`} aria-hidden="true">
-            {narrator ? null : <span className="opacity-60">«</span>}
             {text.slice(0, shown)}
             <span className="opacity-0">{text.slice(shown)}</span>
-            {narrator ? null : done ? <span className="opacity-60">»</span> : null}
           </p>
           <p className="sr-only" aria-live="polite">{(!narrator && ch?.name ? ch.name + ': ' : '') + text}</p>
         </div>

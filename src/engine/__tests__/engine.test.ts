@@ -35,7 +35,7 @@ describe('engine', () => {
     expect(s.flags.greet).toBe('kneel');
   });
   it('time advances and the hub exits at night', () => {
-    let s = { ...base, slot: 5 } as GameState;
+    let s = { ...base, slot: 4 } as GameState;
     s = enter(ic, s, 'c1_hub');
     expect(s.node).toBe('c1_evening');
   });
