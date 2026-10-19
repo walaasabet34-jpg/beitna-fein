@@ -2,7 +2,7 @@
 
 **Rule (creative requirement):** every sound is a genuine recording of the real object, place, performance or broadcast. No speech synthesis or voice cloning, no recreated bulletins, no synthesized or sequenced music, no stand-ins assembled from other objects. If no genuine, reusable recording exists, the cue is **silent** and marked unavailable. Silence is preferred to anything fake.
 
-Every recording, with author, licence and link: `audio-src/SOURCES.json` (a test fails if a sound file is not listed) and the in-game page `public/audio-credits.html` (Pause menu → «مصادر الأصوات»).
+Every recording, with author, licence and link: `audio-src/SOURCES.json` (a test fails if a sound file is not listed) and the in-game page `public/audio-credits.html` (Pause menu → «الأصوات والتسجيلات: المصادر»).
 
 ## What plays
 
@@ -35,29 +35,26 @@ Effects are only trimmed, faded and level-matched: no added reverb, pitch change
 | Story music (`music_home`, `music_play`, `music_night`) | Removed. No genuine performance is used as underscore; scenes rely on the room and the street |
 
 ## Radio
-| Broadcast | What plays |
-|---|---|
-| 27 Oct news (`news_1973_10_27`) | **Silent.** No reusable recording of that day's General Programme bulletin was found. The player says: «مافيش تسجيل أصلي متاح للبث ده، فالراديو ساكت.» |
-| 3 Nov news (`news_1973_11_03`) | **Silent**, same reason |
-| Children's programme (`kids_programme`) | **Silent.** The real programmes (e.g. Abla Fadila) are under copyright and no reusable recording was found |
-| Song (`radio_song`) | **Genuine record:** Munira al-Mahdiyya, Baidaphon 23045, c. 1914 (public domain). The subtitle states plainly that it is an old record, not a live 1973 broadcast. The file is only converted from Ogg to MP3 (256 kbps) for browser support |
-| `shortwave_radio_cairo_1973` (registry only, not used by any scene) | **Genuine Radio Cairo, October 1973**: off-air shortwave recording by Dan Robinson (CC BY-NC 3.0). Content checked by speech recognition: it is the **English-language North American service** («Spotlights on the Middle East», then a tourism programme), and the exact day is unknown. Not wired to the Arabic news slot, because Fatma would hear the Arabic General Programme and the date can't be matched |
+Three ways a broadcast can play, depending on the build:
 
-### Recordings supplied by the creative director (local archive only)
-These are genuine recordings, but their reuse isn't cleared, so they live only in the git-ignored `public/local-archive/` and play only in `npm run dev:archive` (red banner, «نسخة محلية · الحقوق مش مؤكدة» badge). The public build stays silent at those moments and says no authentic recording is available.
-
-| Recording | Checked | Where it plays (local build) |
+| Slot (date in game) | Public build (Vercel) | Local personal build (`npm run dev:archive`) |
 |---|---|---|
-| **Abla Fadila, «غنوة وحدوتة»** (9 min, original file kept as supplied) | Speech recognition: the intro song, then the story of a rich man who painted his palace with gold, ending «إيه غلطتك اللي عملتها في دنيتك؟». **Undated**: the subtitle says it is not a confirmed 1973 broadcast | Chapter 2, the quiet evening moment when Hoda sits in front of the radio (`c2_kids`, broadcast `kids_fadila_episode`) |
-| **Amal Fahmy, «على الناصية»** (11.7 min) | **Not from 1973.** Amal Fahmy mentions the 25 January 2011 revolution and a 2011 graduating class | Not used in any scene; kept in the archive with that note |
-| **Abdel Halim Hafez, «عاش اللي قال»** (lyrics Mohamed Hamza, music Baligh Hamdi) | The supplied file starts with a later narrated intro («أكتوبر 73… إنها النصر»), cut at 37 s, so only the song plays (the original file is kept too). **Date of first broadcast not verified** in any source found | Not used in any scene: it can't be placed on 27–28 Oct or 3–4 Nov 1973 until the date is confirmed |
+| Ch1 children's programme (`kids_programme`, 27 Oct) | **Official embed**: Abla Fadila, «غنوة وحدوتة: حُب الوطن», Egyptian Radio's YouTube channel (@EgyRadio, `x0fnDixn_-w`) | same embed |
+| Ch2 Abla Fadila (`kids_fadila_episode`, 3 Nov) | **Official embed**: «غنوة وحدوتة: التاجر والشحات» (@EgyRadio, `a_uNSnFAFCQ`) | **Local file**: the supplied episode, the rich man who painted his palace with gold |
+| Ch1 song (`radio_song`, 27 Oct) | Munira al-Mahdiyya, Baidaphon 23045, c. 1914 (public domain, file in the build) | same |
+| Ch2 song (`radio_song_c2`, 3 Nov) | Munira al-Mahdiyya record | **Local file**: Abdel Halim Hafez, «عاش اللي قال» (song only, the later narrated intro cut at 37 s). Egyptian radio broadcast it from 18 Oct 1973 ([wazizamusic.com](https://wazizamusic.com/بليغ-حمدي-موسيقار-نصر-أكتوبر1973م/)); this recording is not claimed to be from 3 Nov |
+| News 27 Oct / 3 Nov | Silent, player hidden | same |
 
-Note: Chapter 2's line «الحدوتة النهارده عن ولد بيكذب» describes a different story from the supplied episode. The text was left unchanged.
+**Official embeds**: YouTube's own player, shown at full size (≥ 200 px tall) on the radio card; the game never extracts or hides the audio. Volume, mute and the ambience duck follow the game's radio settings through YouTube's documented `postMessage` commands. Needs an internet connection. Checked in Chrome: both episodes load, start after a tap (state buffering → playing), pause/play/volume commands work. Not checked: Safari/iOS. The provider can remove a video or disable embedding at any time; the player would then show YouTube's own error.
 
-All earlier synthetic voices, recreated bulletins and the generated listeners' programme have been deleted from the project.
+**Story text follows the recording** (content condition `{"build": "archive"}`): Chapter 1 now tells «حُب الوطن» (three brothers who left their country, and who still carried it in his heart); Chapter 2 tells the merchant and the beggar in the public build, and the gold palace in the local build; the Ch2 song line names «عاش اللي قال» only in the local build.
+
+**Not used**: «على الناصية» (supplied episode is post-2011; no official pre-1973 episode found online). Radio Cairo's English shortwave service, Oct 1973 (`shortwave_radio_cairo_1973`), stays in the registry only.
+
+**Local files** live in the git-ignored `public/local-archive/` (overlay `registry.local.json`), are never copied into `dist/`, and are delivered separately (`beitna-local-archive.zip`). Licensing notes live here and on the credits page, never in the story or the player.
 
 ## Mix and controls
-Loudness is matched per bus (effects by their loudest 0.4 s, ambience by overall level); ambience sits about 20 dB under effects; ambience and music duck while the radio plays. Pause menu: sound on/off, music, house & street, effects, radio; the radio player has mute, volume, subtitles, replay and source details.
+Loudness is matched per bus (effects by their loudest 0.4 s, ambience by overall level); ambience sits about 20 dB under effects; ambience and music duck while the radio plays. Pause menu: sound on/off, music, house & street, effects, radio; the radio player has mute and volume (plus play/pause, replay and subtitles for recordings in the build).
 
 ## Rebuild
 ```bash
@@ -74,6 +71,8 @@ To add a genuine recording later (e.g. a cleared Maspero bulletin): put the file
 | Content of every source (right object, no traffic/horns/music in ambience) | AudioSet classifier on each file; the Singer recording scores «Sewing machine» 0.90–0.95 |
 | Radio Cairo recording: language, station, programme | Whisper speech recognition: English, Radio Cairo station ID heard |
 | Files decode, no clipping, seamless loops | `check.py`: pass |
-| Browser behaviour (unlock, buses, mute, volumes, ducking, silence for unavailable broadcasts) | `audio-e2e.mjs`, `radio-e2e.mjs` on phone and desktop sizes: pass |
+| Browser behaviour (unlock, buses, mute, volumes, ducking, hidden player for silent news, embed shown ≥ 200 px, no developer text) | `audio-e2e.mjs`, `radio-e2e.mjs` (phone + desktop), `archive-e2e.mjs` (public vs local build): pass |
+| Official embeds actually play | In Chrome on an ordinary web page: both episodes load, play after a tap, pause/play/volume commands work. **Not** in the claude.ai preview: its sandbox blocks YouTube frames, so the player shows a link to the episode on the official channel instead |
+| Full playthroughs, Ch1 → Ch2 | `e2e.mjs`, 5 runs (phone + desktop, different choices, save/reload) |
 | **How it sounds to a listener** | **Not judged by a human** |
 | **Safari / iOS / real devices** | **Not tested** |

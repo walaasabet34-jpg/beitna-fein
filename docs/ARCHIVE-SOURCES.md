@@ -57,7 +57,7 @@ Only when its tier becomes **cleared**:
 - **Obtained and used:** Munira al-Mahdiyya, «Aldahre Kata Awsali», Baidaphon 23045, c. 1914 (Wikimedia Commons, public domain) → radio song slot, labelled as an old record.
 - **Obtained, verified, not used in scenes:** Radio Cairo shortwave recording, Oct 1973 (`RadioCairoDuring73War`, CC BY-NC 3.0). Speech recognition shows it is the **English** North American service («Spotlights on the Middle East»), exact day unknown. Kept in `public/radio/arch_radio_cairo_1973_sw.mp3` and the registry (`shortwave_radio_cairo_1973`).
 - **Found, not used (rights):** «من تراثنا الإذاعي» (Quran Radio) replay of Sheikh Abdel Halim Mahmoud's Friday sermon of 16 Ramadan 1393 (12 Oct 1973), Internet Archive `MenTorathenAlEzaey10061973`. The uploader's CC licence can't be verified and the sermon text is protected until 2028 (author died 1978).
-- **Not found:** any reusable recording of the General Programme news on 27 Oct or 3 Nov 1973, or of a 1973 children's programme. Those slots are silent.
+- **Not found:** any recording of the General Programme news on 27 Oct or 3 Nov 1973 (those slots are silent). Children's programme: undated Abla Fadila episodes from Egyptian Radio's official YouTube channel (@EgyRadio) are played through its embedded player; see docs/AUDIO.md.
 
 ## Recordings supplied by the creative director (19 Oct 2026), local archive only
 - **Abla Fadila, «غنوة وحدوتة»**: undated episode (rich man and the gold palace). Used locally at `c2_kids`. Rights: Egyptian Radio / National Media Authority, not cleared.

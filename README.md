@@ -3,7 +3,7 @@
 Playable: **Chapter 1 — الشنطة** and **Chapter 2 — الكلمة** (about 20 minutes together). Chapters 3–4 are designed but wait for approval.
 Mobile-first web prototype · React 18 + TypeScript + Vite + Tailwind · JSON narrative · LocalStorage saves.
 
-> All artwork is **TEMP placeholder art** drawn in SVG code. Every sound is a **genuine recording** (see docs/AUDIO.md). No synthetic voices or synthesized music; cues with no genuine recording available stay silent.
+> All artwork is original 2D art drawn in SVG code (no on-screen "temporary" labels). Every sound is a **genuine recording** (see docs/AUDIO.md). No synthetic voices or synthesized music; cues with no genuine recording available stay silent.
 
 ## Run locally
 
@@ -41,20 +41,17 @@ See **docs/AUDIO.md** (what plays where, sources, mix, rebuild) and **docs/ARCHI
 
 Saves are versioned (`src/engine/migrate.ts`). v1 saves from the first deployed build upgrade automatically to v2. Moving to the next chapter carries Hoda's memory: hidden variables, every flag, the foods Fatma has learned, and money.
 
-## Asset status (what is temporary)
+## Asset status
 
 | Asset | Status | Where |
 |---|---|---|
-| Hoda (all poses, 10 expressions, portrait) | **TEMP** – coded SVG placeholder | `src/art/Hoda.tsx` |
-| Scenes: door, living room (day/evening/night/morning), bedroom night, notebook drawing | **TEMP** – coded SVG placeholder | `src/art/scenes.tsx` |
-| Paper grain / mottling | **TEMP** – generated texture | `src/index.css` (`.grain`, `.mottle`) |
-| Ambience (4), effects (16), title music | Genuine recordings (public domain / CC0 / CC BY / CC BY-SA); suitcase latch and balcony basket unavailable (silent) | `public/audio`, `audio-src/`, `tools/audio/build_real.py` |
-| Radio | Genuine archival only: Munira al-Mahdiyya record (c. 1914, public domain) and Radio Cairo shortwave, Oct 1973 (CC BY-NC 3.0, not used in scenes); news and children's programme silent | `public/radio`, `tools/audio/build_radio.py` |
-| Chapter 2 art: school gate, teacher, Umm Nadia, homework notebook, school dress | **TEMP** – coded SVG placeholder | `src/art/scenes.tsx`, `src/art/Hoda.tsx` |
-| Fonts (Aref Ruqaa, Noto Naskh Arabic) | Final candidates, open licence (OFL) | `@fontsource/*` |
-| UI layout, dialogue, narrative JSON | Working prototype | `src/ui`, `src/content` |
+| Hoda (all poses, 10 expressions, portrait), scenes (door, living room day/evening/night/morning, bedroom, notebook, school gate, teacher, Umm Nadia, homework) | Original SVG art, in-game quality for the prototype; could be redrawn by an illustrator one component at a time | `src/art/` |
+| Paper grain / mottling | Generated texture | `src/index.css` |
+| Ambience (4), effects (16), title music | Genuine recordings (public domain / CC0 / CC BY / CC BY-SA); suitcase latch silent | `public/audio`, `audio-src/`, `tools/audio/build_real.py` |
+| Radio | Official Egyptian Radio embeds (Abla Fadila), a 1914 public-domain record; local build adds the supplied gold-palace episode and «عاش اللي قال». News silent. See docs/AUDIO.md | `public/radio`, `public/local-archive/` (local only) |
+| Fonts (Aref Ruqaa, Noto Naskh Arabic) | Open licence (OFL) | `@fontsource/*` |
 
-Every temporary visual is marked on screen: "TEMP ART · رسم مؤقت" on the stage, "TEMP" on Hoda's portrait, and a note on the title screen and pause menu. Final illustrations should replace the art components one-for-one; hotspot rectangles live next to each scene (`livingTargets`, `drawingTargets`).
+Hotspot rectangles live next to each scene (`livingTargets`, `drawingTargets`) so art can be replaced component by component.
 
 ## Time system
 
@@ -76,7 +73,7 @@ src/
     sim.ts                 headless random playthroughs
     save.ts                versioned LocalStorage save + settings
   store/gameStore.ts       zustand wrapper: autosave after every step, sound cues
-  art/                     TEMP SVG art: Hoda model (all poses/expressions), scenes, hotspot geometry
+  art/                     SVG art: Hoda model (all poses/expressions), scenes, hotspot geometry
   audio/                   engine (buses, ducking), manifest, scene → ambience
   ui/                      stage, HUD, dialogue, choices, hub, kitchen, bed, menus
 scripts/e2e.mjs            browser playthrough test

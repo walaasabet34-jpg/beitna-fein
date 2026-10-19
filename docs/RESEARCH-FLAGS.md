@@ -10,7 +10,7 @@ Status of every historical detail the game relies on. Nothing marked **OPEN** sh
 | 4 | Cairo schools in Oct/Nov 1973 | Ch2 opening | **CONFLICTING SOURCES** | One source: study paused only in Canal cities. Another: schools resumed by 3 Nov. Ch2 states no date ("عدّى أسبوع"). |
 | 5 | Displaced Suez children enrolled in local schools | Ch2 | Supported | Al-Watan family testimonies. |
 | 6 | Suez evacuation began after 1967, families returned 1974+ | Backstory ("من سنين") | Supported | Al-Watan family testimonies. |
-| 7 | Abla Fadila's programme on the General Programme | Radio, Ch1–2 | Partly supported | Station confirmed; exact airtime not. Placeholder does not imitate her. |
+| 7 | Abla Fadila's programme on the General Programme | Radio, Ch1–2 | Partly supported | Station confirmed; exact airtime not. Real episodes from Egyptian Radio's official channel play (undated, not presented as the game's dates). |
 | 8 | Blue-painted window glass, early blackout in Cairo | Ch1 window, evening | **OPEN** | Need a Cairo-specific source for Oct 1973. |
 | 9 | Prices in piasters (groceries, notebook, sewing pay) | Kitchen, Ch2 | **OPEN** | Approximate; need period price data. |
 | 10 | Monthly allowance for displaced families | Not used yet (Ch3 candidate) | Partly supported | One testimony mentions 14 EGP/month. |

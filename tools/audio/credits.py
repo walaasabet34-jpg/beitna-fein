@@ -6,6 +6,10 @@ S = json.load(open(os.path.join(ROOT, 'audio-src', 'SOURCES.json')))
 M = json.load(open(os.path.join(ROOT, 'src', 'audio', 'manifest.json')))
 rows = ''.join(f'<tr><td>{html.escape(v["title"])}</td><td>{html.escape(v["author"])}</td><td>{html.escape(v["license"])}</td>'
                f'<td><a href="{html.escape(v["url"])}">{html.escape(v["url"])}</a></td></tr>' for v in S['sources'].values())
+R = json.load(open(os.path.join(ROOT, 'public', 'radio', 'registry.json')))
+embeds = {x['id']: x for b in R['broadcasts'].values() for x in b['sources'] if x.get('embed')}
+erows = ''.join(f'<tr><td>{html.escape(v["title"])}</td><td>{html.escape(v["attribution"])}</td><td>{html.escape(v["historicalDate"])}</td>'
+                f'<td><a href="{html.escape(v["sourceUrl"])}">{html.escape(v["sourceUrl"])}</a></td></tr>' for v in embeds.values())
 missing = ''.join(f'<li><b>{k}</b>: {html.escape(v["unavailable"])}</li>' for k, v in M.items() if v.get('unavailable'))
 page = f'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Audio credits — بيتنا فين؟</title>
@@ -13,7 +17,10 @@ page = f'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="view
 <h1>Audio credits</h1>
 <p>Every sound in the game is a genuine recording. Edited versions of CC BY-SA recordings are shared under the same licence. No synthetic voices or synthesized music are used.</p>
 <table><tr><th>Recording</th><th>Author / performer</th><th>Licence</th><th>Source</th></tr>{rows}</table>
-<h2>Silent because no genuine recording was available</h2><ul>{missing}<li><b>Radio news (27 Oct, 3 Nov 1973) and the children's programme</b>: no reusable archival recording found.</li></ul>
+<h2>Radio: played from Egyptian Radio's official YouTube channel</h2>
+<p>These episodes are not copied into the game. They play inside YouTube's own embedded player (shown on screen), from the official channel of Egyptian Radio (الإذاعة المصرية, @EgyRadio), which enables embedding. They need an internet connection. The episodes are undated and are not presented as broadcasts from the game's dates.</p>
+<table><tr><th>Episode</th><th>Credit</th><th>Date</th><th>Source</th></tr>{erows}</table>
+<h2>Silent because no genuine recording was available</h2><ul>{missing}<li><b>Radio news bulletins (27 Oct, 3 Nov 1973)</b>: no recording of those days' bulletins was found online, and no bulletin is recreated.</li></ul>
 </html>'''
 open(os.path.join(ROOT, 'public', 'audio-credits.html'), 'w').write(page)
 print('wrote public/audio-credits.html')

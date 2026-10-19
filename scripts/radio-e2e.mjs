@@ -10,7 +10,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 let fails = 0;
 for (const [vp, view] of Object.entries(VPS)) {
   const p = await b.newPage(); await p.setViewport(view);
-  const errors = []; p.on('pageerror', (e) => errors.push(e.message)); p.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+  const errors = []; p.on('pageerror', (e) => errors.push(e.message)); p.on('console', (m) => { if (m.type() === 'error' && !/youtube|ERR_|Failed to load resource/i.test(m.text())) errors.push(m.text()); });
   const fetched = []; p.on('request', (r) => fetched.push(r.url()));
   const check = (name, ok, d = '') => { if (!ok) fails++; console.log(`${vp.padEnd(7)} ${ok ? 'PASS' : 'FAIL'} ${name} ${d}`); };
   await p.goto(URL, { waitUntil: 'networkidle0' });
@@ -23,17 +23,23 @@ for (const [vp, view] of Object.entries(VPS)) {
   check('27 Oct: news, kids and songs offered', opts.length === 3, JSON.stringify(opts));
   // news on 27 Oct: no genuine recording exists → the player says so and nothing plays
   await p.click('[data-choice="0"]'); await wait(1500);
-  const unavail = await p.$eval('[data-radio]', (e) => e.textContent).catch(() => '');
-  check('27 Oct news: no genuine recording → silent, and the player says so', unavail.includes('مافيش تسجيل أصلي') && !(await p.evaluate(() => window.__beitnaAudio.audioStatus().radio.playing)), unavail.slice(0, 80));
+  check('27 Oct news: no genuine recording → silent, no player, no developer message', !(await p.$('[data-radio]')) && !(await p.evaluate(() => window.__beitnaAudio.audioStatus().radio.playing)));
+  // children's programme: Abla Fadila from Egyptian Radio's official channel, in YouTube's own visible player
+  await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('beitna-fein:save')); s.node = 'c1_radio'; localStorage.setItem('beitna-fein:save', JSON.stringify(s)); });
+  await p.reload({ waitUntil: 'load' }); await wait(800); await p.click('[data-continue]'); await wait(400);
+  await p.click('[data-choice="1"]'); await wait(1500);
+  const emb = await p.$eval('[data-radio-embed] iframe', (f) => ({ src: f.src, h: f.getBoundingClientRect().height, w: f.getBoundingClientRect().width, vis: getComputedStyle(f).visibility })).catch(() => null);
+  check('kids: official embed, visible, ≥200 px tall', !!emb && emb.src.startsWith('https://www.youtube-nocookie.com/embed/x0fnDixn_-w?') && emb.h >= 199 && emb.w >= 200 && emb.vis === 'visible', JSON.stringify(emb && { h: Math.round(emb.h), w: Math.round(emb.w) }));
+  check('kids: no audio file fetched for the embed', !fetched.some((u) => /\/(radio|local-archive)\/[^/]+\.(mp3|m4a|ogg)$/.test(u)));
   // back to the radio menu and pick the song (a genuine 1914 record)
   await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('beitna-fein:save')); s.node = 'c1_radio'; localStorage.setItem('beitna-fein:save', JSON.stringify(s)); });
   await p.reload({ waitUntil: 'load' }); await wait(800); await p.click('[data-continue]'); await wait(400);
   await p.click('[data-choice="2"]'); await wait(2500);
   check('player appears', !!(await p.$('[data-radio]')));
-  const auth = await p.$eval('[data-radio-auth]', (e) => e.getAttribute('data-radio-auth')).catch(() => null);
-  check('labelled as an authentic archival recording', auth === 'authentic-archival', auth);
+  const txt = await p.$eval('[data-radio]', (e) => e.textContent).catch(() => '');
+  check('no developer labels in the player', !/مؤقت|TEMP|نسخة محلية|الحقوق|تسجيل أصلي/.test(txt), txt.slice(0, 80));
   const sub1 = await p.$eval('[data-radio-subtitle]', (e) => e.textContent).catch(() => null);
-  check('identified as an old record, not live 1973 audio', !!sub1 && sub1.includes('تسجيل أصلي') && sub1.includes('١٩١٤'), sub1 ?? '');
+  check('subtitle shows the singer', !!sub1 && sub1.includes('منيرة'), sub1 ?? '');
   check('ambience/music duck while the radio plays', (await p.evaluate(() => window.__beitnaAudio.audioStatus().ducked)) === true);
   const lvl = async () => { let m = 0; for (let i = 0; i < 12; i++) { m = Math.max(m, await p.evaluate(() => window.__beitnaAudio.outputLevel())); await wait(80); } return m; };
   check('broadcast signal reaches output', (await lvl()) > 0.003);
@@ -54,17 +60,13 @@ for (const [vp, view] of Object.entries(VPS)) {
   check('replay restarts from the beginning', after < before && after < 1, `${before.toFixed(1)}s → ${after.toFixed(1)}s`);
   await p.click('[data-radio-toggle]'); await wait(300);
   check('pause', (await p.evaluate(() => window.__beitnaAudio.audioStatus().radio.playing)) === false);
-  await p.click('[data-radio-info]'); await wait(200);
-  const details = await p.$eval('[data-radio-details]', (e) => e.textContent).catch(() => '');
-  check('details show rights + pending-archival note', details.includes('Public domain') && details.includes('Munira'));
   if (OUT) await p.screenshot({ path: `${OUT}/radio-${vp}.png` });
   check('no archival file was ever requested', !fetched.some((u) => /radio\/(?!arch_munira|registry)/.test(u)), fetched.filter((u) => u.includes('/radio/')).map((u) => u.split('/').pop()).join(','));
   // date gate in the UI: a Chapter 2 save (3 Nov) must not offer the 27 Oct bulletin
   await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('beitna-fein:save')); Object.assign(s, { chapter: 'ch2', node: 'c2_radio_c', day: 1, slot: 1, scene: 'living', cast: [] }); localStorage.setItem('beitna-fein:save', JSON.stringify(s)); });
   await p.reload({ waitUntil: 'load' }); await wait(800); await p.click('[data-continue]'); await wait(400);
   await p.click('[data-choice="0"]'); await wait(1500);
-  const title = await p.$eval('[data-radio]', (e) => e.textContent).catch(() => '');
-  check('3 Nov: tunes the 3 Nov bulletin slot (silent, no genuine recording)', title.includes('نوفمبر') && title.includes('مافيش تسجيل أصلي'), title.slice(0, 90));
+  check('3 Nov bulletin: silent, no player', !(await p.$('[data-radio]')));
   // persistence
   await p.reload({ waitUntil: 'load' }); await wait(800);
   const st = JSON.parse(await p.evaluate(() => localStorage.getItem('beitna-fein:settings')));
