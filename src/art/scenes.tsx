@@ -169,12 +169,13 @@ function PhotoFrame({ withDrawing }: { withDrawing: boolean }) {
         <path d="M745 262 h12 v9 q-6 4 -12 0Z" fill="#a8835a" />
         <ellipse cx="751" cy="252" rx="10.5" ry="13" fill="#b58f63" />
         <ellipse cx="740.6" cy="253" rx="1.8" ry="3" fill="#a8835a" /><ellipse cx="761.4" cy="253" rx="1.8" ry="3" fill="#a8835a" />
-        {/* side-parted hair, brows, eyes, moustache */}
-        <path d="M740.5 250 Q739 236 751 236 Q763 236 761.5 250 Q760 242 754 241 Q747 240.5 742.5 244Z" fill="#2e241b" />
+        {/* revised portrait: softer wavy hair and a slightly older face */}
+        <path d="M740 251 Q737 241 743 238 Q747 233 752 237 Q759 233 763 242 L762 251 Q760 245 757 244 Q753 246 750 242 Q746 245 743 244Z" fill="#34271e" />
+        <path d="M743 257 Q745 259 747 258 M755 258 Q758 259 760 257" stroke="#8d6a45" strokeWidth="0.7" fill="none" opacity=".7" />
         <path d="M745 248.5 h4 M753 248.5 h4" stroke="#3a2d22" strokeWidth="1.1" strokeLinecap="round" />
         <circle cx="747" cy="251.3" r="1" fill="#2e241b" /><circle cx="755" cy="251.3" r="1" fill="#2e241b" />
         <path d="M751 252 l-1 4.5 h2" stroke="#8d6a45" strokeWidth="0.8" fill="none" />
-        <path d="M746.5 259 Q751 256.5 755.5 259 Q751 260.2 746.5 259Z" fill="#2e241b" />
+        <path d="M745.5 259 Q751 257 756.5 259 Q751 261.8 745.5 259Z" fill="#34271e" />
         <path d="M748.5 262 Q751 263 753.5 262" stroke="#7a5638" strokeWidth="0.8" fill="none" />
       </g>
       {/* black mourning ribbon across the corner */}
