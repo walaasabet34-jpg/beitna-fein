@@ -269,7 +269,7 @@
       "type": "line",
       "speaker": "narrator",
       "text": "دخلتي لقيتيها قاعدة على الأرض، بتطبق الفستان الأصفر وتحطه في الشنطة.",
-      "scene": "bedroom",
+      "scene": "living",
       "cast": [
         "hoda"
       ]
@@ -560,7 +560,7 @@
       "type": "line",
       "speaker": "hoda",
       "text": "رجعتي لقيتي هدى قدام الشنطة. «عرفتي حاجة؟»",
-      "scene": "bedroom",
+      "scene": "living",
       "cast": [
         "hoda"
       ],
