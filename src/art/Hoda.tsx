@@ -1,4 +1,4 @@
-// TEMP ART — original placeholder illustration of Hoda (9). One model, reused in every pose,
+// Original illustration of Hoda (9). One model, reused in every pose,
 // so her look stays consistent: two dark braids with faded red ribbons, mustard dress with a
 // cream collar, dusty hem, brown sandals.
 import type { Expr } from '../engine/types';

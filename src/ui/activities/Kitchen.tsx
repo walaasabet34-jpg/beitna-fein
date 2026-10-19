@@ -48,13 +48,13 @@ export function Kitchen({ p, s }: { p: KitchenParams; s: GameState }) {
       <div className="font-ruqaa text-xl text-ink mb-1">المطبخ</div>
       <p className="text-sm text-ink/60 mb-3">اختاري لحد {arNum(p.maxPicks)} حاجات للعشا. اللي من البقال بينزل بالسَّبَت من البلكونة، وبيتدفع من فلوسك.</p>
       {group('pantry', 'في البيت', 'ببلاش')}
-      {group('grocer', 'من البقال', 'أسعار تقريبية — تحت المراجعة')}
+      {group('grocer', 'من البقال', 'بالفلوس')}
       <div className="sticky -bottom-4 -mx-3 sm:-mx-4 px-3 sm:px-4 pb-1 paper flex items-center justify-between gap-3 mt-2 border-t border-ink/10 pt-3 rounded-b-2xl">
         <div className="text-sm text-ink/70">
           {arNum(picks.length)}/{arNum(p.maxPicks)} · هتدفعي {piasters(cost)} · هيفضل معاكي {piasters(Math.max(0, s.money - cost))}
         </div>
         <button data-kitchen-confirm disabled={!ok}
-          onClick={() => act((ic, st) => resolveKitchen(ic, st, picks))}
+          onClick={() => { play('boil'); act((ic, st) => resolveKitchen(ic, st, picks)); }}
           className="rounded-full px-5 py-2 bg-rust text-paper disabled:opacity-40 font-semibold">اطبخي</button>
       </div>
     </div>

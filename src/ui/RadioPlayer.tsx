@@ -1,83 +1,103 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRadio, broadcastTitle } from '../radio/player';
-import { AUTH_LABEL, pendingArchival } from '../radio/registry';
-import { radioState, pauseRadio, resumeRadio, replayRadio } from '../audio/engine';
+import { radioState, pauseRadio, resumeRadio, replayRadio, setDuck } from '../audio/engine';
 import { useGame } from '../store/gameStore';
 import { arabicDate } from '../engine/calendar';
 import { arNum } from '../util/ar';
+import type { RadioSource } from '../radio/registry';
 
-const BADGE: Record<string, string> = {
-  'local-only': 'bg-[#a33] text-white',
-  'authentic-archival': 'bg-[#3d6b47] text-white',
-  'unverified-archival': 'bg-[#8a6d2c] text-white',
-  'modern-recreation': 'bg-[#7a4f6a] text-white',
-  placeholder: 'bg-black/55 text-white/90',
-};
-
-/** Mini radio on the stage: what's on, how authentic it is, subtitles, and the controls. */
+/** Mini radio on the stage: what's on, subtitles, and the controls. Silent broadcasts show nothing. */
 export function RadioPlayer({ gameDate }: { gameDate: string | null }) {
-  const { broadcast, source, status } = useRadio();
+  const { broadcast, source } = useRadio();
   const settings = useGame((g) => g.settings);
   const update = useGame((g) => g.updateSettings);
   const [rs, setRs] = useState(radioState());
-  const [info, setInfo] = useState(false);
   useEffect(() => {
-    if (!broadcast) return;
+    if (!broadcast || source?.embed) return;
     const id = window.setInterval(() => setRs(radioState()), 200);
     return () => clearInterval(id);
-  }, [broadcast]);
-  if (!broadcast) return null;
+  }, [broadcast, source]);
+  if (!broadcast || !source) return null;
 
-  const cue = source?.transcript.filter((c) => c.t <= rs.position + 0.05).slice(-1)[0]?.text;
-  const pending = pendingArchival(broadcast).length > 0;
+  const embed = !!source.embed;
+  const cue = embed ? undefined : source.transcript.filter((c) => c.t <= rs.position + 0.05).slice(-1)[0]?.text;
   const ended = rs.duration > 0 && !rs.playing && rs.position >= rs.duration - 0.15;
   const btn = 'w-9 h-9 grid place-items-center rounded-full bg-white/10 hover:bg-white/20 text-white text-base';
 
   return (
     <div className="absolute inset-x-2 bottom-2 sm:inset-x-auto sm:left-3 sm:bottom-3 sm:w-[min(420px,60%)] pointer-events-auto fade-in" data-radio dir="rtl">
-      {settings.subtitles && !cue && source && source.transcript.length === 0 && (
-        <p className="mb-1.5 mx-auto w-fit max-w-full rounded-md bg-black/60 px-3 py-1 text-white/80 text-[13px]">(مافيش ترجمة للتسجيل ده لسه)</p>
-      )}
       {settings.subtitles && cue && (
         <p className="mb-1.5 mx-auto w-fit max-w-full rounded-md bg-black/70 px-3 py-1 text-white text-[15px] leading-7 text-center" aria-live="polite" data-radio-subtitle>{cue}</p>
       )}
       <div className="rounded-2xl bg-[#1b1611]/90 backdrop-blur ring-1 ring-white/10 p-2.5 text-white shadow-xl">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <div className="text-sm font-semibold truncate">📻 {broadcastTitle(broadcast)}</div>
-            <div className="text-[11px] text-white/60">{gameDate ? arabicDate(gameDate).replace(/\d+/g, (d) => arNum(d)) : ''} · البرنامج العام</div>
-          </div>
-          {source && (
-            <div className="shrink-0 flex flex-col items-end gap-1">
-              <span className={`text-[11px] px-2 py-0.5 rounded-full ${BADGE[source.authenticity]}`} data-radio-auth={source.authenticity}>{AUTH_LABEL[source.authenticity]}</span>
-              {source.license.status === 'local-only' && <span className={`text-[10px] px-2 py-0.5 rounded-full ${BADGE['local-only']}`} data-radio-local>نسخة محلية · الحقوق مش مؤكدة</span>}
-            </div>
-          )}
+        <div className="min-w-0">
+          <div className="text-sm font-semibold truncate">📻 {broadcastTitle(broadcast)}</div>
+          <div className="text-[11px] text-white/60">{gameDate ? arabicDate(gameDate).replace(/\d+/g, (d) => arNum(d)) : ''} · البرنامج العام</div>
         </div>
-        {status === 'unavailable' && <p className="text-xs text-amber-200 mt-1">مافيش تسجيل مسموح بتشغيله للبث ده لسه.</p>}
+        {embed ? <EmbedPlayer key={source.id} source={source} volume={settings.radioMuted ? 0 : settings.radioVolume} /> : null}
         <div className="flex items-center gap-1.5 mt-2">
-          <button className={btn} aria-label={rs.playing ? 'إيقاف مؤقت' : 'تشغيل'} onClick={() => (rs.playing ? pauseRadio() : resumeRadio())} data-radio-toggle disabled={!source}>{rs.playing ? '⏸' : '▶'}</button>
-          <button className={btn} aria-label="إعادة من الأول" onClick={() => replayRadio()} data-radio-replay disabled={!source}>↺</button>
+          {!embed && <button className={btn} aria-label={rs.playing ? 'إيقاف مؤقت' : 'تشغيل'} onClick={() => (rs.playing ? pauseRadio() : resumeRadio())} data-radio-toggle>{rs.playing ? '⏸' : '▶'}</button>}
+          {!embed && <button className={btn} aria-label="إعادة من الأول" onClick={() => replayRadio()} data-radio-replay>↺</button>}
           <button className={btn} aria-pressed={settings.radioMuted} aria-label={settings.radioMuted ? 'شغّلي صوت الراديو' : 'اكتمي الراديو'} onClick={() => update({ radioMuted: !settings.radioMuted })} data-radio-mute>{settings.radioMuted ? '🔇' : '🔈'}</button>
           <input type="range" min={0} max={100} step={5} value={Math.round(settings.radioVolume * 100)} aria-label="صوت الراديو" dir="ltr"
             onChange={(e) => update({ radioVolume: Number(e.target.value) / 100, radioMuted: false })} className="flex-1 min-w-0 accent-[#e2b35c]" data-radio-volume />
-          <button className={`${btn} text-[11px] font-bold ${settings.subtitles ? '!bg-[#e2b35c] !text-black' : ''}`} aria-pressed={settings.subtitles} aria-label="الترجمة" onClick={() => update({ subtitles: !settings.subtitles })} data-radio-cc>CC</button>
-          <button className={btn} aria-expanded={info} aria-label="عن التسجيل" onClick={() => setInfo(!info)} data-radio-info>ⓘ</button>
+          {!embed && <button className={`${btn} text-[11px] font-bold ${settings.subtitles ? '!bg-[#e2b35c] !text-black' : ''}`} aria-pressed={settings.subtitles} aria-label="الترجمة" onClick={() => update({ subtitles: !settings.subtitles })} data-radio-cc>CC</button>}
         </div>
-        <div className="h-1 mt-2 rounded bg-white/10 overflow-hidden" aria-hidden="true">
-          <div className="h-full bg-[#e2b35c]" style={{ width: `${rs.duration ? Math.min(100, (rs.position / rs.duration) * 100) : 0}%` }} />
-        </div>
-        {ended && <p className="text-[11px] text-white/60 mt-1">البث خلص. ↺ عشان تسمعيه تاني.</p>}
-        {info && source && (
-          <div className="mt-2 text-[11px] leading-5 text-white/75 border-t border-white/10 pt-2" data-radio-details>
-            <div>المصدر: {source.title}</div>
-            <div>الحقوق: {source.license.label}</div>
-            {source.attribution && <div>نَسب: {source.attribution}</div>}
-            {source.sourceUrl && <div className="truncate" dir="ltr">{source.sourceUrl}</div>}
-            {pending && <div className="text-amber-200 mt-1">التسجيل الأرشيفي الأصلي في انتظار تصريح الحقوق. لحد ما يتصرّح، بيتشغل صوت مؤقت أصلي مكانه.</div>}
+        {!embed && (
+          <div className="h-1 mt-2 rounded bg-white/10 overflow-hidden" aria-hidden="true">
+            <div className="h-full bg-[#e2b35c]" style={{ width: `${rs.duration ? Math.min(100, (rs.position / rs.duration) * 100) : 0}%` }} />
           </div>
         )}
+        {ended && <p className="text-[11px] text-white/60 mt-1">الحلقة خلصت. ↺ عشان تسمعيها تاني.</p>}
       </div>
+    </div>
+  );
+}
+
+const ORIGIN = 'https://www.youtube-nocookie.com';
+
+/** The provider's own embedded player, shown at full size (not hidden, audio not extracted).
+ *  Volume, mute and the ambience duck follow the game's radio settings through the documented postMessage API. */
+function EmbedPlayer({ source, volume }: { source: RadioSource; volume: number }) {
+  const ref = useRef<HTMLIFrameElement>(null);
+  const [ready, setReady] = useState(false);
+  const [blocked, setBlocked] = useState(false);
+  // Some hosts (e.g. a sandboxed preview) refuse to load the YouTube player. If it never answers, offer the
+  // episode on Egyptian Radio's own channel instead of leaving a broken frame on screen.
+  useEffect(() => { if (ready) return; const t = window.setTimeout(() => setBlocked(true), 9000); return () => clearTimeout(t); }, [ready]);
+  const send = (func: string, args: unknown[] = []) =>
+    ref.current?.contentWindow?.postMessage(JSON.stringify({ event: 'command', func, args }), ORIGIN);
+  useEffect(() => {
+    const onMsg = (e: MessageEvent) => {
+      if (e.origin !== ORIGIN || e.source !== ref.current?.contentWindow) return;
+      let d: { event?: string; info?: { playerState?: number } } = {};
+      try { d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch { return; }
+      if (d.event === 'onReady') { setReady(true); send('playVideo'); }   // the player was tuned by a tap, so it may start
+      const st = d.info?.playerState;
+      if (typeof st === 'number') { setDuck(st === 1 || st === 3); (window as unknown as { __beitnaEmbedState?: number }).__beitnaEmbedState = st; }
+    };
+    window.addEventListener('message', onMsg);
+    return () => { window.removeEventListener('message', onMsg); setDuck(false); };
+  }, []);
+  useEffect(() => {
+    if (!ready) return;
+    if (volume <= 0) send('mute'); else { send('unMute'); send('setVolume', [Math.round(volume * 100)]); }
+  }, [ready, volume]);
+  const onLoad = () => {
+    // documented handshake: ask the player to report its state (playing / paused) back to us
+    ref.current?.contentWindow?.postMessage(JSON.stringify({ event: 'listening', id: source.id, channel: 'widget' }), ORIGIN);
+  };
+  const id = source.embed!.videoId;
+  const src = `${ORIGIN}/embed/${id}?enablejsapi=1&autoplay=1&playsinline=1&rel=0&modestbranding=1&origin=${encodeURIComponent(location.origin)}`;
+  if (blocked && !ready) return (
+    <a href={source.sourceUrl ?? '#'} target="_blank" rel="noopener" className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-white/10 hover:bg-white/20 px-3 py-3 text-sm" data-radio-embed-link={id}>
+      ▶ اسمعي الحلقة على قناة الإذاعة المصرية
+    </a>
+  );
+  return (
+    <div className="mt-2 rounded-lg overflow-hidden bg-black" style={{ minHeight: 200 }} data-radio-embed={id}>
+      <iframe ref={ref} src={src} onLoad={onLoad} title={source.title} className="w-full aspect-video" style={{ minHeight: 200, border: 0 }}
+        allow="autoplay; encrypted-media; picture-in-picture" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
     </div>
   );
 }

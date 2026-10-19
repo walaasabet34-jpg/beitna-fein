@@ -12,7 +12,7 @@ export function TitleScreen() {
   const { startNew, continueGame, hasSave } = useGame();
   const [confirm, setConfirm] = useState(false);
   // Gentle theme on the title (starts only once the player has tapped something).
-  useEffect(() => { setLoop('music', 'music_home'); setLoop('ambience', null); }, []);
+  useEffect(() => { setLoop('music', 'music_title'); setLoop('ambience', 'amb_night'); }, []);
   const save = hasSave ? loadGame() : null;
   const ch = save ? CHAPTERS[save.chapter] : null;
   return (
@@ -48,9 +48,6 @@ export function TitleScreen() {
             </div>
           )}
         </div>
-        <p className="absolute bottom-4 inset-x-0 text-xs text-paper/45 px-4">
-          نموذج أولي · الفصل الأول بس · كل الرسومات مؤقتة (TEMP) ومش نهائية · الصوت مولّد مؤقت
-        </p>
       </div>
     </div>
   );

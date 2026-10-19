@@ -1,4 +1,4 @@
-// TEMP ART — original placeholder scenes, drawn in code (SVG). All coordinates use a 1200 × 800 canvas.
+// Original scenes, drawn in code (SVG). All coordinates use a 1200 × 800 canvas.
 import type { GameState, Expr } from '../engine/types';
 import { hodaSpot } from '../engine/core';
 import { Hoda, Suitcase, Doll, HODA, type Outfit } from './Hoda';
@@ -148,11 +148,37 @@ function Radio() {
 function PhotoFrame({ withDrawing }: { withDrawing: boolean }) {
   return (
     <g>
-      <rect x="712" y="214" width="78" height="92" fill="#5a3a22" />
-      <rect x="720" y="222" width="62" height="76" fill="#cfc6b4" />
-      <circle cx="751" cy="250" r="12" fill="#6a6258" />
-      <path d="M731 298 Q751 262 771 298Z" fill="#4c463f" />
-      <path d="M744 252 h14" stroke="#2d2a26" strokeWidth="2" />
+      {/* a studio photograph of Fatma's late husband: sepia print in a cream oval mount */}
+      <rect x="710" y="212" width="82" height="96" rx="2" fill="#4e3420" />
+      <rect x="714" y="216" width="74" height="88" fill="#6b4a2f" />
+      <rect x="718" y="220" width="66" height="80" fill="#e9dfc8" />
+      <defs>
+        <radialGradient id="sepiaPhoto" cx="50%" cy="38%" r="65%">
+          <stop offset="0" stopColor="#d9c19a" /><stop offset="0.7" stopColor="#b8976a" /><stop offset="1" stopColor="#8e6f4a" />
+        </radialGradient>
+        <clipPath id="photoOval"><ellipse cx="751" cy="260" rx="26" ry="33" /></clipPath>
+      </defs>
+      <ellipse cx="751" cy="260" rx="27.5" ry="34.5" fill="#c8b48e" />
+      <g clipPath="url(#photoOval)">
+        <rect x="720" y="222" width="62" height="76" fill="url(#sepiaPhoto)" />
+        {/* jacket, shirt and tie */}
+        <path d="M722 296 Q726 276 742 272 L751 284 L760 272 Q776 276 780 296Z" fill="#4a3826" />
+        <path d="M744 272 L751 284 L758 272 L755 269 L747 269Z" fill="#efe4cc" />
+        <path d="M749.5 276 L752.5 276 L753.5 290 L751 293 L748.5 290Z" fill="#3a2b1d" />
+        {/* neck and face */}
+        <path d="M745 262 h12 v9 q-6 4 -12 0Z" fill="#a8835a" />
+        <ellipse cx="751" cy="252" rx="10.5" ry="13" fill="#b58f63" />
+        <ellipse cx="740.6" cy="253" rx="1.8" ry="3" fill="#a8835a" /><ellipse cx="761.4" cy="253" rx="1.8" ry="3" fill="#a8835a" />
+        {/* side-parted hair, brows, eyes, moustache */}
+        <path d="M740.5 250 Q739 236 751 236 Q763 236 761.5 250 Q760 242 754 241 Q747 240.5 742.5 244Z" fill="#2e241b" />
+        <path d="M745 248.5 h4 M753 248.5 h4" stroke="#3a2d22" strokeWidth="1.1" strokeLinecap="round" />
+        <circle cx="747" cy="251.3" r="1" fill="#2e241b" /><circle cx="755" cy="251.3" r="1" fill="#2e241b" />
+        <path d="M751 252 l-1 4.5 h2" stroke="#8d6a45" strokeWidth="0.8" fill="none" />
+        <path d="M746.5 259 Q751 256.5 755.5 259 Q751 260.2 746.5 259Z" fill="#2e241b" />
+        <path d="M748.5 262 Q751 263 753.5 262" stroke="#7a5638" strokeWidth="0.8" fill="none" />
+      </g>
+      {/* black mourning ribbon across the corner */}
+      <path d="M776 212 L792 212 L792 228Z" fill="#1d1a17" />
       {withDrawing && (
         <g transform="rotate(3 836 262)">
           <rect x="800" y="220" width="74" height="86" fill="#f4ecd8" stroke="#b9a37f" />
@@ -526,7 +552,7 @@ export function drawingTargets(s: GameState): Record<string, Rect> {
   };
 }
 
-// ── Chapter 2 additions (TEMP ART) ─────────────────────────
+// ── Chapter 2 additions ─────────────────────────
 function NeighbourWoman({ x, y }: { x: number; y: number }) {
   // أم نادية: rose galabeya, patterned headscarf, a toddler on her hip
   return (

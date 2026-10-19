@@ -25,11 +25,6 @@ export default function App() {
   }, [rm]);
   return (
     <>
-      {LOCAL_ARCHIVE && (
-        <div className="fixed top-0 inset-x-0 z-50 bg-[#a33] text-white text-center text-xs py-1 px-3" role="status" data-local-archive>
-          نسخة محلية تجريبية: فيها تسجيلات أرشيفية حقوقها مش مؤكدة. للاستماع على جهازك بس، ماتتنشرش.
-        </div>
-      )}
       {screen === 'game' && hasState ? <GameScreen /> : <TitleScreen />}
     </>
   );

@@ -104,9 +104,6 @@ export function Stage({ ic, s, children }: { ic: IndexedChapter; s: GameState; c
           <span className="text-xs px-3 py-1 rounded-full bg-black/50 text-white/85">↔ اسحبي عشان تشوفي الأوضة كلها</span>
         </div>
       )}
-      <div className="absolute bottom-1.5 left-2 text-[10px] tracking-wide px-1.5 py-0.5 rounded bg-black/45 text-white/75 pointer-events-none" dir="ltr">
-        TEMP ART · رسم مؤقت
-      </div>
       {children}
     </div>
   );

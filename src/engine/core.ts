@@ -13,6 +13,9 @@ export const NIGHT_SLOT = 4;
 const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
 
 // ── Conditions ──────────────────────────────────────────────
+let BUILD: 'public' | 'archive' = 'public';
+/** Set once at startup (main.tsx). Lets a line match the recording that actually plays in this build. */
+export function setBuild(b: 'public' | 'archive') { BUILD = b; }
 export function evaluate(c: Condition | undefined, s: GameState): boolean {
   if (!c) return true;
   if ('all' in c) return c.all.every((x) => evaluate(x, s));
@@ -28,6 +31,7 @@ export function evaluate(c: Condition | undefined, s: GameState): boolean {
   if ('money' in c) return range(s.money, c.money.gte, c.money.lte);
   if ('slot' in c) return range(s.slot, c.slot.gte, c.slot.lte);
   if ('visited' in c) return s.visited.includes(c.visited);
+  if ('build' in c) return BUILD === c.build;
   return false;
 }
 function range(v: number, gte?: number, lte?: number) {

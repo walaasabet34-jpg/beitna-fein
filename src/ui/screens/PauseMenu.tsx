@@ -36,7 +36,9 @@ export function PauseMenu() {
         <div className="text-ink">
           <div className={row}><span>الصوت</span>{seg('sound', [[true, 'شغّال'], [false, 'مقفول']])}</div>
           <Slider id="vol-music" label="المزيكا" value={settings.musicVolume} disabled={!settings.sound} onChange={(v) => updateSettings({ musicVolume: v })} />
-          <Slider id="vol-sfx" label="أصوات البيت" value={settings.sfxVolume} disabled={!settings.sound} onChange={(v) => updateSettings({ sfxVolume: v })} />
+          <Slider id="vol-amb" label="صوت البيت والشارع" value={settings.ambienceVolume} disabled={!settings.sound} onChange={(v) => updateSettings({ ambienceVolume: v })} />
+          <Slider id="vol-sfx" label="المؤثرات" value={settings.sfxVolume} disabled={!settings.sound} onChange={(v) => updateSettings({ sfxVolume: v })} />
+          <Slider id="vol-radio" label="الراديو" value={settings.radioVolume} disabled={!settings.sound} onChange={(v) => updateSettings({ radioVolume: v })} />
           <SoundTest disabled={!settings.sound} />
           <div className={row}><span>حركة أقل</span>{seg('reducedMotion', [[null, 'زي الجهاز'], [true, 'أيوه'], [false, 'لأ']])}</div>
           <div className={row}><span>سرعة الكلام</span>{seg('textSpeed', [['slow', 'بطيء'], ['normal', 'عادي'], ['instant', 'على طول']])}</div>
@@ -54,7 +56,7 @@ export function PauseMenu() {
             </div>
           )}
           <button className="rounded-full px-5 py-2 text-ink/70 underline underline-offset-4" onClick={toTitle} data-to-title>الشاشة الرئيسية</button>
-          <p className="text-xs text-ink/50 text-center leading-6">نموذج أولي. كل الرسومات والأصوات مؤقتة (TEMP) ومش هي الشكل النهائي للعبة.</p>
+          <a className="text-xs text-ink/50 text-center underline underline-offset-4" href="./audio-credits.html" target="_blank" rel="noopener" data-audio-credits>الأصوات والتسجيلات: المصادر</a>
         </div>
       </div>
     </div>
@@ -86,7 +88,7 @@ function SoundTest({ disabled }: { disabled?: boolean }) {
         <span className={disabled ? 'opacity-50' : ''}>اختبار الصوت</span>
         <div className="flex gap-1">
           <button disabled={disabled} className="rounded-full px-3 py-1 text-sm border border-ink/20 disabled:opacity-40" onClick={() => { playSfx('knock'); check(); }} data-test-sfx>خبط</button>
-          <button disabled={disabled} className="rounded-full px-3 py-1 text-sm border border-ink/20 disabled:opacity-40" onClick={() => { setLoop('music', 'music_play'); check(); }} data-test-music>مزيكا</button>
+          <button disabled={disabled} className="rounded-full px-3 py-1 text-sm border border-ink/20 disabled:opacity-40" onClick={() => { setLoop('music', 'music_title'); check(); }} data-test-music>مزيكا</button>
         </div>
       </div>
       {msg && <p className="text-xs text-ink/60 mt-1" aria-live="polite">{msg}</p>}

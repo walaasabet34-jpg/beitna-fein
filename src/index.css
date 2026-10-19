@@ -82,18 +82,19 @@ body {
 .hot:hover .tag, .hot:focus-visible .tag { opacity: 1; }
 @keyframes pip { 0%,100% { transform: scale(.85); opacity: .75 } 50% { transform: scale(1.15); opacity: 1 } }
 
-/* Character life */
-.breathe { animation: breathe 4.2s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+/* Character life. The scene is one big SVG that Chrome repaints whenever any part of it moves, so these
+   slow ambient motions advance in a few discrete steps per second instead of 60 repaints a second. */
+.breathe { animation: breathe 4.2s steps(5) infinite; transform-box: fill-box; transform-origin: 50% 100%; }
 @keyframes breathe { 0%,100% { transform: scaleY(1) } 50% { transform: scaleY(1.012) } }
-.sway { animation: sway 7s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 100%; }
+.sway { animation: sway 7s steps(10) infinite; transform-box: fill-box; transform-origin: 50% 100%; }
 @keyframes sway { 0%,100% { transform: rotate(-.6deg) } 50% { transform: rotate(.6deg) } }
-.blink { animation: blink 5.3s infinite; transform-box: fill-box; transform-origin: 50% 50%; }
+.blink { animation: blink 5.3s step-end infinite; transform-box: fill-box; transform-origin: 50% 50%; }
 @keyframes blink { 0%, 94%, 100% { transform: scaleY(0) } 96%, 98% { transform: scaleY(1) } }
-.dust { animation: dust 14s linear infinite; }
+.dust { animation: dust 14s steps(20) infinite; }
 @keyframes dust { 0% { transform: translate(0,0); opacity: 0 } 15% { opacity: .9 } 85% { opacity: .7 } 100% { transform: translate(-60px, 120px); opacity: 0 } }
-.rays { animation: rays 9s ease-in-out infinite; }
+.rays { animation: rays 9s steps(12) infinite; }
 @keyframes rays { 0%,100% { opacity: .55 } 50% { opacity: .8 } }
-.flicker { animation: flicker 3.5s ease-in-out infinite; }
+.flicker { animation: flicker 3.5s steps(6) infinite; }
 @keyframes flicker { 0%,100% { opacity: .9 } 40% { opacity: .78 } 60% { opacity: 1 } }
 .draw-stroke { stroke-dasharray: var(--len, 1200); stroke-dashoffset: var(--len, 1200); animation: draw 1.6s ease-out forwards; animation-delay: var(--delay, 0s); }
 @keyframes draw { to { stroke-dashoffset: 0 } }
@@ -131,4 +132,4 @@ html.rm .draw-stroke { animation: none !important; stroke-dashoffset: 0; }
 }
 
 /* Local experimental archive build: leave room for the warning banner */
-html.local-archive #root { padding-top: 26px; box-sizing: border-box; }
+

@@ -19,7 +19,9 @@ export type Condition =
   | { flag: string; eq?: FlagVal; gte?: number; lte?: number }
   | { money: { gte?: number; lte?: number } }
   | { slot: { gte?: number; lte?: number } }
-  | { visited: string };
+  | { visited: string }
+  /** which build is running: 'archive' = the local personal build with the local recordings */
+  | { build: 'public' | 'archive' };
 
 export interface Effect {
   vars?: Partial<Vars>;

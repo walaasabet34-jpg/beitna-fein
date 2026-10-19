@@ -212,7 +212,7 @@ export function pauseRadio() {
   const s = radio.src; radio.src = null; try { s.stop(); } catch { /* noop */ }
   setDuck(false);
 }
-function setDuck(on: boolean) { if (ducked !== on) { ducked = on; applyPrefs(0.35); } }
+export function setDuck(on: boolean) { if (ducked !== on) { ducked = on; applyPrefs(0.35); } }
 export function resumeRadio() { if (radio && !radio.playing && radio.buf) startRadioAt(radio.offset >= radio.buf.duration - 0.1 ? 0 : radio.offset); }
 export function replayRadio() { if (radio?.buf) { pauseRadio(); startRadioAt(0); } }
 export function stopRadio(fade = 0.5) {

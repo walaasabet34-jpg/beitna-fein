@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import { CHAPTERS } from '../../content';
-import { indexChapter, continueToChapter, getNode } from '../core';
+import { indexChapter, continueToChapter, getNode, resolveLine, setBuild } from '../core';
 import { simulate } from '../sim';
 import { gameDate } from '../calendar';
 import { aired, playableSource, type Registry } from '../../radio/registry';
@@ -29,16 +29,21 @@ describe('radio registry', () => {
       expect(s.type, s.id).toBe('archival');
       expect(['authentic-archival', 'unverified-archival']).toContain(s.authenticity);
       if (s.license.status === 'pending') { expect(s.license.label).toBe('Pending rights clearance'); expect(s.file).toBeNull(); }
+      if (s.embed) {   // official embedded player only: Egyptian Radio's own channel, nothing stored
+        expect(s.file).toBeNull(); expect(s.license.status).toBe('cleared'); expect(s.embed.channel).toBe('@EgyRadio');
+        expect(s.sourceUrl).toBe(`https://www.youtube.com/watch?v=${s.embed.videoId}`); expect(s.attribution).toBeTruthy();
+      }
       if (s.file) { expect(s.license.status).toBe('cleared'); expect(s.authenticity).toBe('authentic-archival'); expect(s.sourceUrl).toMatch(/^https:\/\//); expect(s.attribution).toBeTruthy(); }
     }
     const radioDir = fs.readdirSync(path.join(root, 'public/radio'));
     expect(radioDir.filter((f) => !f.startsWith('arch_') && f !== 'registry.json')).toEqual([]);
   });
-  it('broadcasts without a genuine recording stay silent; the song is a genuine old record', () => {
-    for (const id of ['news_1973_10_27', 'news_1973_11_03', 'kids_programme']) expect(playableSource(id, live), id).toBeNull();
-    const song = playableSource('radio_song', live)!;
-    expect(song.id).toBe('arch_munira_c1914');
-    expect(song.transcript[0].text).toMatch(/تسجيل أصلي/);   // clearly identified, never presented as live 1973 audio
+  it('news stays silent; Abla Fadila plays from the official channel embed; the song is a genuine old record', () => {
+    for (const id of ['news_1973_10_27', 'news_1973_11_03']) expect(playableSource(id, live), id).toBeNull();
+    expect(playableSource('kids_programme', live)?.embed?.videoId).toBe('x0fnDixn_-w');        // «حُب الوطن»
+    expect(playableSource('kids_fadila_episode', live)?.embed?.videoId).toBe('a_uNSnFAFCQ');   // «التاجر والشحات»
+    for (const id of ['radio_song', 'radio_song_c2']) expect(playableSource(id, live)?.id, id).toBe('arch_munira_c1914');
+    expect(JSON.stringify(live)).not.toMatch(/\[نسخة|مش بث حي|TEMP|مؤقت/);   // no developer text in subtitles
   });
   it('a pending archival source is never chosen for playback', () => {
     for (const id of Object.keys(live.broadcasts)) {
@@ -102,5 +107,26 @@ describe('local archive (unconfirmed rights)', () => {
   });
   it('date gating still applies to local recordings', () => {
     expect(aired('news_1973_10_27', '1973-11-03', mergeOverlay(live, overlay))).toBe(false);
+  });
+});
+
+describe('the words match the recording that plays in each build', () => {
+  const ovPath = path.join(root, 'public/local-archive/registry.local.json');
+  it.skipIf(!fs.existsSync(ovPath))('local build: gold-palace episode in Ch2, «عاش اللي قال» in the Ch2 song slot (from 18 Oct 1973)', () => {
+    const merged = mergeOverlay(live, JSON.parse(fs.readFileSync(ovPath, 'utf8')));
+    expect(playableSource('kids_fadila_episode', merged, true)?.id).toBe('local_fadila_episode');
+    expect(playableSource('radio_song_c2', merged, true)?.id).toBe('local_aash_elli_al');
+    expect(playableSource('radio_song', merged, true)?.id).toBe('arch_munira_c1914');   // Ch1 keeps the old record
+    expect(merged.broadcasts.radio_song_c2.airDate).toBe('1973-10-18');
+  });
+  it('Ch2 story line follows the build', () => {
+    const ic2 = indexChapter(CHAPTERS.ch2);
+    const st = { ...simulate(ic2, 1, 3000, 'random').state, flags: {} };
+    setBuild('public');
+    expect(resolveLine(getNode(ic2, 'c2_kids3') as never, st).text).toMatch(/تاجر/);
+    setBuild('archive');
+    expect(resolveLine(getNode(ic2, 'c2_kids3') as never, st).text).toMatch(/بالدهب/);
+    expect(resolveLine(getNode(ic2, 'c2_r_song') as never, st).text).toMatch(/عاش اللي قال/);
+    setBuild('public');
   });
 });

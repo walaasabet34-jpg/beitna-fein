@@ -9,6 +9,8 @@ export interface RadioSource {
   historicalDate: string | null; authenticity: Authenticity;
   license: { status: 'pending' | 'cleared' | 'rejected' | 'local-only'; label: string; holder: string | null; terms: string | null; verifiedBy: string | null; verifiedOn: string | null };
   attribution: string | null; file: string | null; transcript: Cue[];
+  /** Played through the provider's official embedded player (visible), never extracted. */
+  embed?: { provider: 'youtube'; videoId: string; channel: string };
 }
 export interface Broadcast { title: string; kind: string; airDate: string; window: 'same-day' | 'any-after'; sources: RadioSource[] }
 export interface Registry { version: number; broadcasts: Record<string, Broadcast> }
@@ -62,17 +64,11 @@ export function aired(id: string, gameDate: string | null, reg: Registry = regis
 /** The source the game will actually play: first one with cleared rights AND a file. */
 export function playableSource(id: string, reg: Registry = registry, local = LOCAL_ARCHIVE): RadioSource | null {
   const b = reg.broadcasts[id];
-  return b?.sources.find((s) => !!s.file && (s.license.status === 'cleared' || (local && s.license.status === 'local-only'))) ?? null;
+  return b?.sources.find((s) => (!!s.file || !!s.embed) && (s.license.status === 'cleared' || (local && s.license.status === 'local-only'))) ?? null;
 }
 /** Archival sources still waiting for clearance (shown to the player as a note, never played). */
 export function pendingArchival(id: string, reg: Registry = registry): RadioSource[] {
   return reg.broadcasts[id]?.sources.filter((s) => s.type === 'archival' && s.license.status === 'pending') ?? [];
 }
 
-export const AUTH_LABEL: Record<Authenticity, string> = {
-  'authentic-archival': 'تسجيل أصلي من الأرشيف',
-  'unverified-archival': 'تسجيل أرشيفي (لسه ماتأكدش)',
-  'modern-recreation': 'إعادة تمثيل حديثة',
-  placeholder: 'صوت مؤقت',
-};
 

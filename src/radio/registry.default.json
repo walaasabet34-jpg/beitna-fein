@@ -7,6 +7,7 @@
   "airDate: the real historical date the broadcast aired. The game never offers a broadcast before its airDate. window 'same-day' = only on that exact in-game date (news, communiqués); 'any-after' = any in-game date on or after airDate (songs, recurring programmes).",
   "Only genuine recordings are played. A broadcast with no cleared genuine recording stays silent and the player says so.",
   "Only genuine recordings are played. A broadcast with no cleared genuine recording stays silent and the player says so.",
+  "Only genuine recordings are played. A broadcast with no cleared genuine recording stays silent and the player says so.",
   "Only genuine recordings are played. A broadcast with no cleared genuine recording stays silent and the player says so."
  ],
  "broadcasts": {
@@ -93,12 +94,36 @@
    ]
   },
   "kids_programme": {
-   "title": "برنامج الأطفال",
+   "title": "أبلة فضيلة — غنوة وحدوتة",
    "kind": "children",
    "airDate": "1959-01-01",
    "window": "any-after",
    "_note": "The real programme is Abla Fadila's 'غنوة وحدوتة' on the General Programme. The placeholder does NOT imitate her voice or reproduce her stories; the story text is original.",
    "sources": [
+    {
+     "id": "egyradio_hobb_el_watan",
+     "type": "archival",
+     "title": "أبلة فضيلة — «غنوة وحدوتة»: حُب الوطن",
+     "sourceUrl": "https://www.youtube.com/watch?v=x0fnDixn_-w",
+     "historicalDate": "Undated episode (programme on air since 1959); not presented as a 1973 broadcast",
+     "authenticity": "authentic-archival",
+     "license": {
+      "status": "cleared",
+      "label": "Official embed: Egyptian Radio channel on YouTube, embedding enabled by the channel",
+      "holder": "Egyptian Radio (National Media Authority)",
+      "terms": "Played in YouTube's embedded player under YouTube's Terms of Service; no copy is stored or distributed",
+      "verifiedBy": "YouTube player response: author «الإذاعة المصرية», playableInEmbed true (checked 2026-10-19)",
+      "verifiedOn": "2026-10-18"
+     },
+     "attribution": "Fadila Tawfik (Abla Fadila), «غنوة وحدوتة»: «حُب الوطن». Egyptian Radio, official YouTube channel @EgyRadio.",
+     "file": null,
+     "transcript": [],
+     "embed": {
+      "provider": "youtube",
+      "videoId": "x0fnDixn_-w",
+      "channel": "@EgyRadio"
+     }
+    },
     {
      "id": "arch_ghenwa_wa_hadduta",
      "type": "archival",
@@ -147,11 +172,7 @@
      "transcript": [
       {
        "t": 0.0,
-       "text": "[تسجيل أصلي قديم — منيرة المهدية، أسطوانة حوالي ١٩١٤. مش بث حي من ١٩٧٣]"
-      },
-      {
-       "t": 6.0,
-       "text": "♪"
+       "text": "♪ منيرة المهدية ♪"
       }
      ]
     }
@@ -265,6 +286,30 @@
    "window": "any-after",
    "sources": [
     {
+     "id": "egyradio_tager_wel_shahat",
+     "type": "archival",
+     "title": "أبلة فضيلة — «غنوة وحدوتة»: التاجر والشحات",
+     "sourceUrl": "https://www.youtube.com/watch?v=a_uNSnFAFCQ",
+     "historicalDate": "Undated episode (programme on air since 1959); not presented as a 1973 broadcast",
+     "authenticity": "authentic-archival",
+     "license": {
+      "status": "cleared",
+      "label": "Official embed: Egyptian Radio channel on YouTube, embedding enabled by the channel",
+      "holder": "Egyptian Radio (National Media Authority)",
+      "terms": "Played in YouTube's embedded player under YouTube's Terms of Service; no copy is stored or distributed",
+      "verifiedBy": "YouTube player response: author «الإذاعة المصرية», playableInEmbed true (checked 2026-10-19)",
+      "verifiedOn": "2026-10-18"
+     },
+     "attribution": "Fadila Tawfik (Abla Fadila), «غنوة وحدوتة»: «التاجر والشحات». Egyptian Radio, official YouTube channel @EgyRadio.",
+     "file": null,
+     "transcript": [],
+     "embed": {
+      "provider": "youtube",
+      "videoId": "a_uNSnFAFCQ",
+      "channel": "@EgyRadio"
+     }
+    },
+    {
      "id": "arch_fadila_episode",
      "type": "archival",
      "title": "أبلة فضيلة، حلقة من «غنوة وحدوتة» (تاريخ الحلقة مش معروف)",
@@ -282,6 +327,38 @@
      "attribution": null,
      "file": null,
      "transcript": []
+    }
+   ]
+  },
+  "radio_song_c2": {
+   "title": "أغاني على الراديو",
+   "kind": "music",
+   "airDate": "1973-10-18",
+   "window": "any-after",
+   "sources": [
+    {
+     "id": "arch_munira_c1914",
+     "type": "archival",
+     "title": "تسجيل أصلي: منيرة المهدية — «Aldahre Kata Awsali»، أسطوانة بيضافون رقم ٢٣٠٤٥ (حوالي ١٩١٤)",
+     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Aldahre_Kata_Awsali_(c._1914).ogg",
+     "historicalDate": "c. 1914",
+     "authenticity": "authentic-archival",
+     "license": {
+      "status": "cleared",
+      "label": "Public domain (Wikimedia Commons)",
+      "holder": "Public domain",
+      "terms": "Public domain; recording c. 1914",
+      "verifiedBy": "Wikimedia Commons file page; content checked with an AudioSet classifier (female singing, Middle Eastern music)",
+      "verifiedOn": "2026-10-18"
+     },
+     "attribution": "Munira al-Mahdiyya, Baidaphon record no. 23045 (c. 1914). Via Wikimedia Commons (public domain).",
+     "file": "radio/arch_munira_c1914.mp3",
+     "transcript": [
+      {
+       "t": 0.0,
+       "text": "♪ منيرة المهدية ♪"
+      }
+     ]
     }
    ]
   }

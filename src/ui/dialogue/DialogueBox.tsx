@@ -39,7 +39,6 @@ export function DialogueBox({ speaker, text, expr, onNext, nodeId, outfit }:
         {isHoda && (
           <div className="relative shrink-0 w-16 h-20 sm:w-20 sm:h-24 rounded-xl overflow-hidden ring-2 ring-[#b8862e]/60 -mt-10 bg-[#e8d6b6] shadow-lg">
             <HodaPortrait expr={expr ?? 'neutral'} outfit={outfit} />
-            <span className="absolute bottom-0 inset-x-0 text-[8px] leading-3 text-center bg-black/45 text-white/80" dir="ltr">TEMP</span>
           </div>
         )}
         <div className="flex-1 min-w-0">

@@ -39,7 +39,7 @@ function cueFor(ic: IndexedChapter, s: GameState) {
 
 export const useGame = create<Store>((set, get) => {
   const settings = loadSettings();
-  setPrefs({ enabled: settings.sound, music: settings.musicVolume, sfx: settings.sfxVolume, radio: settings.radioVolume, radioMuted: settings.radioMuted });
+  setPrefs({ enabled: settings.sound, music: settings.musicVolume, sfx: settings.sfxVolume, ambience: settings.ambienceVolume, radio: settings.radioVolume, radioMuted: settings.radioMuted });
   return {
     screen: 'title',
     state: null,
@@ -89,7 +89,7 @@ export const useGame = create<Store>((set, get) => {
     updateSettings: (p) => {
       const settings = { ...get().settings, ...p };
       saveSettings(settings);
-      setPrefs({ enabled: settings.sound, music: settings.musicVolume, sfx: settings.sfxVolume, radio: settings.radioVolume, radioMuted: settings.radioMuted });
+      setPrefs({ enabled: settings.sound, music: settings.musicVolume, sfx: settings.sfxVolume, ambience: settings.ambienceVolume, radio: settings.radioVolume, radioMuted: settings.radioMuted });
       set({ settings });
     },
   };
