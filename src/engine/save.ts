@@ -7,14 +7,15 @@ const SETTINGS_KEY = 'beitna-fein:settings';
 export interface Settings {
   sound: boolean;
   musicVolume: number;   // 0..1
-  sfxVolume: number;     // 0..1 (effects + ambience)
+  sfxVolume: number;     // 0..1 (interaction effects)
+  ambienceVolume: number; // 0..1 (room tone, street, night)
   radioVolume: number;   // 0..1 (in-game radio broadcasts)
   radioMuted: boolean;
   subtitles: boolean;    // radio subtitles
   reducedMotion: boolean | null; // null = follow the OS setting
   textSpeed: 'slow' | 'normal' | 'instant';
 }
-export const DEFAULT_SETTINGS: Settings = { sound: true, musicVolume: 0.6, sfxVolume: 0.8, radioVolume: 0.9, radioMuted: false, subtitles: true, reducedMotion: null, textSpeed: 'normal' };
+export const DEFAULT_SETTINGS: Settings = { sound: true, musicVolume: 0.6, sfxVolume: 0.8, ambienceVolume: 0.7, radioVolume: 0.9, radioMuted: false, subtitles: true, reducedMotion: null, textSpeed: 'normal' };
 
 function storage(): Storage | null {
   try { return typeof localStorage === 'undefined' ? null : localStorage; } catch { return null; }

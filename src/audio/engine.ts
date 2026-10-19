@@ -1,4 +1,6 @@
-// Audio engine: Web Audio with three buses (music · ambience · sfx) under one master.
+// Audio engine: Web Audio with four buses (music · ambience · sfx · radio) under one master.
+// - Ambience sits under the effects; while the radio talks, ambience and music duck so every word stays clear.
+// - Music is used sparingly: a cue can be a one-shot (loop:false) or silence (file:null).
 // - Nothing is created until the first user gesture (autoplay policies on Chrome / Safari / iOS).
 // - Music and ambience crossfade; the same cue never restarts or stacks.
 // - "Exclusive" one-shots (radio, sewing…) cut the previous instance; long sounds fade on scene change.
@@ -6,14 +8,16 @@
 import manifest from './manifest.json';
 
 export type CueName = keyof typeof manifest;
-interface Cue { file: string; bus: 'music' | 'ambience' | 'sfx'; loop: boolean; gain: number; duration: number; exclusive: boolean }
+interface Cue { file: string | null; bus: 'music' | 'ambience' | 'sfx'; loop: boolean; gain: number; duration: number; exclusive: boolean }
 const CUES = manifest as Record<string, Cue>;
 
-export interface AudioPrefs { enabled: boolean; music: number; sfx: number; radio: number; radioMuted: boolean }
+export interface AudioPrefs { enabled: boolean; music: number; sfx: number; ambience?: number; radio: number; radioMuted: boolean }
 
 let ctx: AudioContext | null = null;
 let master: GainNode, musicBus: GainNode, ambBus: GainNode, sfxBus: GainNode, radioBus: GainNode, analyser: AnalyserNode;
-let prefs: AudioPrefs = { enabled: true, music: 0.6, sfx: 0.8, radio: 0.9, radioMuted: false };
+let prefs: AudioPrefs = { enabled: true, music: 0.6, sfx: 0.8, ambience: 0.7, radio: 0.9, radioMuted: false };
+let ducked = false;
+const DUCK = 0.45;   // ambience/music level while the radio is speaking
 const buffers = new Map<string, Promise<AudioBuffer | null>>();
 const failed = new Set<string>();
 const base = (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/';
@@ -47,15 +51,16 @@ function applyPrefs(time: number) {
   if (!ctx) return;
   const now = ctx.currentTime;
   master.gain.setTargetAtTime(prefs.enabled ? 1 : 0, now, time || 0.001);
-  musicBus.gain.setTargetAtTime(prefs.music, now, time || 0.001);
-  ambBus.gain.setTargetAtTime(prefs.sfx * 0.9, now, time || 0.001);
+  const d = ducked ? DUCK : 1;
+  musicBus.gain.setTargetAtTime(prefs.music * d, now, time || 0.001);
+  ambBus.gain.setTargetAtTime((prefs.ambience ?? prefs.sfx * 0.9) * d, now, time || 0.001);
   sfxBus.gain.setTargetAtTime(prefs.sfx, now, time || 0.001);
   radioBus.gain.setTargetAtTime(prefs.radioMuted ? 0 : prefs.radio, now, time || 0.001);
 }
 
 function load(name: string): Promise<AudioBuffer | null> {
   const cue = CUES[name];
-  if (!cue || !ctx) return Promise.resolve(null);
+  if (!cue || !cue.file || !ctx) return Promise.resolve(null);
   if (!buffers.has(name)) {
     const c = ctx;
     buffers.set(name, fetch(base + cue.file)
@@ -70,7 +75,7 @@ function load(name: string): Promise<AudioBuffer | null> {
 const live = new Map<string, { src: AudioBufferSourceNode; gain: GainNode }>();
 export function playSfx(name: string) {
   const cue = CUES[name];
-  if (!cue || !prefs.enabled) return;
+  if (!cue || !cue.file || !prefs.enabled) return;
   const c = ensureCtx(); if (!c) return;
   if (c.state === 'suspended') void c.resume();
   void load(name).then((buf) => {
@@ -103,7 +108,7 @@ const wanted: Record<'music' | 'ambience', string | null> = { music: null, ambie
 const XFADE = 2;
 
 export function setLoop(kind: 'music' | 'ambience', name: string | null, fade = 1.6) {
-  wanted[kind] = name && CUES[name] ? name : null;
+  wanted[kind] = name && CUES[name]?.file ? name : null;   // a cue without a file means silence
   if (!ctx) return;                               // will start after unlock()
   const cur = loops[kind];
   if (cur?.name === wanted[kind]) return;         // same cue: keep playing, no restart
@@ -121,6 +126,10 @@ function startLoop(kind: 'music' | 'ambience', name: string, fade: number) {
     if (!buf || loops[kind] !== st || !ctx) return;
     const now = ctx.currentTime;
     gain.gain.setValueAtTime(0, now); gain.gain.linearRampToValueAtTime(cue.gain, now + fade);
+    if (!cue.loop) {                                // one-shot music: plays once, then silence (no restart while still wanted)
+      const src = ctx.createBufferSource(); src.buffer = buf; src.connect(gain); src.start(now + 0.02); st.sources.push(src);
+      return;
+    }
     const schedule = (at: number, first: boolean) => {
       if (loops[kind] !== st || !ctx) return;
       const src = ctx.createBufferSource(); const g = ctx.createGain(); src.buffer = buf;
@@ -184,7 +193,8 @@ function startRadioAt(offset: number) {
   g.gain.setValueAtTime(0, ctx.currentTime); g.gain.linearRampToValueAtTime(1, ctx.currentTime + 0.25);
   src.start(0, Math.min(offset, radio.buf.duration - 0.05));
   const r = radio; r.src = src; r.gain = g; r.startedAt = ctx.currentTime - offset; r.offset = offset; r.playing = true;
-  src.onended = () => { if (radio === r && r.src === src) { r.playing = false; r.offset = r.buf ? r.buf.duration : 0; } };
+  setDuck(true);
+  src.onended = () => { if (radio === r && r.src === src) { r.playing = false; r.offset = r.buf ? r.buf.duration : 0; setDuck(false); } };
 }
 /** Start a radio file from the beginning (stops any previous broadcast). Resolves false if it can't load. */
 export async function playRadio(url: string): Promise<boolean> {
@@ -200,12 +210,14 @@ export function pauseRadio() {
   if (!ctx || !radio?.playing || !radio.src) return;
   radio.offset = ctx.currentTime - radio.startedAt; radio.playing = false;
   const s = radio.src; radio.src = null; try { s.stop(); } catch { /* noop */ }
+  setDuck(false);
 }
+function setDuck(on: boolean) { if (ducked !== on) { ducked = on; applyPrefs(0.35); } }
 export function resumeRadio() { if (radio && !radio.playing && radio.buf) startRadioAt(radio.offset >= radio.buf.duration - 0.1 ? 0 : radio.offset); }
 export function replayRadio() { if (radio?.buf) { pauseRadio(); startRadioAt(0); } }
 export function stopRadio(fade = 0.5) {
   if (!radio) return;
-  const r = radio; radio = null;
+  const r = radio; radio = null; setDuck(false);
   if (ctx && r.src && r.gain) { const now = ctx.currentTime; r.gain.gain.cancelScheduledValues(now); r.gain.gain.setValueAtTime(r.gain.gain.value, now); r.gain.gain.linearRampToValueAtTime(0, now + fade); try { r.src.stop(now + fade + 0.05); } catch { /* noop */ } }
 }
 export function radioState() {
@@ -219,7 +231,7 @@ export function audioStatus() {
   return {
     state: ctx?.state ?? 'not-created',
     music: loops.music?.name ?? null, ambience: loops.ambience?.name ?? null,
-    playing: [...live.keys()], failed: [...failed], prefs: { ...prefs }, radio: radioState(),
+    playing: [...live.keys()], failed: [...failed], prefs: { ...prefs }, radio: radioState(), ducked,
   };
 }
 export function outputLevel(): number {

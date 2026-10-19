@@ -24,19 +24,26 @@ describe('radio registry', () => {
       }
     }
   });
-  it('archival recordings: none cleared, none bundled, all labelled "Pending rights clearance"', () => {
-    for (const b of Object.values(live.broadcasts)) for (const s of b.sources.filter((x) => x.type === 'archival')) {
-      expect(s.license.status).toBe('pending');
-      expect(s.license.label).toBe('Pending rights clearance');
-      expect(s.file).toBeNull();
+  it('genuine recordings only: no recreation, placeholder or synthetic source exists anywhere', () => {
+    for (const b of Object.values(live.broadcasts)) for (const s of b.sources) {
+      expect(s.type, s.id).toBe('archival');
+      expect(['authentic-archival', 'unverified-archival']).toContain(s.authenticity);
+      if (s.license.status === 'pending') { expect(s.license.label).toBe('Pending rights clearance'); expect(s.file).toBeNull(); }
+      if (s.file) { expect(s.license.status).toBe('cleared'); expect(s.authenticity).toBe('authentic-archival'); expect(s.sourceUrl).toMatch(/^https:\/\//); expect(s.attribution).toBeTruthy(); }
     }
     const radioDir = fs.readdirSync(path.join(root, 'public/radio'));
-    expect(radioDir.filter((f) => !f.startsWith('ph_') && f !== 'registry.json')).toEqual([]);
+    expect(radioDir.filter((f) => !f.startsWith('arch_') && f !== 'registry.json')).toEqual([]);
+  });
+  it('broadcasts without a genuine recording stay silent; the song is a genuine old record', () => {
+    for (const id of ['news_1973_10_27', 'news_1973_11_03', 'kids_programme']) expect(playableSource(id, live), id).toBeNull();
+    const song = playableSource('radio_song', live)!;
+    expect(song.id).toBe('arch_munira_c1914');
+    expect(song.transcript[0].text).toMatch(/تسجيل أصلي/);   // clearly identified, never presented as live 1973 audio
   });
   it('a pending archival source is never chosen for playback', () => {
     for (const id of Object.keys(live.broadcasts)) {
       const s = playableSource(id, live);
-      if (s) { expect(s.license.status).toBe('cleared'); expect(s.type).not.toBe('archival'); }
+      if (s) { expect(s.license.status).toBe('cleared'); expect(s.authenticity).toBe('authentic-archival'); }
     }
   });
   it('every playable file exists', () => {
@@ -87,7 +94,7 @@ describe('local archive (unconfirmed rights)', () => {
   ] } } } as never;
   it('local-only recordings play only in the local build', () => {
     const merged = mergeOverlay(live, overlay);
-    expect(playableSource('news_1973_10_27', merged, false)?.id).toBe('ph_news_1973_10_27');   // public build → placeholder
+    expect(playableSource('news_1973_10_27', merged, false)).toBeNull();                          // public build → silent
     expect(playableSource('news_1973_10_27', merged, true)?.id).toBe('loc');                  // local build → archive copy
   });
   it('overlay sources still marked pending are ignored, even with a file', () => {

@@ -23,11 +23,11 @@ const advance = async (n) => { for (let i = 0; i < n; i++) { await p.click('[dat
 await advance(4); await wait(1500);
 let s = await st();
 check('door scene plays stairwell ambience', s.ambience === 'amb_stair', s.ambience);
-check('signal reaches the output', (await level()) > 0.002);
-// reach living room (music_home starts at c1_d12)
+check('signal reaches the output (quiet stairwell, measured over 3 s)', (await level(3000)) > 0.0015);
+// reach living room (c1_d12: the story asks for music_home, which is now silence; the room's ambience carries the scene)
 for (let i = 0; i < 30 && (await p.$eval('[data-screen=game]', (e) => e.dataset.nodeId)) !== 'c1_d13'; i++) await advance(1);
 await wait(2500); s = await st();
-check('living room: home music + day ambience', s.music === 'music_home' && s.ambience === 'amb_day', `${s.music} / ${s.ambience}`);
+check('living room: no music, day ambience (real recordings)', s.music === null && s.ambience === 'amb_day', `${s.music} / ${s.ambience}`);
 // mute via HUD
 await p.click('[aria-label="اقفلي الصوت"]'); await wait(800);
 const muted = await level(800);
@@ -38,18 +38,19 @@ check('unmute restores output', (await level()) > 0.002);
 await p.click('[data-menu]'); await p.waitForSelector('[data-pause]');
 await p.$eval('#vol-music', (el) => { const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; set.call(el, '20'); el.dispatchEvent(new Event('input', { bubbles: true })); });
 await p.$eval('#vol-sfx', (el) => { const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; set.call(el, '40'); el.dispatchEvent(new Event('input', { bubbles: true })); });
+await p.$eval('#vol-amb', (el) => { const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; set.call(el, '30'); el.dispatchEvent(new Event('input', { bubbles: true })); });
 await wait(300); s = await st();
-check('music / sfx volume applied separately', Math.abs(s.prefs.music - 0.2) < 0.01 && Math.abs(s.prefs.sfx - 0.4) < 0.01, JSON.stringify(s.prefs));
+check('music / effects / ambience volume applied separately', Math.abs(s.prefs.music - 0.2) < 0.01 && Math.abs(s.prefs.sfx - 0.4) < 0.01 && Math.abs(s.prefs.ambience - 0.3) < 0.01, JSON.stringify(s.prefs));
 // sound test buttons
 await p.click('[data-test-sfx]'); await wait(200);
 check('sound test: effect plays', (await st()).playing.includes('knock'));
 await p.click('[data-test-music]'); await wait(2200);
-check('sound test: music plays', (await st()).music === 'music_play');
+check('sound test: music plays', (await st()).music === 'music_title');
 await p.keyboard.press('Escape'); await wait(2200);
-check('closing the menu restores the story music', (await st()).music === 'music_home', (await st()).music);
+check('closing the menu restores the story (silence)', (await st()).music === null, (await st()).music);
 await p.reload({ waitUntil: 'networkidle0' });
 const saved = JSON.parse(await p.evaluate(() => localStorage.getItem('beitna-fein:settings')));
-check('audio preferences survive reload', saved.musicVolume === 0.2 && saved.sfxVolume === 0.4 && saved.sound === true, JSON.stringify(saved));
+check('audio preferences survive reload', saved.musicVolume === 0.2 && saved.sfxVolume === 0.4 && saved.ambienceVolume === 0.3 && saved.sound === true, JSON.stringify(saved));
 // exclusivity + transition: jump to the radio and let the scene change
 await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('beitna-fein:save')); s.node = 'c1_r_news1'; localStorage.setItem('beitna-fein:save', JSON.stringify(s)); });
 await p.reload({ waitUntil: 'networkidle0' }); await p.click('[data-continue]'); await wait(300);

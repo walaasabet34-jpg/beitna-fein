@@ -5,6 +5,7 @@ man = json.load(open(os.path.join(ROOT, 'src/audio/manifest.json')))
 bad = 0
 print(f"{'cue':12s} {'peak dBFS':>9s} {'RMS dBFS':>9s} {'DC':>7s} {'clip%':>6s} {'loop seam':>10s}")
 for k, m in man.items():
+    if not m['file']: print(f'{k:12s} (silence)'); continue
     raw = subprocess.run(['ffmpeg', '-loglevel', 'error', '-i', os.path.join(ROOT, 'public', m['file']), '-f', 's16le', '-ac', '1', '-ar', '44100', '-'], capture_output=True).stdout
     x = np.frombuffer(raw, '<i2').astype(float) / 32768
     peak = 20 * np.log10(np.max(np.abs(x)) + 1e-9); rms = 20 * np.log10(np.sqrt(np.mean(x ** 2)) + 1e-9)

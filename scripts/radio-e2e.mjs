@@ -21,12 +21,20 @@ for (const [vp, view] of Object.entries(VPS)) {
   await p.click('[data-continue]'); await wait(400);
   const opts = await p.$$eval('[data-choice]', (els) => els.map((e) => e.textContent.trim()));
   check('27 Oct: news, kids and songs offered', opts.length === 3, JSON.stringify(opts));
-  await p.click('[data-choice="0"]'); await wait(2500);
+  // news on 27 Oct: no genuine recording exists → the player says so and nothing plays
+  await p.click('[data-choice="0"]'); await wait(1500);
+  const unavail = await p.$eval('[data-radio]', (e) => e.textContent).catch(() => '');
+  check('27 Oct news: no genuine recording → silent, and the player says so', unavail.includes('مافيش تسجيل أصلي') && !(await p.evaluate(() => window.__beitnaAudio.audioStatus().radio.playing)), unavail.slice(0, 80));
+  // back to the radio menu and pick the song (a genuine 1914 record)
+  await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('beitna-fein:save')); s.node = 'c1_radio'; localStorage.setItem('beitna-fein:save', JSON.stringify(s)); });
+  await p.reload({ waitUntil: 'load' }); await wait(800); await p.click('[data-continue]'); await wait(400);
+  await p.click('[data-choice="2"]'); await wait(2500);
   check('player appears', !!(await p.$('[data-radio]')));
   const auth = await p.$eval('[data-radio-auth]', (e) => e.getAttribute('data-radio-auth')).catch(() => null);
-  check('labelled as placeholder (not authentic)', auth === 'placeholder', auth);
+  check('labelled as an authentic archival recording', auth === 'authentic-archival', auth);
   const sub1 = await p.$eval('[data-radio-subtitle]', (e) => e.textContent).catch(() => null);
-  check('subtitle shown', !!sub1, sub1 ?? '');
+  check('identified as an old record, not live 1973 audio', !!sub1 && sub1.includes('تسجيل أصلي') && sub1.includes('١٩١٤'), sub1 ?? '');
+  check('ambience/music duck while the radio plays', (await p.evaluate(() => window.__beitnaAudio.audioStatus().ducked)) === true);
   const lvl = async () => { let m = 0; for (let i = 0; i < 12; i++) { m = Math.max(m, await p.evaluate(() => window.__beitnaAudio.outputLevel())); await wait(80); } return m; };
   check('broadcast signal reaches output', (await lvl()) > 0.003);
   await p.click('[data-radio-cc]'); await wait(300);
@@ -48,15 +56,15 @@ for (const [vp, view] of Object.entries(VPS)) {
   check('pause', (await p.evaluate(() => window.__beitnaAudio.audioStatus().radio.playing)) === false);
   await p.click('[data-radio-info]'); await wait(200);
   const details = await p.$eval('[data-radio-details]', (e) => e.textContent).catch(() => '');
-  check('details show rights + pending-archival note', details.includes('Original') && details.includes('في انتظار تصريح الحقوق'));
+  check('details show rights + pending-archival note', details.includes('Public domain') && details.includes('Munira'));
   if (OUT) await p.screenshot({ path: `${OUT}/radio-${vp}.png` });
-  check('no archival file was ever requested', !fetched.some((u) => /radio\/(?!ph_|registry)/.test(u)), fetched.filter((u) => u.includes('/radio/')).map((u) => u.split('/').pop()).join(','));
+  check('no archival file was ever requested', !fetched.some((u) => /radio\/(?!arch_munira|registry)/.test(u)), fetched.filter((u) => u.includes('/radio/')).map((u) => u.split('/').pop()).join(','));
   // date gate in the UI: a Chapter 2 save (3 Nov) must not offer the 27 Oct bulletin
   await p.evaluate(() => { const s = JSON.parse(localStorage.getItem('beitna-fein:save')); Object.assign(s, { chapter: 'ch2', node: 'c2_radio_c', day: 1, slot: 1, scene: 'living', cast: [] }); localStorage.setItem('beitna-fein:save', JSON.stringify(s)); });
   await p.reload({ waitUntil: 'load' }); await wait(800); await p.click('[data-continue]'); await wait(400);
   await p.click('[data-choice="0"]'); await wait(1500);
   const title = await p.$eval('[data-radio]', (e) => e.textContent).catch(() => '');
-  check('3 Nov plays the 3 Nov bulletin', title.includes('نوفمبر'), title.slice(0, 60));
+  check('3 Nov: tunes the 3 Nov bulletin slot (silent, no genuine recording)', title.includes('نوفمبر') && title.includes('مافيش تسجيل أصلي'), title.slice(0, 90));
   // persistence
   await p.reload({ waitUntil: 'load' }); await wait(800);
   const st = JSON.parse(await p.evaluate(() => localStorage.getItem('beitna-fein:settings')));

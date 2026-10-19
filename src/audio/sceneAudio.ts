@@ -7,7 +7,7 @@ export function ambienceFor(s: GameState): string | null {
   switch (s.scene) {
     case 'door': return 'amb_stair';
     case 'night': case 'drawing': return 'amb_night';
-    case 'morning': return 'amb_day';
+    case 'morning': return 'amb_morning';
     default: return s.slot >= NIGHT_SLOT ? 'amb_night' : 'amb_day';
   }
 }
