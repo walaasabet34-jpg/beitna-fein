@@ -15,7 +15,7 @@ Relationship before illness is recorded separately from bedside choices. The mot
 - Existing Chapter 1/2 reachability and caring/harsh divergence tests pass. Previous Chapter 3 suitcase, day/night lighting and continuity regressions pass.
 - Explicit tests cover immediate and deferred meetings, messenger handover, refusal, reconsideration, unconditional medical care, pre-illness relationship memory, carried crossing-day memories, and removal of the suitcase art after delivery.
 - `npm run build`: passed (TypeScript and production Vite build).
-- Chromium full playthroughs on mobile: first-choice and random paths finish all six chapters (five chapter transitions), reload/continue and manual saving pass, RTL/layout pass, no JavaScript/console errors.
+- Three Chromium full playthroughs: mobile first-choice (301 steps), mobile random (285 steps), and desktop random with stage-hotspot interactions (265 steps). All finish six chapters (five transitions), reload/continue and manual saving pass, RTL/layout pass, no JavaScript/console errors.
 - Eight targeted Chromium scene checks: crossing, hospital, mother's arrival and post-handover at 390 and 1440 pixels. Stage, crossing clock, suitcase disappearance and horizontal layout pass. Screenshots of the new scenes were inspected.
 - Removed seven unreferenced legacy public files that caused the old audio/radio audit failures: `audio/latch.mp3`, `audio/music_home.mp3`, `audio/music_night.mp3`, `audio/music_play.mp3`, `radio/ph_kids.mp3`, `radio/ph_news.mp3`, `radio/ph_song.mp3`. Runtime manifest/registry entries are unchanged; no synthetic audio is added.
 
@@ -36,3 +36,4 @@ Both browser scripts accept `CHROMIUM_PATH=/path/to/chromium`. In this execution
 ## Release limits
 
 This is a complete playable narrative draft, not a claim of exhaustive historical or literary verification. Old grocery prices remain approximate, historical recordings without verified provenance/rights are not newly supplied, and character visuals remain the prototype's SVG style. PR #1 is not merged; main-branch conflicts must be reviewed separately. This change does not update the production site by merging into main.
+
