@@ -262,7 +262,12 @@
       "scene": "living",
       "cast": [],
       "music": null,
-      "sfx": "sewing"
+      "sfx": "sewing",
+      "effects": {
+        "setTime": {
+          "slot": 3
+        }
+      }
     },
     {
       "id": "c3_bag1",
@@ -471,8 +476,7 @@
       "music": "music_night",
       "effects": {
         "setTime": {
-          "day": 2,
-          "slot": 0
+          "slot": 4
         }
       }
     },
@@ -486,7 +490,13 @@
         "naima"
       ],
       "sfx": "steps",
-      "music": null
+      "music": null,
+      "effects": {
+        "setTime": {
+          "day": 2,
+          "slot": 0
+        }
+      }
     },
     {
       "id": "c3_naima",
