@@ -24,7 +24,7 @@ export function TitleScreen() {
       <div className="relative h-full flex flex-col items-center justify-center text-center px-6 gap-6">
         <div>
           <h1 className="font-ruqaa text-6xl sm:text-8xl text-paper drop-shadow-[0_4px_20px_rgba(0,0,0,.6)]">بيتنا فين؟</h1>
-          <p className="mt-3 text-paper/75 text-lg">القاهرة · أكتوبر ١٩٧٣</p>
+          <p className="mt-3 text-paper/75 text-lg">القاهرة · أكتوبر–ديسمبر ١٩٧٣</p>
         </div>
         <div className="flex flex-col gap-3 w-full max-w-xs">
           {save && ch && (

@@ -34,3 +34,7 @@ CHROMIUM_PATH=/path/to/chromium node scripts/chapter3-e2e.mjs
 ```
 
 PR remains unmerged. GitHub reports merge conflicts with main; those and the existing audio failures still need resolving before merge. This check does not certify the entire narrative or audiovisual quality.
+
+## Follow-up
+
+The six-chapter revision removes the unreferenced public audio leftovers and completes browser checks using an isolated Chromium extraction. See `FULL-STORY-VALIDATION.md` for current results; the results above describe the earlier fix commit.

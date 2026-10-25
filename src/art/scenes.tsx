@@ -298,7 +298,7 @@ export function LivingRoom({ s, expr, morning = false }: { s: GameState; expr: E
 
       {/* Hoda & the suitcase: placement itself is the feedback */}
       {bagOnTop && <Suitcase x={556} y={92} s={0.85} />}
-      {!onStage(s, 'hoda') && <Suitcase x={930} y={700} s={0.9} />}
+      {!onStage(s, 'hoda') && !['mother', 'messenger'].includes(String(s.flags.belongings_delivery)) && <Suitcase x={930} y={700} s={0.9} />}
       {onStage(s, 'hoda') && spot === 'underCloset' && (
         <g transform="translate(528 548) scale(1)"><Hoda pose="sit" expr={expr} doll={doll} outfit={outfit} /></g>
       )}
@@ -639,4 +639,23 @@ export function HomeworkScene({ s }: { s: GameState }) {
 }
 export function homeworkTargets(): Record<string, Rect> {
   return { tree: [850, 180, 170, 80], school: [600, 180, 180, 80], sea: [370, 180, 130, 80], family: [140, 320, 900, 260] };
+}
+
+/** Hospital corridor: Hoda is being treated off stage, not shown as a healthy living-room sprite. */
+export function HospitalScene({ s }: { s: GameState }) {
+  const night = s.slot >= 4;
+  return <g data-hospital>
+    <rect width="1200" height="800" fill={night ? '#59615f' : '#c4ccc5'} />
+    <rect y="460" width="1200" height="340" fill="#7d8d84" />
+    <rect y="610" width="1200" height="190" fill="#a79d8c" />
+    <path d="M0 610 H1200 M300 610 L100 800 M600 610 V800 M900 610 L1100 800" stroke="#716e65" strokeWidth="3" />
+    <rect x="660" y="120" width="240" height="490" fill="#5b665e" />
+    <rect x="680" y="140" width="200" height="450" fill="#a39c82" />
+    <rect x="725" y="180" width="110" height="130" fill={night ? '#3a494d' : '#ccd7cd'} />
+    <circle cx="850" cy="385" r="6" fill="#534e40" />
+    <path d="M170 520 H530 V555 H170Z M195 555 V650 M500 555 V650" fill="#6c4d39" stroke="#453b31" strokeWidth="8" />
+    <rect x="270" y="185" width="190" height="130" fill="#e4dcc4" stroke="#6f766d" strokeWidth="5" />
+    <path d="M300 220 H430 M300 250 H410 M300 280 H425" stroke="#959b88" strokeWidth="7" />
+    <rect x="0" y="0" width="1200" height="800" fill="url(#vignette)" />
+  </g>;
 }

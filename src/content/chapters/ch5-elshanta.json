@@ -1,0 +1,830 @@
+{
+  "id": "ch5",
+  "number": 6,
+  "title": "الشنطة",
+  "start": "g_start",
+  "init": {
+    "day": 1,
+    "slot": 0,
+    "money": 0,
+    "scene": "living"
+  },
+  "slotNames": [
+    "الصبح",
+    "الضهر",
+    "العصر",
+    "المغرب",
+    "بالليل"
+  ],
+  "dayNames": [
+    "",
+    "الكراسة",
+    "الأم",
+    "الموعد"
+  ],
+  "calendar": {
+    "1": "1973-12-07",
+    "2": "1973-12-10",
+    "3": "1973-12-12"
+  },
+  "calendarStatus": "provisional",
+  "nodes": [
+    {
+      "id": "g_start",
+      "type": "card",
+      "title": "الفصل السادس",
+      "subtitle": "الشنطة",
+      "cast": [],
+      "music": null,
+      "broadcast": null
+    },
+    {
+      "id": "g_home",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "٧ ديسمبر. بقالك أسبوع بتصحّي في نفس المعاد. النهارده حطيتي كبايتين، ورجّعتي واحدة قبل ما تمليها."
+    },
+    {
+      "id": "g_objects",
+      "type": "choice",
+      "prompt": "الطلبية قدامك، لكن عينك على حاجتها. تبدأي بإيه؟",
+      "options": [
+        {
+          "text": "تفتحي الكراسة.",
+          "goto": "g_notebook",
+          "effects": {
+            "flags": {
+              "grief_opened_book": true
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "تلمي الهدوم المطوية.",
+          "goto": "g_clothes",
+          "effects": {
+            "flags": {
+              "grief_folded": true
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "تسيبي كل حاجة مكانها النهارده.",
+          "goto": "g_leave",
+          "effects": {
+            "flags": {
+              "grief_left_room": true
+            },
+            "vars": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "g_notebook",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "في الكراسة حساب وإملا ورسم ناقص. مش كل صفحة رسالة ليكي. صفحة منها فيها علم صغير وتاريخ ٦ أكتوبر.",
+      "next": "g_war_memory"
+    },
+    {
+      "id": "g_clothes",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "فردتي الكم قبل ما تطويه، مع إنه مش هيتكرمش على دراعها تاني. تحت الهدوم كراستها.",
+      "next": "g_war_memory"
+    },
+    {
+      "id": "g_leave",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "سيبتي الحاجات مكانها. لما رجعتي للماكينة، الكراسة فضلت في طرف عينك.",
+      "next": "g_war_memory"
+    },
+    {
+      "id": "g_war_memory",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "افتكرتي يوم العبور، وصوت الناس اللي دخل من الشباك. اليوم نفسه كان فيه فرحة حقيقية، قبل ما تعرفوا اللي جاي.",
+      "variants": [
+        {
+          "if": {
+            "flag": "war_shared_joy"
+          },
+          "text": "افتكرتي كفها وهو بيخبط في كفك يوم العبور. يومها فرحتوا سوا. مش معنى اللي حصل بعدها إن الفرحة ماحصلتش."
+        },
+        {
+          "if": {
+            "flag": "war_return_promise"
+          },
+          "text": "افتكرتي يوم قلتي لها إن الرجوع قريب. سمعتي سؤالها تاني: قريب قد إيه؟"
+        },
+        {
+          "if": {
+            "flag": "war_silenced"
+          },
+          "text": "افتكرتي صوتك يوم الخبر: استني واسكتي. الخبر سمعتيه، لكن سؤالها يومها ماكمّلش."
+        }
+      ]
+    },
+    {
+      "id": "g_contact",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "١٠ ديسمبر. نعيمة خبطت. الست اللي ابنها وصل لها لقت أم هدى، وأوصلت لها رسالتكم. الاسم الكامل، واسم القريبة، والعنوان القديم اتطابقوا.",
+      "scene": "door",
+      "cast": [
+        "naima"
+      ],
+      "effects": {
+        "setTime": {
+          "day": 2,
+          "slot": 0
+        }
+      }
+    },
+    {
+      "id": "g_identity",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "قبل أي لقاء، نعيمة كلمتها وتأكدت من تفاصيل تعرفها عن بنتها ومن القريبة نفسها بعد تحسن صحتها. أم هدى ما اختفتش باختيارها: عنوان الشغل اتغيّر، ورسائلها ماوصلتش للناس اللي كانت عندهم البنت."
+    },
+    {
+      "id": "g_news",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "نعيمة قالت لها إن هدى مرضت وماتت. ماوعدتيش حد ينتظر بنتًا مش هترجع. الأم طلبت تشوفك وتشوف حاجتها."
+    },
+    {
+      "id": "g_meet",
+      "type": "choice",
+      "prompt": "إنتي قادرة تقابليها؟",
+      "options": [
+        {
+          "text": "«خليها تيجي. هقابلها.»",
+          "goto": "g_yes",
+          "effects": {
+            "flags": {
+              "mother_meeting": "now"
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "«مش النهارده. بعد يومين، وهكون موجودة.»",
+          "goto": "g_later",
+          "effects": {
+            "flags": {
+              "mother_meeting": "later"
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "«خدي إنتي الشنطة لها. مش قادرة أقابلها.»",
+          "goto": "g_send",
+          "effects": {
+            "flags": {
+              "mother_meeting": "messenger"
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "«مش هقابلها، ومش هقدر أسلّم الحاجات دلوقتي.»",
+          "goto": "g_refuse",
+          "effects": {
+            "flags": {
+              "mother_meeting": "refused"
+            },
+            "vars": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "g_yes",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "نعيمة هزت راسها. قفلتي باب الشقة ورجعتي للشنطة. الأم جاية تشوف أثر بنتها، مش تحكم على حزنك.",
+      "scene": "living",
+      "cast": [],
+      "next": "g_prepare"
+    },
+    {
+      "id": "g_later",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "حددتي يوم ١٢ ديسمبر. نعيمة بلغت الأم بالموعد، ورجعت قالت لك إنها هتيجي. اليومين مش هيخلّصوا الخوف، لكن ده موعد تقدري تستعدي له.",
+      "scene": "living",
+      "cast": [],
+      "next": "g_prepare"
+    },
+    {
+      "id": "g_send",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "نعيمة وافقت توصل الحاجات وتسأل الأم إذا كانت تحب تبعت لك رد. تسليم الشنطة مش مشروط بقدرتك على المقابلة.",
+      "scene": "living",
+      "cast": [],
+      "next": "g_prepare"
+    },
+    {
+      "id": "g_refuse",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "نعيمة قالت: «هقول لها إنك مش قادرة. بس دي حاجات بنتها، وهي طالبة تستلمها.» ماوافقتش تخبّي عنها العنوان، ولا تقول لها إن الشنطة ضاعت.",
+      "scene": "living",
+      "cast": [],
+      "next": "g_hold"
+    },
+    {
+      "id": "g_hold",
+      "type": "choice",
+      "prompt": "بعد كلام نعيمة:",
+      "options": [
+        {
+          "text": "تراجعي قرارك وتبعتي الحاجات معاها.",
+          "goto": "g_send",
+          "effects": {
+            "flags": {
+              "mother_meeting": "messenger",
+              "grief_reconsidered": true
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "تسمحي بالمقابلة، حتى لو مش عارفة هتقولي إيه.",
+          "goto": "g_yes",
+          "effects": {
+            "flags": {
+              "mother_meeting": "now",
+              "grief_reconsidered": true
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "تفضلي رافضة دلوقتي.",
+          "goto": "g_hold_end",
+          "effects": {
+            "flags": {
+              "belongings_delivery": "withheld"
+            },
+            "vars": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "g_hold_end",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "الأم عرفت الحقيقة، وعارفة إن حاجات بنتها عندك. نعيمة خرجت من غير الشنطة. قرارك النهارده ماقفلش طلب الأم، بس أجّل ردّك عليه.",
+      "next": "g_end_hold"
+    },
+    {
+      "id": "g_prepare",
+      "type": "choice",
+      "prompt": "تجهزي الشنطة إزاي؟",
+      "options": [
+        {
+          "text": "تحطي كل حاجتها؛ ماتحتفظيش بحاجة من غير سؤال.",
+          "goto": "g_all",
+          "effects": {
+            "flags": {
+              "keepsake_request": "none"
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "تحطي كل حاجتها وتطلبي من الأم الاحتفاظ برسمة، لو وافقت.",
+          "goto": "g_request",
+          "effects": {
+            "flags": {
+              "keepsake_request": "drawing"
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "تكتبي سطر عن كل حاجة تفتكريها، وتحطي الورقة مع الحاجات.",
+          "goto": "g_note",
+          "effects": {
+            "flags": {
+              "keepsake_request": "note",
+              "memory_note": true
+            },
+            "vars": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "g_all",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "حطيتي المشط والهدوم والكراسة. كل مرة تفتكري إنك خلصتي، تلاقي حاجة صغيرة لسه برّه.",
+      "next": "g_seam"
+    },
+    {
+      "id": "g_request",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "الرسمة دخلت الشنطة مع الباقي. كتبتي طلبك على ورقة؛ لو رفضت، هتفضل الرسمة معاها.",
+      "next": "g_seam"
+    },
+    {
+      "id": "g_note",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "كتبتي الحاجات اللي تعرفيها عنها، وسبتي مكان للحاجات اللي ماتعرفيهاش. الأم عاشت معاها سنين انتي ماشوفتيهاش.",
+      "next": "g_seam"
+    },
+    {
+      "id": "g_seam",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "جوه الشنطة اسمها بالقلم. أول مرة من زمان، قعدتي تبصي له من غير ما تدوري على حاجة تانية.",
+      "variants": [
+        {
+          "if": {
+            "flag": "memory_stitch"
+          },
+          "text": "جوه الشنطة أول حرفين مطرّزين. الخيط مشدود زيادة في حتة، وسايب في حتة. باقي الاسم لسه بالقلم."
+        },
+        {
+          "if": {
+            "flag": "memory_refused"
+          },
+          "text": "جوه الشنطة الاسم كله بالقلم. افتكرتي إيدها وهي بتبعد الإبرة لما قلتي إنك مش ناقصة شغل يتعاد."
+        }
+      ]
+    },
+    {
+      "id": "g_route",
+      "type": "branch",
+      "cases": [
+        {
+          "if": {
+            "flag": "mother_meeting",
+            "eq": "messenger"
+          },
+          "goto": "g_messenger"
+        },
+        {
+          "if": {
+            "flag": "mother_meeting",
+            "eq": "later"
+          },
+          "goto": "g_dec12"
+        }
+      ],
+      "else": "g_arrival"
+    },
+    {
+      "id": "g_dec12",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "١٢ ديسمبر. اليوم اللي حددتيه وصل. حطيتي كرسي تاني جنب الطبلية، وفتحتي الباب لما نعيمة خبطت.",
+      "effects": {
+        "setTime": {
+          "day": 3,
+          "slot": 0
+        }
+      },
+      "next": "g_arrival"
+    },
+    {
+      "id": "g_arrival",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "دخلت أم هدى ومعاها نعيمة. قالت اسم بنتها كاملًا قبل ما تقعد. حطيتي الشنطة بينكم، ومافيش حد مد إيده يفتحها.",
+      "scene": "living",
+      "cast": [
+        "mother",
+        "naima"
+      ],
+      "music": null
+    },
+    {
+      "id": "g_mother_ask",
+      "type": "line",
+      "speaker": "mother",
+      "text": "«احكيلي عنها هنا. كانت بتعمل إيه؟»"
+    },
+    {
+      "id": "g_relation",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "افتكرتي إنها كانت موجودة في الأوضة دي، أكتر من مجرد آخر أيام المرض.",
+      "variants": [
+        {
+          "if": {
+            "flag": "relationship_before_illness",
+            "eq": "warm"
+          },
+          "text": "عندك حاجات كتير تحكيها: طريقتها في السؤال، والحكاية اللي بتصحح لك فيها الاسم، وصوتها جنب الماكينة. كثرة الكلام ماقللتش غيابها."
+        },
+        {
+          "if": {
+            "flag": "relationship_before_illness",
+            "eq": "closed"
+          },
+          "text": "افتكرتي الأسئلة اللي وقفتيها بكلمة، والحاجات اللي ماورّيتهالكيش تاني. عندك كلام عنها، وفيه فراغات انتي عارفة سبب بعضها."
+        }
+      ]
+    },
+    {
+      "id": "g_account",
+      "type": "choice",
+      "prompt": "تختاري تحكي إزاي؟",
+      "options": [
+        {
+          "text": "تحكي حاجة صغيرة حقيقية، من غير تجميل دورك.",
+          "goto": "g_account_true",
+          "effects": {
+            "flags": {
+              "mother_account": "truth"
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "تعترفي إنك كنتي قاسية في مواقف ومش هتطلبي منها تسامحك.",
+          "goto": "g_account_fault",
+          "effects": {
+            "flags": {
+              "mother_account": "admitted"
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "«كانت كويسة معايا.» وتتفادي تفاصيل معاملتك.",
+          "goto": "g_account_hide",
+          "effects": {
+            "flags": {
+              "mother_account": "evasive"
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "«مش عارفة أتكلم دلوقتي.» وتعرضي عليها الكراسة.",
+          "goto": "g_account_silent",
+          "effects": {
+            "flags": {
+              "mother_account": "silent"
+            },
+            "vars": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "g_account_true",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "حكيتي عن سؤالها يوم العبور، وعن المشط اللي كانت بتدور عليه. الأم قالت: «كانت بتسيبه تحت أي ورقة قدامها.» دي عادة عرفتوها انتوا الاتنين.",
+      "next": "g_mother_seam"
+    },
+    {
+      "id": "g_account_fault",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "الأم سمعتك، وبعدين قالت: «أنا جاية أسمع عنها. مش قادرة أطمن حد دلوقتي.» سكتّي. ماطلبتيش منها رد تاني.",
+      "next": "g_mother_seam"
+    },
+    {
+      "id": "g_account_hide",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "«كويسة إزاي؟ كانت مبسوطة؟» بصّيتي للكراسة. الإجابة القصيرة ماقفلتش السؤال، والأم فضلت مستنية حاجة تعرف بيها أيام بنتها.",
+      "next": "g_mother_seam"
+    },
+    {
+      "id": "g_account_silent",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "فتحت الكراسة بهدوء. نعيمة فضلت قاعدة، والأم قلبت الصفحات من غير ما تطلب منك تشرحي كل صفحة.",
+      "next": "g_mother_seam"
+    },
+    {
+      "id": "g_mother_seam",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "فتحت الشنطة. مرّرت صباعها على الاسم وسألت: «هي اللي عملته؟»"
+    },
+    {
+      "id": "g_seam_answer",
+      "type": "choice",
+      "prompt": "تردّي عليها:",
+      "options": [
+        {
+          "text": "تقولي بالضبط إيه اللي هدى عملته وإنتي ساعدتي في إيه.",
+          "goto": "g_seam_truth",
+          "effects": {
+            "flags": {
+              "seam_answer": "truth"
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "تكتفي بهزة راس، وتسيبيها تبص.",
+          "goto": "g_seam_nod",
+          "effects": {
+            "flags": {
+              "seam_answer": "nod"
+            },
+            "vars": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "g_seam_truth",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "«هي اللي كتبت الاسم. لسه ماطرّزتوش.» صوتك طلع واطي.",
+      "variants": [
+        {
+          "if": {
+            "flag": "memory_stitch"
+          },
+          "text": "«هي. أنا ورّيتها أول حرفين، والباقي كانت هتكمّله.» ماقلتيش أكتر من اللي حصل."
+        }
+      ],
+      "next": "g_keepsake"
+    },
+    {
+      "id": "g_seam_nod",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "هزّيتي راسك. الأم فضلت بصّة للاسم، وانتي ماحاولتيش تملي السكوت.",
+      "next": "g_keepsake"
+    },
+    {
+      "id": "g_keepsake",
+      "type": "branch",
+      "cases": [
+        {
+          "if": {
+            "flag": "keepsake_request",
+            "eq": "drawing"
+          },
+          "goto": "g_ask_drawing"
+        }
+      ],
+      "else": "g_handover"
+    },
+    {
+      "id": "g_ask_drawing",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "سألتيها عن الرسمة. قالت: «خليني أخدها دلوقتي. أنا لسه ماشفتش كل حاجتها.» طلبك اتسمع، لكن الرسمة فضلت في الشنطة."
+    },
+    {
+      "id": "g_handover",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "سلّمتي الشنطة لأم هدى. قبل ما تقوم، قالت لك اسم الدلع اللي كانت بتناديها بيه وهي صغيرة. اسم ماسمعتيهوش من هدى.",
+      "effects": {
+        "flags": {
+          "belongings_delivery": "mother",
+          "mother_met": true
+        }
+      }
+    },
+    {
+      "id": "g_after",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "بعد ما مشيت، رجعتي للماكينة. الخيط لسه بنفس اللون. الكرسي التاني فاضي، والشنطة مش في ركنها.",
+      "cast": [],
+      "music": null,
+      "next": "g_end_met"
+    },
+    {
+      "id": "g_messenger",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "نعيمة استلمت الشنطة. قلتي لها تدي كل حاجة للأم، وتنقل طلبك لو فيه طلب. قفلتي الباب قبل ما تنزل آخر سلمة.",
+      "effects": {
+        "flags": {
+          "belongings_delivery": "messenger",
+          "mother_met": false
+        }
+      }
+    },
+    {
+      "id": "g_reply",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "نعيمة رجعت بعد يومين: «الحاجات وصلت. أمها خدت الكراسة والرسمة، وقالت لو حبيتي تحكيلها في يوم، أنا أعرف أوصّلك.»",
+      "effects": {
+        "setTime": {
+          "day": 3,
+          "slot": 0
+        }
+      }
+    },
+    {
+      "id": "g_messenger_after",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "لسه ممكن تقابليها يوم تاني، لكن ده ماحصلش في نهاية الحكاية دي. مكان الشنطة فاضي، والمشط مش على الرف.",
+      "next": "g_end_sent"
+    },
+    {
+      "id": "g_end_met",
+      "type": "end",
+      "title": "الشنطة خرجت",
+      "text": "أم هدى خرجت بحاجتها، وفاطمة فضلت مع الأيام اللي عاشتهم معاها. مش كل الذكريات بتحتاج حاجة تمسكيها بإيدك.",
+      "cast": [],
+      "music": null,
+      "memories": [
+        {
+          "if": {
+            "flag": "war_shared_joy"
+          },
+          "text": "يوم العبور، كفها خبط في كفك."
+        },
+        {
+          "if": {
+            "flag": "memory_stitch"
+          },
+          "text": "أول حرفين بالخيط، والباقي بالقلم."
+        },
+        {
+          "if": {
+            "flag": "memory_refused"
+          },
+          "text": "طلبت منك توريها الغرزة. الاسم فضل بالقلم."
+        },
+        {
+          "if": {
+            "flag": "made_doll"
+          },
+          "text": "عروسة من القصاقيص، عينيها مش قد بعض."
+        },
+        {
+          "if": {
+            "flag": "mother_account",
+            "eq": "admitted"
+          },
+          "text": "اعترفتي بقسوتك. الأم ماكانتش مطالبة تطمّنك."
+        }
+      ],
+      "variants": [
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "relationship_before_illness",
+                "eq": "closed"
+              },
+              {
+                "flag": "mother_account",
+                "eq": "admitted"
+              }
+            ]
+          },
+          "text": "قلتي الحقيقة، لكن المقابلة ما رجّعتش الأيام اللي كنتي تقدري تسمعيها فيها. الأم خدت حاجات هدى، وانتي رجعتي للماكينة من غير كلمة تريحك."
+        },
+        {
+          "if": {
+            "flag": "relationship_before_illness",
+            "eq": "closed"
+          },
+          "text": "أم هدى خرجت بالشنطة. فضلتي فاكرة سؤالها: كانت بتعمل إيه؟ في البيت حاجات كتير كنتي بتطلبي منها تسكت عنها، ومحدش هيحكيها لك دلوقتي."
+        },
+        {
+          "if": {
+            "flag": "relationship_before_illness",
+            "eq": "warm"
+          },
+          "text": "حكيتوا وضحكتوا مرة صغيرة وسط العياط. بعد ما أم هدى مشيت بالشنطة، لفيتي ناحية الكرسي اللي كانت هدى بتحب تقعد عليه. كنتي عايزة تحكيلها عن الزيارة."
+        }
+      ]
+    },
+    {
+      "id": "g_end_sent",
+      "type": "end",
+      "title": "وصلت",
+      "text": "وصلت حاجات هدى لأمها. فاطمة ماقدرتش تقابلها المرة دي. الطلبية لسه مستنياها، وأول غرزة مش راضية تطلع.",
+      "cast": [],
+      "music": null,
+      "memories": [
+        {
+          "if": {
+            "flag": "war_shared_joy"
+          },
+          "text": "يوم العبور، كفها خبط في كفك."
+        },
+        {
+          "if": {
+            "flag": "memory_stitch"
+          },
+          "text": "أول حرفين بالخيط، والباقي بالقلم."
+        },
+        {
+          "if": {
+            "flag": "memory_refused"
+          },
+          "text": "طلبت منك توريها الغرزة. الاسم فضل بالقلم."
+        },
+        {
+          "if": {
+            "flag": "made_doll"
+          },
+          "text": "عروسة من القصاقيص، عينيها مش قد بعض."
+        },
+        {
+          "if": {
+            "flag": "mother_account",
+            "eq": "admitted"
+          },
+          "text": "اعترفتي بقسوتك. الأم ماكانتش مطالبة تطمّنك."
+        }
+      ],
+      "variants": [
+        {
+          "if": {
+            "flag": "relationship_before_illness",
+            "eq": "closed"
+          },
+          "text": "الحاجات وصلت. نعيمة عرضت توصّلك بأمها لو حبيتي. قلتي مش دلوقتي. لما رجعتي للشغل، افتكرتي إنك قلتي لهدى نفس الجملة كتير."
+        },
+        {
+          "if": {
+            "flag": "relationship_before_illness",
+            "eq": "warm"
+          },
+          "text": "الحاجات وصلت لأمها. لسه مش قادرة تحكي عن هدى بصيغة الماضي. أخدتي بالك إنك سايبة كرسيها قريب من الماكينة، فسبتيه مكانه النهارده."
+        }
+      ]
+    },
+    {
+      "id": "g_end_hold",
+      "type": "end",
+      "title": "الشنطة لسه هنا",
+      "text": "الأم مستنية حاجات بنتها. فاطمة حطت الشنطة بعيد عن الباب. وجودها ما رجّعش هدى، وما أنهى طلب أمها.",
+      "cast": [],
+      "music": null,
+      "memories": [
+        {
+          "if": {
+            "flag": "war_shared_joy"
+          },
+          "text": "يوم العبور، كفها خبط في كفك."
+        },
+        {
+          "if": {
+            "flag": "memory_stitch"
+          },
+          "text": "أول حرفين بالخيط، والباقي بالقلم."
+        },
+        {
+          "if": {
+            "flag": "memory_refused"
+          },
+          "text": "طلبت منك توريها الغرزة. الاسم فضل بالقلم."
+        },
+        {
+          "if": {
+            "flag": "made_doll"
+          },
+          "text": "عروسة من القصاقيص، عينيها مش قد بعض."
+        },
+        {
+          "if": {
+            "flag": "mother_account",
+            "eq": "admitted"
+          },
+          "text": "اعترفتي بقسوتك. الأم ماكانتش مطالبة تطمّنك."
+        }
+      ],
+      "variants": [
+        {
+          "if": {
+            "flag": "relationship_before_illness",
+            "eq": "closed"
+          },
+          "text": "الشنطة لسه عندك، وطلب أمها لسه من غير إجابة. حطيتيها بعيد عن الباب. افتكرتي صوتك وإنتي بتقولي مش دلوقتي، وفضلتي واقفة مكانك."
+        },
+        {
+          "if": {
+            "flag": "relationship_before_illness",
+            "eq": "warm"
+          },
+          "text": "فضلتي ماسكة في الحاجات اللي كنتوا بتستخدموها سوا. لكن أمها برّه البيت مستنياها هي كمان. الشنطة ماقدرتش تملأ مكان هدى، حتى وإنتي رافضة تسيبيها."
+        }
+      ]
+    }
+  ]
+}
