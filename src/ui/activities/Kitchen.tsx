@@ -46,7 +46,7 @@ export function Kitchen({ p, s }: { p: KitchenParams; s: GameState }) {
   return (
     <div className="paper paper-edge rounded-2xl p-3 sm:p-4 fade-in" data-activity="kitchen">
       <div className="font-ruqaa text-xl text-ink mb-1">المطبخ</div>
-      <p className="text-sm text-ink/60 mb-3">اختاري لحد {arNum(p.maxPicks)} حاجات للعشا. اللي من البقال بينزل بالسَّبَت من البلكونة، وبيتدفع من فلوسك.</p>
+      <p className="text-sm text-ink/60 mb-3">اختاري لحد {arNum(p.maxPicks)} حاجات للوجبة. اللي من البقال بيتجاب بالسَّبَت، وبيتدفع من فلوسك.</p>
       {group('pantry', 'في البيت', 'ببلاش')}
       {group('grocer', 'من البقال', 'بالفلوس')}
       <div className="sticky -bottom-4 -mx-3 sm:-mx-4 px-3 sm:px-4 pb-1 paper flex items-center justify-between gap-3 mt-2 border-t border-ink/10 pt-3 rounded-b-2xl">

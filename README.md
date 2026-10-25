@@ -1,6 +1,6 @@
 # بيتنا فين؟ — Where Is Home?
 
-Playable story draft: **six connected chapters**, from 4 October to 12 December 1973: الشنطة → صوت الراديو → الكلمة → الخبر → لما ترجعي → الشنطة. The story includes childhood illness, death and grief.
+Playable story draft: **six connected chapters**, from 4 October to 4 December 1973: الشنطة → صوت الراديو → الكلمة → الخبر → لما ترجعي → الشنطة. The story includes childhood illness, death and grief.
 Mobile-first web prototype · React 18 + TypeScript + Vite + Tailwind · JSON narrative · LocalStorage saves.
 
 > All artwork is original 2D art drawn in SVG code (no on-screen "temporary" labels). Every sound is a **genuine recording** (see docs/AUDIO.md). No synthetic voices or synthesized music; cues with no genuine recording available stay silent.

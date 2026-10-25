@@ -268,7 +268,7 @@ export function LivingRoom({ s, expr, morning = false }: { s: GameState; expr: E
   const spot = hodaSpot(s);
   const doll = !!s.flags.made_doll;
   const meal = morning ? 'breakfast' : s.flags.cooked && slot >= 3 ? 'dinner' : 'none';
-  const bagOnTop = !!s.flags.bag_on_closet && !s.flags.bag_returned && !morning && s.chapter === 'ch1';
+  const bagOnTop = !!s.flags.bag_on_closet && !s.flags.bag_returned && !morning && s.chapter === 'ch1' && s.day === 1;
   const outfit = outfitOf(s);
 
   return (
@@ -301,7 +301,7 @@ export function LivingRoom({ s, expr, morning = false }: { s: GameState; expr: E
       {onStage(s, 'naima') && <Adult x={1030} y={235} color="#65715c" />}
       {/* Hoda & the suitcase: placement itself is the feedback */}
       {bagOnTop && <Suitcase x={556} y={92} s={0.85} />}
-      {!onStage(s, 'hoda') && !['mother', 'messenger'].includes(String(s.flags.belongings_delivery)) && <Suitcase x={930} y={700} s={0.9} />}
+      {!bagOnTop && !onStage(s, 'hoda') && !['mother', 'messenger'].includes(String(s.flags.belongings_delivery)) && <Suitcase x={930} y={700} s={0.9} />}
       {onStage(s, 'hoda') && spot === 'underCloset' && (
         <g transform="translate(528 548) scale(1)"><Hoda pose="sit" expr={expr} doll={doll} outfit={outfit} /></g>
       )}
@@ -319,7 +319,7 @@ export function LivingRoom({ s, expr, morning = false }: { s: GameState; expr: E
       )}
       {onStage(s, 'hoda') && spot === 'sewing' && (
         <g>
-          {!morning || !s.flags.bag_peeked ? <Suitcase x={1060} y={556} s={0.8} /> : null}
+          <Suitcase x={1060} y={556} s={0.8} />
           <g transform="translate(360 470) scale(0.95)"><Hoda pose="stand" expr={expr} doll={doll} outfit={outfit} /></g>
         </g>
       )}
@@ -336,7 +336,7 @@ export function LivingRoom({ s, expr, morning = false }: { s: GameState; expr: E
 
 export function livingTargets(s: GameState): Record<string, Rect> {
   const spot = hodaSpot(s);
-  const bagOnTop = !!s.flags.bag_on_closet && !s.flags.bag_returned && s.chapter === 'ch1';
+  const bagOnTop = !!s.flags.bag_on_closet && !s.flags.bag_returned && s.chapter === 'ch1' && s.day === 1;
   const hoda: Rect = spot === 'underCloset' ? [540, 560, 140, 220] : spot === 'corner' ? [1030, 570, 150, 220]
     : spot === 'sofa' ? [920, 340, 140, 220] : [370, 470, 150, 300];
   const suitcase: Rect = bagOnTop ? [550, 80, 90, 72] : spot === 'corner' ? [924, 686, 90, 70] : [1052, 540, 84, 64];
@@ -471,7 +471,7 @@ export function NightScene({ s, expr }: { s: GameState; expr: Expr }) {
         </g>
       )}
       {bagSpot !== 'closet' && bagSpot !== 'under' && (
-        <Suitcase x={isSofa ? 1070 : 900} y={isSofa ? 540 : 590} s={0.85} open={!!s.flags.bag_peeked} />
+        <Suitcase x={isSofa ? 1070 : 900} y={isSofa ? 540 : 590} s={0.85} open={['c1_peek1', 'c1_peek2', 'c1_peek3', 'c1_peek4', 'c2_cert1', 'c2_cert2', 'c2_cert3', 'c2_cert4', 'c2_cert_seen', 'c2_cert_seen2'].includes(s.node)} />
       )}
       {bagSpot === 'under' && <Suitcase x={isSofa ? 760 : 640} y={isSofa ? 600 : 640} s={0.7} />}
 
