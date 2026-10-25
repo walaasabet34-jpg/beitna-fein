@@ -15,7 +15,7 @@ try {
     page.on('pageerror', e => errors.push(e.message));
     for (const [chapter, node, day, slot, cast, flags] of [
       ['chwar', 'w_joy', 1, 2, ['hoda'], { war_shared_joy: true }],
-      ['ch4', 's_breath', 4, 2, [], {}],
+      ['ch4', 's_breath', 4, 2, ['hoda'], {}],
       ['ch5', 'g_arrival', 2, 0, ['mother', 'naima'], { hoda_died: true }],
       ['ch5', 'g_after', 2, 0, [], { hoda_died: true, belongings_delivery: 'mother' }],
     ]) {
@@ -28,9 +28,9 @@ try {
       await page.reload({ waitUntil: 'networkidle0' });
       await page.click('[data-continue]');
       await page.waitForSelector(`[data-node-id="${node}"]`);
-      if (node === 's_breath') assert(await page.$('[data-hospital]'));
+      if (node === 's_breath') assert(await page.$('[data-patient]'));
       if (node === 'g_after') assert.equal(await page.$('[data-stage] path[d="M26 6 Q26 -8 40 -8 L52 -8 Q66 -8 66 6"]'), null);
-      if (node === 'w_joy') assert.match(await page.$eval('[data-testid="clock"]', e => e.textContent), /العبور.*العصر/);
+      if (node === 'w_joy') assert.match(await page.$eval('[data-testid="clock"]', e => e.textContent), /06\/10.*العصر/);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
       assert.equal(overflow, false, `${width}/${node} overflows`);
       await page.screenshot({ path: `${out}/${width}-${node}.png` });

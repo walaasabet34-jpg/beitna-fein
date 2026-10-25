@@ -42,3 +42,7 @@ This is a fictional family story around documented historical events. Character 
 ## Remaining editorial limits
 
 Prices in the older chapters remain approximations; no exact purchasing-power claim is made. Dates of individual family events are fictional. Full historical and literary review is still appropriate before describing this as a finished historical release. Main-branch merge conflicts remain outside this narrative commit.
+
+## Publication revision
+
+See NARRATIVE-GUIDELINES.md for the revised contact chain, pre-illness mother's reply and 1–4 December ending. The approved version keeps the October–December setting. The alternative Suez-blockade/1974 storyline from Claude review (2) has not been adopted because it introduces historical assumptions that need separate verification.

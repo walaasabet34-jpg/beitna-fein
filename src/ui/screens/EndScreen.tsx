@@ -18,7 +18,7 @@ export function EndScreen({ node, s }: { node: EndNode; s: GameState }) {
           <p className="text-[18px] leading-9 text-ink mb-6">{text}</p>
           {memories.length > 0 && (
             <>
-              <div className="font-ruqaa text-xl text-rust mb-2">حاجات فضلت من أول يوم</div>
+              <div className="font-ruqaa text-xl text-rust mb-2">حاجات فضلت</div>
               <ul className="space-y-1.5 mb-6">
                 {memories.map((m, i) => <li key={i} className="text-[16px] text-[#4a392c] leading-8 flex gap-2"><span aria-hidden="true">✦</span>{m.text}</li>)}
               </ul>

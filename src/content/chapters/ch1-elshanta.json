@@ -7,7 +7,7 @@
     "day": 1,
     "slot": 1,
     "money": 35,
-    "scene": "door",
+    "scene": "landing",
     "vars": {
       "distress": 50
     }
@@ -21,9 +21,8 @@
   ],
   "dayNames": [
     "",
-    "اليوم الأول",
-    "اليوم التاني",
-    "اليوم التالت"
+    "04/10",
+    "05/10"
   ],
   "calendar": {
     "1": "1973-10-04",
@@ -39,42 +38,111 @@
       "تهجير أهالي السويس قبل أكتوبر 1973 (السنين اللي حصل فيها) — القصة بتقول 'من سنين' بس.",
       "السبت اللي بيتدلّى من البلكونة، والقلّة، والكستبان: تفاصيل شائعة، بس تتراجع لشقق القاهرة سنة 73."
     ],
-    "calendar": "PROVISIONAL — 27-28 أكتوبر 1973، لحد ما التحقق التاريخي يخلص (شوف docs/RESEARCH-FLAGS.md)."
+    "calendar": "Fictional family dates: 4–5 October 1973."
   },
   "nodes": [
     {
       "id": "c1_start",
       "type": "card",
       "sfx": "page",
-      "title": "الفصل الأول",
+      "title": "القاهرة · ٤ أكتوبر ١٩٧٣",
       "subtitle": "الشنطة",
-      "music": null
+      "music": null,
+      "cast": [
+        "hoda"
+      ]
     },
     {
       "id": "c1_d1",
       "type": "line",
-      "scene": "door",
+      "scene": "landing",
       "speaker": "narrator",
-      "text": "القاهرة، الخميس ٤ أكتوبر ١٩٧٣. قبل الحرب بيومين؛ فاطمة لسه ما تعرفش اللي جاي."
+      "text": "طالعة بالعيش وبكرة خيط. على بابك بنت قاعدة على شنطة."
     },
     {
       "id": "c1_d2",
       "type": "line",
-      "speaker": "narrator",
-      "text": "من الصبح وماكينة الخياطة ساكتة. فستان أم سيد لسه ناقصه الكُم الشمال."
+      "speaker": "hoda",
+      "text": "…سبعتاشر. تمنتاشر.",
+      "next": "intro_first"
+    },
+    {
+      "id": "intro_first",
+      "type": "choice",
+      "prompt": "",
+      "options": [
+        {
+          "text": "«بتعدّي السلم؟»",
+          "goto": "intro_count",
+          "effects": {
+            "flags": {
+              "first_words": "count"
+            },
+            "vars": {
+              "openness": 1
+            }
+          }
+        },
+        {
+          "text": "(تقعدي قريب منها وتحطي العيش على رجلك)",
+          "goto": "intro_bread",
+          "effects": {
+            "flags": {
+              "first_words": "sit"
+            },
+            "vars": {
+              "safety": 1
+            }
+          }
+        },
+        {
+          "text": "«إنتي مستنية مين؟»",
+          "goto": "intro_wait",
+          "effects": {
+            "flags": {
+              "first_words": "ask"
+            },
+            "vars": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "intro_count",
+      "type": "line",
+      "text": "عدّيته مرتين. نسيت أول مرة.",
+      "speaker": "hoda",
+      "next": "c1_d3"
+    },
+    {
+      "id": "intro_bread",
+      "type": "line",
+      "text": "ده من الفرن اللي تحت؟",
+      "speaker": "hoda",
+      "next": "c1_d3"
+    },
+    {
+      "id": "intro_wait",
+      "type": "line",
+      "text": "نعيمة. هي طالعة.",
+      "speaker": "hoda",
+      "next": "c1_d3"
     },
     {
       "id": "c1_d3",
       "type": "line",
-      "sfx": "knock",
       "speaker": "narrator",
-      "text": "وبعدين خبط على الباب. خبطتين صغيرين… وواحدة أتقل."
+      "text": "صوت شبشب على السلم. نعيمة سندت على الدرابزين.",
+      "cast": [
+        "hoda",
+        "naima"
+      ]
     },
     {
       "id": "c1_d4",
       "type": "line",
       "speaker": "naima",
-      "text": "افتحي يا فاطمة، أنا نعيمة. ومعايا الضيفة."
+      "text": "سبقتيني يا هدى؟ طب استني الشنطة ما تقعش."
     },
     {
       "id": "c1_d5",
@@ -85,38 +153,77 @@
           "door_open": true
         }
       },
-      "text": "على العتبة، جنب الحاجة نعيمة، واقفة بنت صغيرة. ضفيرتين، وشريطة حمرا بهتانة، وفستان أصفر عليه تراب السكة."
+      "text": "نعيمة حطت بقجة هدوم في إيدك. من جيبها طلعت ورقة بعنوان مشطوب."
     },
     {
       "id": "c1_d6",
       "type": "line",
       "speaker": "narrator",
-      "text": "وفي إيدها شنطة جلد بني، أكبر منها بشوية. ماسكاها بإيديها الاتنين."
+      "text": "البنت زحزحت الشنطة بعيد عن الباب. رجليها فضلت حواليها."
     },
     {
       "id": "c1_d7",
+      "type": "choice",
+      "prompt": "",
+      "options": [
+        {
+          "text": "«وسنية؟»",
+          "goto": "intro_sonia",
+          "effects": {
+            "flags": {
+              "knows_sonia": true
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "(تشاوري على العنوان)",
+          "goto": "intro_address",
+          "effects": {
+            "flags": {
+              "knows_address_gone": true
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "(تفتحي الباب)",
+          "goto": "c1_d7b"
+        }
+      ]
+    },
+    {
+      "id": "intro_sonia",
       "type": "line",
+      "text": "لسه في المستشفى. مش هتعرف تاخدها معاها دلوقتي.",
       "speaker": "naima",
-      "text": "دي هدى اللي كلمتك عليها. أمها من مهجّرين السويس. كانت سايباها مع قريبتها وهي بتتنقل تدور على شغل وسكن، والعنوان اللي عندنا مبقتش فيه. قريبتها دخلت المستشفى، ومفيش حد تاني يقدر يقعد بالبنت. أنا أعرف أمها، وانتي وافقتي تساعديني لحد ما نوصل لها."
+      "next": "c1_d7b"
+    },
+    {
+      "id": "intro_address",
+      "type": "line",
+      "text": "ناس تانية ساكنة. سيبت لهم اسمي، وهنسأل عند محل شغل أمها القديم.",
+      "speaker": "naima",
+      "next": "c1_d7b"
     },
     {
       "id": "c1_d7b",
       "type": "line",
       "speaker": "naima",
-      "text": "لحد ما العيلة تتلم تاني، هتقعد معاكي. ربنا يجبر بخاطرهم."
+      "text": "أسبوع يا فاطمة، لحد ما نوصل لأمها. أنا تحت لو احتجتي حاجة."
     },
     {
       "id": "c1_d8",
       "type": "line",
       "speaker": "naima",
-      "text": "سلّمي على خالتك فاطمة يا هدى."
+      "text": "سلّمي على خالتك فاطمة."
     },
     {
       "id": "c1_d9",
       "type": "line",
-      "speaker": "narrator",
+      "speaker": "hoda",
       "expr": "guarded",
-      "text": "هدى بصّت للبلاط. ولا كلمة."
+      "text": "هي مش خالتي."
     },
     {
       "id": "c1_greet",
@@ -124,7 +231,7 @@
       "prompt": "هتستقبليها إزاي؟",
       "options": [
         {
-          "text": "(تنزلي على ركبتك لحد ما عينك تبقى قد عينها) أهلاً يا هدى. أنا فاطمة.",
+          "text": "(تنزلي على ركبتك) «يبقى أنا فاطمة وبس.»",
           "effects": {
             "vars": {
               "trust": 4,
@@ -170,7 +277,7 @@
       "type": "line",
       "speaker": "hoda",
       "expr": "guarded",
-      "text": "…أهلاً."
+      "text": "…ماشي."
     },
     {
       "id": "c1_g_kneel2",
@@ -229,7 +336,10 @@
         }
       },
       "text": "هدى هزّت راسها. الحاجة نعيمة نزلت السلم، وصوت شبشبها فضل يبعد لحد ما اختفى.",
-      "sfx": "steps"
+      "sfx": "steps",
+      "cast": [
+        "hoda"
+      ]
     },
     {
       "id": "c1_d12",
@@ -238,7 +348,10 @@
       "speaker": "narrator",
       "text": "الباب اتقفل. والشقة بقت فجأة أوسع من العادة.",
       "music": "music_home",
-      "sfx": "door_close"
+      "sfx": "door_close",
+      "cast": [
+        "hoda"
+      ]
     },
     {
       "id": "c1_d13",
@@ -345,6 +458,13 @@
           "goto": "c1_talk"
         },
         {
+          "id": "buttons",
+          "label": "تفرزوا الزراير",
+          "target": "sewing",
+          "once": true,
+          "goto": "bond_buttons"
+        },
+        {
           "id": "bag",
           "target": "suitcase",
           "label": "الشنطة",
@@ -431,9 +551,19 @@
         {
           "id": "thimble",
           "if": {
-            "slot": {
-              "gte": 2
-            }
+            "any": [
+              {
+                "flag": "buttons_together"
+              },
+              {
+                "flag": "buttons_counted"
+              },
+              {
+                "slot": {
+                  "gte": 2
+                }
+              }
+            ]
           },
           "goto": "c1_ev_th1"
         },
@@ -635,6 +765,80 @@
       "speaker": "hoda",
       "text": "المشط! سهلة أوي. إنتي مابتعرفيش فوازير خالص؟",
       "expr": "laugh",
+      "next": "c1_hub"
+    },
+    {
+      "id": "bond_buttons",
+      "type": "line",
+      "text": "هدى جمعت الزراير الحمرا. حطيتي زرارين فوق بعض؛ اللون واحد، والمقاس مختلف.",
+      "speaker": "narrator",
+      "cast": [
+        "hoda"
+      ]
+    },
+    {
+      "id": "bond_buttons_pick",
+      "type": "choice",
+      "prompt": "«أعملهم تاني؟»",
+      "options": [
+        {
+          "text": "«جربي الصغير لوحده والكبير لوحده.»",
+          "goto": "bond_retry",
+          "effects": {
+            "flags": {
+              "buttons_together": true
+            },
+            "vars": {
+              "trust": 2,
+              "autonomy": 2
+            }
+          }
+        },
+        {
+          "text": "«أنا هفرز وإنتي عدّيهم.»",
+          "goto": "bond_count",
+          "effects": {
+            "flags": {
+              "buttons_counted": true
+            },
+            "vars": {
+              "safety": 2
+            }
+          }
+        },
+        {
+          "text": "«سيبيهم، الطلبية مستعجلة.»",
+          "goto": "bond_stop",
+          "effects": {
+            "flags": {
+              "buttons_stopped": true
+            },
+            "vars": {
+              "openness": -1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "bond_retry",
+      "type": "line",
+      "text": "جرّبت زرار فوق التاني. المرة دي دفعت الطبق ناحيتك تستني رأيك.",
+      "speaker": "narrator",
+      "next": "c1_hub"
+    },
+    {
+      "id": "bond_count",
+      "type": "line",
+      "text": "عدّتهم، وبعدين رجعت لأول صف: «استني، ده عدّيته مرتين.»",
+      "speaker": "narrator",
+      "next": "c1_hub"
+    },
+    {
+      "id": "bond_stop",
+      "type": "line",
+      "text": "بعدت الطبق عن إيدها. زرار صغير وقع؛ رجعته من غير كلام.",
+      "speaker": "narrator",
       "next": "c1_hub"
     },
     {
@@ -3578,7 +3782,7 @@
     {
       "id": "c1_m_breakfast",
       "type": "choice",
-      "prompt": "الفطار — فلوس الفستان لسه مش مضمونة لو الطلبية ما خلصتش. هتصرفي من اللي معاكي إزاي؟",
+      "prompt": "تفطروا إيه؟",
       "options": [
         {
           "text": "تجيبي فول وطعمية سخنة (٣ قروش). هدى هتفرح، بس الفلوس هتقل.",
@@ -4012,7 +4216,7 @@
           "if": {
             "flag": "kids_story"
           },
-          "text": "حكتلك حدوتة العصفورة اللي دوّرت على عش جديد."
+          "text": "حكتلك الحكاية اللي سمعتها في الراديو."
         }
       ],
       "nextChapterTitle": "الفصل التاني: صوت الراديو",

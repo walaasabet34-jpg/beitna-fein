@@ -28,7 +28,7 @@ describe('engine', () => {
     expect(evaluate({ any: [{ money: { gte: 11 } }, { var: 'trust', gte: 99 }] }, s)).toBe(false);
   });
   it('a "once" option disappears after use', () => {
-    let s = base;
+    let s = enter(ic, base, 'c1_greet');
     while (s.node !== 'c1_greet') s = advance(ic, s);
     const opt = visibleOptions(getNode(ic, 'c1_greet'), s)[0];
     s = choose(ic, s, opt);

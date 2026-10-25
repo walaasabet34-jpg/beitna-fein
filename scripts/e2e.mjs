@@ -46,7 +46,7 @@ for (const run of RUNS.slice(Number(process.env.E2E_FROM ?? 0), Number(process.e
   page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(`console.${m.type()}: ${m.text()}`); });
 
   await page.goto(URL, { waitUntil: 'networkidle0' });
-  await page.evaluate(() => localStorage.clear());
+  await page.evaluate(() => { localStorage.clear(); localStorage.setItem('beitna-fein:settings', JSON.stringify({ textSpeed: 'instant', sound: false, reducedMotion: true })); });
   await page.reload({ waitUntil: 'networkidle0' });
   const tag = `${run.vp}-${run.policy}-${run.seed}`;
   if (process.env.E2E_TRACE) console.log('before title shot'); await snap(page, `${OUT}/${tag}-00-title.png`);
@@ -86,7 +86,7 @@ for (const run of RUNS.slice(Number(process.env.E2E_FROM ?? 0), Number(process.e
 
     const key = info.id.slice(0, 2) + '-' + info.type + (/draw|hw/.test(info.id) ? '-pad' : '') + (/_m|_d2|_out/.test(info.id) ? '-day2' : '') + (/_d\d|_leave|_return|_naima|_un\d/.test(info.id) && info.type === 'line' ? '-door' : '') + (/night|cert|sleep/.test(info.id) ? '-night' : '') + (/teacher/.test(info.id) ? '-school' : '') + (/radio|r_news|r_kids|kids/.test(info.id) ? '-radio' : '');
     TR('evaluated ' + info.id);
-    if (!shot.has(key)) { TR('shot'); shot.add(key); await new Promise((res) => setTimeout(res, 900)); await snap(page, `${OUT}/${tag}-${String(shot.size).padStart(2, '0')}-${key}-${info.id}.png`); }
+    if (!process.env.E2E_NO_SHOTS && !shot.has(key)) { TR('shot'); shot.add(key); await new Promise((res) => setTimeout(res, 900)); await snap(page, `${OUT}/${tag}-${String(shot.size).padStart(2, '0')}-${key}-${info.id}.png`); }
 
     if (run.reloadAt && steps === run.reloadAt) {
       await page.reload({ waitUntil: 'networkidle0' });
@@ -179,5 +179,5 @@ for (const run of RUNS.slice(Number(process.env.E2E_FROM ?? 0), Number(process.e
 }
 await browser.close();
 console.log(JSON.stringify(results, null, 2)); console.log('screenshots skipped (renderer stall):', skippedShots);
-const bad = results.filter((x) => 'ended' in x && (!x.ended || x.errors.length || x.overflow || !x.rtlOk || x.reloadOk === false || !x.menuOk));
+const bad = results.filter((x) => 'ended' in x && (!x.ended || x.chapterTransitions !== 5 || x.errors.length || x.overflow || !x.rtlOk || x.reloadOk === false || !x.menuOk));
 process.exit(bad.length ? 1 : 0);

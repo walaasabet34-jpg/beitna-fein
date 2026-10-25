@@ -96,7 +96,7 @@ describe('complete story', () => {
     grief = enter(c5, grief, 'g_relation');
     const relation = getNode(c5, grief.node);
     if (relation.type !== 'line') throw new Error();
-    expect(resolveLine(relation, grief).text).toContain('الأسئلة اللي وقفتيها');
+    expect(resolveLine(relation, grief).text).toContain('أمها فضلت مستنية');
   });
 
   it('supports immediate/deferred meeting, messenger, refusal and reconsideration without withholding the death news', () => {

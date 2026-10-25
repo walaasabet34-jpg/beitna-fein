@@ -5,6 +5,7 @@ import { NIGHT_SLOT } from '../engine/core';
 export function ambienceFor(s: GameState): string | null {
   if (s.ambience !== undefined && s.ambience !== null) return s.ambience;
   switch (s.scene) {
+    case 'sickroom': return null;
     case 'hospital': return null;
     case 'door': return 'amb_stair';
     case 'night': case 'drawing': return 'amb_night';

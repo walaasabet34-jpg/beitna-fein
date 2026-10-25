@@ -18,17 +18,17 @@
   ],
   "dayNames": [
     "",
-    "الغرزة",
-    "الكشف",
-    "الحصبة",
-    "المستشفى",
-    "الرجوع"
+    "18/11",
+    "19/11",
+    "22/11",
+    "30/11",
+    "30/11"
   ],
   "calendar": {
     "1": "1973-11-18",
     "2": "1973-11-19",
     "3": "1973-11-22",
-    "4": "1973-11-27",
+    "4": "1973-11-30",
     "5": "1973-11-30"
   },
   "calendarStatus": "provisional",
@@ -118,7 +118,92 @@
       "id": "s_ordinary",
       "type": "line",
       "speaker": "narrator",
-      "text": "١٨ نوفمبر. الخيط اللي عند نعيمة لسه ماجابش رد مؤكد. هدى قاعدة جنب الماكينة، بتحاول تكتب اسمها على حتة قماش جوه الشنطة."
+      "text": "هدى كاتبة اسمها على قماش جوه الشنطة. نعيمة خبطت ومعاها جواب.",
+      "next": "mother_reply"
+    },
+    {
+      "id": "mother_reply",
+      "type": "line",
+      "text": "«يا هدى، جوابك وصل. مشمش لسه بينام فوق الدولاب؟ ردي على العنوان ده. هاجيلك أول الشهر.»",
+      "speaker": "narrator",
+      "scene": "paper",
+      "cast": [],
+      "effects": {
+        "flags": {
+          "mother_contacted": true
+        },
+        "vars": {}
+      }
+    },
+    {
+      "id": "mother_reply_hoda",
+      "type": "line",
+      "text": "هي فاكرة مشمش!",
+      "speaker": "hoda",
+      "scene": "living",
+      "cast": [
+        "hoda"
+      ]
+    },
+    {
+      "id": "mother_reply_pick",
+      "type": "choice",
+      "prompt": "هدى مدت لك القلم.",
+      "options": [
+        {
+          "text": "«اكتبي لها إنتي. هاتي الورقة وأنا أمسكها.»",
+          "goto": "mother_write",
+          "effects": {
+            "flags": {
+              "letter_started": true
+            },
+            "vars": {
+              "trust": 2
+            }
+          }
+        },
+        {
+          "text": "«نملي على نعيمة لما تفضى.»",
+          "goto": "mother_dictate",
+          "effects": {
+            "flags": {
+              "letter_dictated": true
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "«نرد بعد ما أخلص الكم.»",
+          "goto": "mother_postpone",
+          "effects": {
+            "flags": {
+              "letter_delayed": true
+            },
+            "vars": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "mother_write",
+      "type": "line",
+      "text": "كتبت أول سطر بسرعة، وبعدين سألتك عن شكل كلمة.",
+      "speaker": "narrator",
+      "next": "s_stitch"
+    },
+    {
+      "id": "mother_dictate",
+      "type": "line",
+      "text": "هدى قالت الجملة، ونعيمة كتبتها. رجعت البنت تبص على اسمها في الشنطة.",
+      "speaker": "narrator",
+      "next": "s_stitch"
+    },
+    {
+      "id": "mother_postpone",
+      "type": "line",
+      "text": "نعيمة سابت عنوان الرد عندك. الجواب اتبعت معاها تاني يوم.",
+      "speaker": "narrator",
+      "next": "s_stitch"
     },
     {
       "id": "s_stitch",
@@ -191,7 +276,7 @@
       "id": "s_cough",
       "type": "line",
       "speaker": "narrator",
-      "text": "بالليل كحت كذا مرة، وقالت إنها بردانة. قستي سخونتها وطلبتي من نعيمة تساعدك توصلي لطبيب.",
+      "text": "بالليل كحت كذا مرة. لما حطيتي إيدك على جبهتها، طلبتي من نعيمة تنادي الطبيب.",
       "effects": {
         "setTime": {
           "day": 1,
@@ -203,25 +288,92 @@
       "id": "s_doctor",
       "type": "line",
       "speaker": "narrator",
-      "text": "تاني يوم الطبيب كشف عليها. قال تفضل في البيت بعيد عن الأطفال، ويتابع حالتها. رجعتي بالملاحظات اللي قالها، وفضلتي تراقبي تعبها.",
+      "text": "كشف عليها وطلب المتابعة والراحة بعيد عن الأطفال. هدى كانت مستنية يخلص عشان تقوم من السرير.",
       "effects": {
         "setTime": {
           "day": 2,
           "slot": 0
         }
-      }
+      },
+      "scene": "sickroom",
+      "cast": [
+        "hoda"
+      ]
     },
     {
       "id": "s_rash",
       "type": "line",
       "speaker": "narrator",
-      "text": "بعد كام يوم ظهر طفح. الطبيب شخّص حصبة. الكحة والسخونية ماكانوش مجرد برد. نعيمة فضلت تسأل عن الأم، من غير ما تدخل حد يزور هدى أو يخالطها.",
+      "text": "الطفح ظهر. الطبيب قال حصبة، وطلب تتابعوا أي صعوبة في النفس.",
       "effects": {
         "setTime": {
           "day": 3,
           "slot": 0
         }
-      }
+      },
+      "scene": "sickroom",
+      "cast": [
+        "hoda"
+      ],
+      "next": "sick_activity"
+    },
+    {
+      "id": "sick_activity",
+      "type": "choice",
+      "prompt": "«زهقت من القعدة.»",
+      "options": [
+        {
+          "text": "(تحطي طبق الزراير على الترابيزة القريبة)",
+          "goto": "sick_buttons",
+          "effects": {
+            "flags": {
+              "sick_buttons": true
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "(تفتحي الكراسة على صفحة فاضية)",
+          "goto": "sick_letter",
+          "effects": {
+            "flags": {
+              "letter_to_mother": true
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "«نرتاح شوية، ونكمّل بعدين.»",
+          "goto": "sick_rest",
+          "effects": {
+            "flags": {
+              "sick_rest": true
+            },
+            "vars": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "sick_buttons",
+      "type": "line",
+      "text": "عدّت صفًا صغيرًا، وبعدين زقّت الطبق: «كفاية.» شلتيه من قدامها.",
+      "speaker": "narrator",
+      "next": "s_company"
+    },
+    {
+      "id": "sick_letter",
+      "type": "line",
+      "text": "«اكتبي إن الكحة بتصحيني. وقولي لها تيجي.» هدى اتأكدت إن الورقة مش هتترمي.",
+      "speaker": "narrator",
+      "next": "s_company"
+    },
+    {
+      "id": "sick_rest",
+      "type": "line",
+      "text": "سحبت الغطا لحد رقبتها، وطلبت تخلي الباب موارب.",
+      "speaker": "narrator",
+      "next": "s_company"
     },
     {
       "id": "s_company",
@@ -289,7 +441,7 @@
       "id": "s_search",
       "type": "line",
       "speaker": "narrator",
-      "text": "نعيمة قالت إن معارف ابنها وصلوا لست كانت بتشتغل مع أم هدى. سايبين رسالة بمكان البنت، ومستنيين يلاقوا عنوان الأم الحالي."
+      "text": "بعتي خبر تعبها على عنوان أمها. نعيمة سألت عند المحل عن وسيلة أسرع لو احتجتوا حد يبلغها."
     },
     {
       "id": "s_mother",
@@ -297,7 +449,7 @@
       "prompt": "هدى سألت: «حد سأل عليّا؟»",
       "options": [
         {
-          "text": "تقوليلها إن فيه ناس بتسأل، ولسه مفيش خبر مؤكد.",
+          "text": "«بعتنا لها إنك تعبانة. أول ما ترد هقولك.»",
           "goto": "s_honest",
           "effects": {
             "flags": {
@@ -309,7 +461,7 @@
           }
         },
         {
-          "text": "«هقولك أول ما يوصل خبر أكيد.»",
+          "text": "«عندها عنواننا دلوقتي.»",
           "goto": "s_wait",
           "effects": {
             "flags": {
@@ -319,7 +471,7 @@
           }
         },
         {
-          "text": "«ماما جاية قريب.» رغم إنك مش عارفة.",
+          "text": "«هتيجي قريب، متقلقيش.»",
           "goto": "s_false",
           "effects": {
             "flags": {
@@ -333,31 +485,33 @@
     {
       "id": "s_honest",
       "type": "line",
-      "speaker": "narrator",
-      "text": "«يعني لسه؟» قلتي: «لسه.» طلبت المشط، عشان شعرها مش مريحها.",
+      "speaker": "hoda",
+      "text": "اكتبي لها تجيب المشط. بتاعي أسنانه مش حلوة.",
       "next": "s_breath"
     },
     {
       "id": "s_wait",
       "type": "line",
-      "speaker": "narrator",
-      "text": "«طيب ماتنسيش.» قلتي إنك مش هتنسي. طلبت المشط، عشان شعرها مش مريحها.",
+      "speaker": "hoda",
+      "text": "طب اكتبي العنوان كبير، عشان تقراه.",
       "next": "s_breath"
     },
     {
       "id": "s_false",
       "type": "line",
       "speaker": "narrator",
-      "text": "«يبقى تجيب المشط بتاعي معاها.» افتكرتي إن المشط قدامك على الرف. ماعرفتيش تكمّلي الجملة.",
+      "text": "هدى سحبت الجواب جنبها، وسألتك: قريب قد إيه؟",
       "next": "s_breath"
     },
     {
       "id": "s_breath",
       "type": "line",
       "speaker": "narrator",
-      "text": "٢٧ نوفمبر. نفسها بقى أصعب وحالتها ساءت. طلبتوا مساعدة طبية عاجلة واتنقلت المستشفى. الطبيب شرح إن عندها التهاب رئوي شديد من مضاعفات الحصبة.",
+      "text": "نفسها بقى أصعب. اتنقلت المستشفى للعلاج من التهاب رئوي شديد بعد الحصبة.",
       "scene": "hospital",
-      "cast": [],
+      "cast": [
+        "hoda"
+      ],
       "music": null,
       "ambience": null,
       "effects": {
@@ -365,13 +519,27 @@
           "day": 4,
           "slot": 2
         }
+      },
+      "next": "s_urgent"
+    },
+    {
+      "id": "s_urgent",
+      "type": "line",
+      "text": "نعيمة خرجت من عند الطبيب: «ابني رايح يبلّغها دلوقتي. معاه اسم المستشفى.»",
+      "speaker": "narrator",
+      "effects": {
+        "flags": {
+          "mother_urgent_message": true
+        },
+        "vars": {}
       }
     },
     {
       "id": "s_waiting",
       "type": "line",
       "speaker": "narrator",
-      "text": "بقيتي بين انتظار الطبيب والرجوع للشقة تجيبي حاجتها. العلاج شغّال، لكن الطبيب ماوعدكيش بالشفاء. سألتي عن ميعاد الزيارة الجاية، وقعدتي على الكرسي في الممر."
+      "text": "سمحوا لك بالزيارة. الممرضة قالت تجيبي المسموح من حاجتها وتسألي قبل ما تدخليه.",
+      "cast": []
     },
     {
       "id": "s_bag",
@@ -389,11 +557,24 @@
           }
         },
         {
-          "text": "العروسة القماش لو لسه موجودة؛ وإلا كراستها.",
+          "text": "العروسة اللي عملتوها.",
           "goto": "s_doll",
           "effects": {
             "flags": {
               "hospital_comfort": true
+            },
+            "vars": {}
+          },
+          "if": {
+            "flag": "made_doll"
+          }
+        },
+        {
+          "text": "الكستبان من درج الماكينة.",
+          "goto": "s_thimble",
+          "effects": {
+            "flags": {
+              "hospital_thimble": true
             },
             "vars": {}
           }
@@ -440,10 +621,21 @@
       "next": "s_bedside"
     },
     {
+      "id": "s_thimble",
+      "type": "line",
+      "text": "لفّيتي الكستبان في حتة قماش صغيرة وسألتي الممرضة قبل ما تدخليه.",
+      "speaker": "narrator",
+      "next": "s_bedside"
+    },
+    {
       "id": "s_bedside",
       "type": "line",
-      "speaker": "narrator",
-      "text": "في وقت سمحوا لك تقعدي معاها، سألتك عن البيت. لسه بتتكلم عن رجوعها، مش عن وداع. قالت إن كراستها ماتترميش مع القصاقيص."
+      "speaker": "hoda",
+      "text": "الكراسة؟ اللي غلافها أزرق.",
+      "scene": "hospital",
+      "cast": [
+        "hoda"
+      ]
     },
     {
       "id": "s_reply",
@@ -473,7 +665,7 @@
           }
         },
         {
-          "text": "تحاولي تعتذري عن مرة زعقتي لها فيها.",
+          "text": "«أنا زعقت لك يوم الزراير…»",
           "goto": "s_reply_sorry",
           "effects": {
             "flags": {
@@ -495,33 +687,103 @@
       "id": "s_reply_quiet",
       "type": "line",
       "speaker": "narrator",
-      "text": "قعدتي في المكان اللي سمحوا لك بيه. ماكانش عندك كلام يصلّح التعب، لكن ماقمتيش قبل ما تحتاج ترتاح.",
+      "text": "حطيتي الكراسة في المكان اللي شاورِت عليه، وقعدتي لحد ما طلبت ترتاح.",
       "next": "s_decline"
     },
     {
       "id": "s_reply_sorry",
       "type": "line",
-      "speaker": "narrator",
-      "text": "بدأتي: «أنا ساعات بتعصب…» هدى كانت مرهقة، ومردّتش. وقفتي الكلام. مش مطلوب منها تطمّنك أو تسامحك وهي تعبانة.",
+      "speaker": "hoda",
+      "text": "نتكلم بعدين. أنا عايزة أنام.",
       "next": "s_decline"
     },
     {
       "id": "s_decline",
       "type": "line",
-      "speaker": "narrator",
-      "text": "على مدار الأيام التالية حالتها فضلت شديدة رغم العلاج. في ٣٠ نوفمبر، الطبيب خرج وقال لك إن هدى ماتت.",
+      "speaker": "doctor",
+      "text": "أنا آسف يا مدام فاطمة. هدى ماتت رغم العلاج.",
       "scene": "hospital",
-      "cast": [],
+      "cast": [
+        "doctor"
+      ],
       "music": null,
       "effects": {
         "setTime": {
           "day": 5,
-          "slot": 0
+          "slot": 4
         },
         "flags": {
           "hoda_died": true
         }
-      }
+      },
+      "next": "s_collect"
+    },
+    {
+      "id": "s_collect",
+      "type": "choice",
+      "prompt": "الممرضة ناولتك حاجتها.",
+      "options": [
+        {
+          "text": "(تمسكي الكراسة)",
+          "goto": "s_collect_book",
+          "effects": {
+            "flags": {
+              "received_belongings": "book"
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "(تفتحي الشنطة وتحطي الحاجات)",
+          "goto": "s_collect_bag",
+          "effects": {
+            "flags": {
+              "received_belongings": "bag"
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "(تطلبي من نعيمة تمسكها لحظة)",
+          "goto": "s_collect_naima",
+          "effects": {
+            "flags": {
+              "received_belongings": "naima"
+            },
+            "vars": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "s_collect_book",
+      "type": "line",
+      "text": "إيدك على الغلاف الأزرق. نعيمة استنت جنبك.",
+      "speaker": "narrator",
+      "cast": [
+        "naima"
+      ],
+      "next": "s_return"
+    },
+    {
+      "id": "s_collect_bag",
+      "type": "line",
+      "text": "حطيتي الكراسة جوه وقفلتِ القفل. إيد الشنطة فضلت في إيدك.",
+      "speaker": "narrator",
+      "cast": [
+        "naima"
+      ],
+      "next": "s_return"
+    },
+    {
+      "id": "s_collect_naima",
+      "type": "line",
+      "text": "نعيمة أخدتها، وإنتي بتلمّي بقية حاجتك من الكرسي.",
+      "speaker": "narrator",
+      "cast": [
+        "naima"
+      ],
+      "next": "s_return"
     },
     {
       "id": "s_return",
@@ -534,7 +796,7 @@
       "effects": {
         "setTime": {
           "day": 5,
-          "slot": 3
+          "slot": 4
         }
       }
     },

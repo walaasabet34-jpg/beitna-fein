@@ -15,5 +15,8 @@ export function migrateSave(raw: unknown): GameState | null {
   if (s.version === 1) {
     s = { ...s, version: 2, completed: [], slot: s.slot >= 5 ? 4 : s.slot, music: undefined, ambience: undefined };
   }
+  if (s.chapter === 'ch4' && s.node.startsWith('c4_')) {
+    s = { ...s, node: 's_start', scene: 'living', day: 1, slot: 0, cast: ['hoda'], visited: [], music: null, ambience: null };
+  }
   return s;
 }

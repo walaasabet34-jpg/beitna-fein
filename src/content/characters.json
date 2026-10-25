@@ -29,5 +29,13 @@
   "mother": {
     "name": "أم هدى",
     "color": "#6b5a78"
+  },
+  "doctor": {
+    "name": "الطبيب",
+    "color": "#53726a"
+  },
+  "doorman": {
+    "name": "البواب",
+    "color": "#76634c"
   }
 }
