@@ -1,0 +1,530 @@
+{
+  "id": "chwar",
+  "number": 2,
+  "title": "صوت الراديو",
+  "start": "w_start",
+  "init": {
+    "day": 1,
+    "slot": 0,
+    "money": 0,
+    "scene": "living"
+  },
+  "slotNames": [
+    "الصبح",
+    "الضهر",
+    "العصر",
+    "المغرب",
+    "بالليل"
+  ],
+  "dayNames": [
+    "",
+    "06/10",
+    "07/10",
+    "16/10",
+    "22/10",
+    "25/10"
+  ],
+  "calendar": {
+    "1": "1973-10-06",
+    "2": "1973-10-07",
+    "3": "1973-10-16",
+    "4": "1973-10-22",
+    "5": "1973-10-25"
+  },
+  "calendarStatus": "provisional",
+  "nodes": [
+    {
+      "id": "w_start",
+      "type": "card",
+      "title": "الفصل التاني",
+      "subtitle": "صوت الراديو",
+      "music": null,
+      "cast": [
+        "hoda"
+      ],
+      "broadcast": null
+    },
+    {
+      "id": "w_oct6",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "هدى بتدور على مشطها. طرف الكراسة مغطّي نص الترابيزة."
+    },
+    {
+      "id": "w_morning",
+      "type": "choice",
+      "prompt": "قبل ما ترجعي للماكينة:",
+      "options": [
+        {
+          "text": "تساعديها تدور على المشط.",
+          "goto": "w_comb",
+          "effects": {
+            "flags": {
+              "war_comb": true
+            },
+            "vars": {
+              "trust": 2
+            }
+          }
+        },
+        {
+          "text": "تقولي لها تدور بنفسها، وتفضّيلها مكان للشغل جنبك.",
+          "goto": "w_space",
+          "effects": {
+            "flags": {
+              "war_space": true
+            },
+            "vars": {
+              "autonomy": 2
+            }
+          }
+        },
+        {
+          "text": "«مش كل شوية تعطليني.»",
+          "goto": "w_snap",
+          "effects": {
+            "flags": {
+              "war_snap": true
+            },
+            "vars": {
+              "trust": -3,
+              "distress": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "w_comb",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "طلع تحت الكراسة. مشّطت ضفيرتها بإيد وحاولت تقفل الكراسة بالتانية.",
+      "next": "w_afternoon"
+    },
+    {
+      "id": "w_space",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "هدى لقت المشط، وحطت الكراسة على الطرف اللي فضّيتيه لها. صوت الورق فضل جنب صوت الماكينة.",
+      "next": "w_afternoon"
+    },
+    {
+      "id": "w_snap",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "«أنا بس بسأل.» رجعت تدور من غير ما تحرك الكرسي عشان ما يعملش صوت.",
+      "next": "w_afternoon"
+    },
+    {
+      "id": "w_afternoon",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "الخبر قطع شغلك. رفعتي رجلك من الدوّاسة وقرّبتي الكرسي للراديو.",
+      "music": null,
+      "effects": {
+        "setTime": {
+          "day": 1,
+          "slot": 2
+        }
+      },
+      "next": "war_listen"
+    },
+    {
+      "id": "war_listen",
+      "type": "choice",
+      "prompt": "",
+      "options": [
+        {
+          "text": "(ترفعّي صوت الراديو)",
+          "goto": "war_tune",
+          "effects": {
+            "flags": {
+              "war_listened": true
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "(تفتحي الباب لنعيمة)",
+          "goto": "war_door",
+          "effects": {
+            "flags": {
+              "war_opened": true
+            },
+            "vars": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "war_tune",
+      "type": "line",
+      "text": "هدى سحبت كرسيّها قريب. سيبتي الصوت واضح.",
+      "speaker": "narrator",
+      "next": "w_radio"
+    },
+    {
+      "id": "war_door",
+      "type": "line",
+      "text": "نعيمة كانت على الباب فعلًا، ومن الشقة اللي جنبها صوت زغرودة.",
+      "speaker": "narrator",
+      "scene": "door",
+      "cast": [
+        "hoda",
+        "naima"
+      ],
+      "next": "w_radio"
+    },
+    {
+      "id": "w_radio",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "قواتنا عبرت قناة السويس. نعيمة دخلت وهي بتقول: «عبروا يا فاطمة!»",
+      "cast": [
+        "hoda",
+        "naima"
+      ],
+      "scene": "living"
+    },
+    {
+      "id": "w_hoda",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "يعني الناحية التانية؟",
+      "expr": "surprised"
+    },
+    {
+      "id": "w_celebrate",
+      "type": "choice",
+      "prompt": "الخبر مفرّح. تردّي عليها إزاي؟",
+      "options": [
+        {
+          "text": "(تقربي الكرسي لهدى) «تعالي اسمعي معايا.»",
+          "goto": "w_joy",
+          "effects": {
+            "flags": {
+              "war_shared_joy": true
+            },
+            "vars": {
+              "trust": 3,
+              "safety": 2
+            }
+          }
+        },
+        {
+          "text": "«هنرجع قريب، خلاص.»",
+          "goto": "w_promise",
+          "effects": {
+            "flags": {
+              "war_return_promise": true
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "«ثانية يا هدى، عايزة أسمع الباقي.»",
+          "goto": "w_quiet",
+          "effects": {
+            "flags": {
+              "war_silenced": true
+            },
+            "vars": {
+              "openness": -3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "w_joy",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "نعيمة زغردت. هدى خبطت كفها في كفك، وبعدين جريت تبص من الشباك.",
+      "next": "w_flag"
+    },
+    {
+      "id": "w_promise",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "«قريب قد إيه؟» ماعرفتيش تردي. هدى راحت تشوف الفستان اللي جوه الشنطة، قبل ما نعيمة تناديها تفرح معاكم.",
+      "next": "w_flag"
+    },
+    {
+      "id": "w_quiet",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "سكتت. نعيمة قعدت جنبها وقالتلها إن الجيش عبر القناة. هدى ابتسمت لها، وفضلت عينها عليكي.",
+      "next": "w_flag"
+    },
+    {
+      "id": "w_flag",
+      "type": "choice",
+      "prompt": "هدى رسمت علم صغير في كراستها. عايزة تعملوا إيه بيه؟",
+      "options": [
+        {
+          "text": "تكتبوا التاريخ واسمها وتحطوه جنب الراديو.",
+          "goto": "w_flag_keep",
+          "effects": {
+            "flags": {
+              "war_flag_kept": true
+            },
+            "vars": {
+              "safety": 2
+            }
+          }
+        },
+        {
+          "text": "تسيبيه في كراستها وتحكي معاها عن الرسم.",
+          "goto": "w_flag_book",
+          "effects": {
+            "flags": {
+              "war_flag_book": true
+            },
+            "vars": {
+              "trust": 2
+            }
+          }
+        },
+        {
+          "text": "تطلبّي منها تلم الورق. الطلبية لازم تخلص.",
+          "goto": "w_flag_put",
+          "effects": {
+            "flags": {
+              "war_flag_dismissed": true
+            },
+            "vars": {
+              "openness": -2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "w_flag_keep",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "كتبت «٦ أكتوبر» تحت العلم. قلمها ضغط في الورقة، وانتي ثبّتّيها بعيد عن سخونة الراديو.",
+      "next": "w_oct7"
+    },
+    {
+      "id": "w_flag_book",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "«السارية طلعت مايلة.» قلتي لها: «جرّبي بالمِسطرة.» سابته في الكراسة بعد ما عدّلته.",
+      "next": "w_oct7"
+    },
+    {
+      "id": "w_flag_put",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "قفلت الكراسة. إنتي رجعتي للشغل، ومن الشباك لسه واصل صوت الناس.",
+      "next": "w_oct7"
+    },
+    {
+      "id": "w_oct7",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "نعيمة نادت من الباب: «افتحي الراديو.» القتال لسه مستمر شرق القناة.",
+      "effects": {
+        "setTime": {
+          "day": 2,
+          "slot": 0
+        }
+      }
+    },
+    {
+      "id": "w_search",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "نعيمة فردت ورقة العنوان القديم. هدى شاورِت على اسم الشارع وشدّت القلم ناحيتها."
+    },
+    {
+      "id": "w_address",
+      "type": "choice",
+      "prompt": "تضيفي إيه للسؤال عن الأم؟",
+      "options": [
+        {
+          "text": "تسألي هدى عن اسم قريبتها وآخر مكان شافته.",
+          "goto": "w_details",
+          "effects": {
+            "flags": {
+              "search_details": true
+            },
+            "vars": {
+              "trust": 2
+            }
+          }
+        },
+        {
+          "text": "تراجعي العنوان مع نعيمة من غير استجواب هدى.",
+          "goto": "w_naima",
+          "effects": {
+            "flags": {
+              "search_via_naima": true
+            },
+            "vars": {}
+          }
+        },
+        {
+          "text": "تأجلي الكلام النهارده، وتطلبي من نعيمة تفضل تسأل.",
+          "goto": "w_later",
+          "effects": {
+            "flags": {
+              "search_delegated": true
+            },
+            "vars": {}
+          }
+        }
+      ]
+    },
+    {
+      "id": "w_details",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "كتبت اسم أمها واسم محل عم فوزي الترزي. وقفت عند العنوان: «الباقي مش فاكرة.»",
+      "next": "w_oct16"
+    },
+    {
+      "id": "w_naima",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "نعيمة كتبت اللي تعرفه. هدى صححت اسم المحل، وسابت القلم جنب الورقة.",
+      "next": "w_oct16"
+    },
+    {
+      "id": "w_later",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "نعيمة خدت الورقة تسأل بيها عند المحل. هدى اتأكدت إن فيه نسخة عندك.",
+      "next": "w_oct16"
+    },
+    {
+      "id": "w_oct16",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "الأخبار متفرقة. قوات إسرائيلية بقت غرب القناة، وإنتي بتحاولي تفهمي من النشرة.",
+      "effects": {
+        "setTime": {
+          "day": 3,
+          "slot": 3
+        }
+      }
+    },
+    {
+      "id": "w_worry",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "بس إحنا فرحنا."
+    },
+    {
+      "id": "w_worry_choice",
+      "type": "choice",
+      "prompt": "تقوليلها إيه؟",
+      "options": [
+        {
+          "text": "«أيوه. ولسه فيه قتال.»",
+          "goto": "w_truth",
+          "effects": {
+            "flags": {
+              "war_uncertainty_honest": true
+            },
+            "vars": {
+              "trust": 2
+            }
+          }
+        },
+        {
+          "text": "«هقولك لما أفهم.»",
+          "goto": "w_block",
+          "effects": {
+            "flags": {
+              "war_blocked": true
+            },
+            "vars": {
+              "openness": -3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "w_truth",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "هدى قعدت جنبك. سابت النشرة تكمل، وبعدين سألت إذا كان ينفع تسيب النور شوية.",
+      "next": "w_oct22"
+    },
+    {
+      "id": "w_block",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "قلبت العلم على وشّه في الكراسة. وإنتي لقيتي نفسك بتدوّري على نشرة تانية.",
+      "next": "w_oct22"
+    },
+    {
+      "id": "w_oct22",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "النشرة جابت خبر الدعوة لوقف إطلاق النار. نعيمة استنت لآخرها قبل ما تقوم.",
+      "effects": {
+        "setTime": {
+          "day": 4,
+          "slot": 3
+        }
+      }
+    },
+    {
+      "id": "w_oct25",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "فيه دعوة جديدة لوقف النار. «لسه؟» سألت نعيمة، وإنتي بتلمّي الزراير.",
+      "effects": {
+        "setTime": {
+          "day": 5,
+          "slot": 3
+        }
+      }
+    },
+    {
+      "id": "w_question",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "«يعني نقدر نسأل على ماما تاني؟»",
+      "expr": "worried"
+    },
+    {
+      "id": "w_answer",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "«هنسأل تاني.» رجعتي للطلبية، وهدى ردّت القلم لمكانه جنب الورقة."
+    },
+    {
+      "id": "w_end",
+      "type": "end",
+      "title": "صوت الراديو",
+      "text": "في نفس الأوضة فرحتوا، وخفتوا، واستنيتوا. هدى لسه عندها سؤال واحد أكبر من نشرات الأخبار.",
+      "nextChapter": "ch2",
+      "nextChapterTitle": "الفصل التالت: الكلمة",
+      "memories": [
+        {
+          "if": {
+            "flag": "war_shared_joy"
+          },
+          "text": "كف هدى خبط في كفك يوم العبور."
+        },
+        {
+          "if": {
+            "flag": "war_return_promise"
+          },
+          "text": "قلتي إن الرجوع قريب، قبل ما تعرفي."
+        },
+        {
+          "if": {
+            "flag": "war_flag_kept"
+          },
+          "text": "علم صغير، وتحته التاريخ بخطها."
+        }
+      ]
+    }
+  ]
+}

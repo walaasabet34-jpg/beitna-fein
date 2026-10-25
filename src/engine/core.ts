@@ -251,7 +251,8 @@ export function moodExpr(v: Vars): Expr {
 /** Where Hoda sits in the living room – her position is the feedback. */
 export type HodaSpot = 'corner' | 'sofa' | 'sewing' | 'underCloset';
 export function hodaSpot(s: GameState): HodaSpot {
-  if (s.flags.bag_on_closet) return 'underCloset';
+  // The wardrobe position belongs to Chapter 1; keep the flag as story memory.
+  if (s.chapter === 'ch1' && s.flags.bag_on_closet) return 'underCloset';
   if (s.vars.safety >= 38 || s.flags.sewing_together) return 'sewing';
   if (s.vars.safety >= 26) return 'sofa';
   return 'corner';

@@ -297,9 +297,11 @@ export function LivingRoom({ s, expr, morning = false }: { s: GameState; expr: E
       )}
       {!night && <Dust />}
 
+      {onStage(s, 'mother') && <Adult x={780} y={230} color="#716078" />}
+      {onStage(s, 'naima') && <Adult x={1030} y={235} color="#65715c" />}
       {/* Hoda & the suitcase: placement itself is the feedback */}
       {bagOnTop && <Suitcase x={556} y={92} s={0.85} />}
-      {!onStage(s, 'hoda') && <Suitcase x={930} y={700} s={0.9} />}
+      {!onStage(s, 'hoda') && !['mother', 'messenger'].includes(String(s.flags.belongings_delivery)) && <Suitcase x={930} y={700} s={0.9} />}
       {onStage(s, 'hoda') && spot === 'underCloset' && (
         <g transform="translate(528 548) scale(1)"><Hoda pose="sit" expr={expr} doll={doll} outfit={outfit} /></g>
       )}
@@ -640,4 +642,66 @@ export function HomeworkScene({ s }: { s: GameState }) {
 }
 export function homeworkTargets(): Record<string, Rect> {
   return { tree: [850, 180, 170, 80], school: [600, 180, 180, 80], sea: [370, 180, 130, 80], family: [140, 320, 900, 260] };
+}
+
+/** Hospital corridor: Hoda is being treated off stage, not shown as a healthy living-room sprite. */
+export function HospitalScene({ s }: { s: GameState }) {
+  const night = s.slot >= 4;
+  return <g data-hospital>
+    <rect width="1200" height="800" fill={night ? '#59615f' : '#c4ccc5'} />
+    <rect y="460" width="1200" height="340" fill="#7d8d84" />
+    <rect y="610" width="1200" height="190" fill="#a79d8c" />
+    <path d="M0 610 H1200 M300 610 L100 800 M600 610 V800 M900 610 L1100 800" stroke="#716e65" strokeWidth="3" />
+    <rect x="660" y="120" width="240" height="490" fill="#5b665e" />
+    <rect x="680" y="140" width="200" height="450" fill="#a39c82" />
+    <rect x="725" y="180" width="110" height="130" fill={night ? '#3a494d' : '#ccd7cd'} />
+    <circle cx="850" cy="385" r="6" fill="#534e40" />
+    <path d="M170 520 H530 V555 H170Z M195 555 V650 M500 555 V650" fill="#6c4d39" stroke="#453b31" strokeWidth="8" />
+    <rect x="270" y="185" width="190" height="130" fill="#e4dcc4" stroke="#6f766d" strokeWidth="5" />
+    <path d="M300 220 H430 M300 250 H410 M300 280 H425" stroke="#959b88" strokeWidth="7" />
+    {onStage(s, 'hoda') && <g data-patient>
+      <rect x="145" y="370" width="460" height="240" rx="15" fill="#ddd8c4" stroke="#68756f" strokeWidth="10" />
+      <path d="M160 610 V685 M590 610 V685" stroke="#68756f" strokeWidth="12" />
+      <g transform="translate(245 215) scale(.9)"><Hoda pose="sit" expr="sleepy" outfit={outfitOf(s)} /></g>
+      <path d="M170 470 Q370 440 585 490 V600 H170Z" fill="#afbeb2" />
+    </g>}
+    <rect x="0" y="0" width="1200" height="800" fill="url(#vignette)" />
+  </g>;
+}
+
+export function LandingScene({ s, expr }: { s: GameState; expr: Expr }) {
+  return <g data-landing>
+    <rect width="1200" height="800" fill="#c2a47d" />
+    <rect x="640" y="80" width="300" height="480" fill="#64452f" stroke="#4b3427" strokeWidth="15" />
+    <path d="M0 800 V700 H200 V650 H400 V600 H600 V550 H1200 V800Z" fill="#99836a" stroke="#6d5b49" strokeWidth="5" />
+    <path d="M0 585 L530 440 L530 575 M40 580 V685 M190 540 V640 M350 495 V600" stroke="#50453c" strokeWidth="12" fill="none" />
+    <Suitcase x={790} y={550} s={1.2} />
+    <g transform="translate(800 310) scale(.95)"><Hoda pose="sit" expr={expr} outfit="mustard" /></g>
+    {onStage(s, 'naima') && <Adult x={490} y={245} color="#64715a" />}
+    <rect width="1200" height="800" fill="url(#vignette)" />
+  </g>;
+}
+
+function Adult({ x, y, color }: { x: number; y: number; color: string }) {
+  return <g transform={`translate(${x} ${y})`} data-adult>
+    <path d="M-60 360 Q-48 130 -30 95 Q0 65 35 100 Q62 180 65 360Z" fill={color} />
+    <ellipse cy="75" rx="46" ry="58" fill="#b77d56" />
+    <path d="M-48 100 Q-68 -5 5 1 Q64 5 48 110 L31 90 Q44 25 0 25 Q-38 27 -30 100Z" fill={color} />
+    <path d="M-15 73 h6 M14 73 h6 M-10 99 Q0 103 10 99" stroke="#49362e" strokeWidth="3" fill="none" />
+    <path d="M-40 160 L-75 245 L-10 270 M40 160 L65 245 L15 270" stroke={color} strokeWidth="27" fill="none" />
+    <ellipse cx="-6" cy="270" rx="15" ry="9" fill="#b77d56" />
+    <ellipse cx="18" cy="269" rx="15" ry="9" fill="#b77d56" />
+  </g>;
+}
+
+export function PaperScene({ s }: { s: GameState }) {
+  return <g data-paper-scene>
+    <rect width="1200" height="800" fill="#76563e" />
+    <rect x="180" y="105" width="360" height="540" rx="6" fill="#e6d4af" transform="rotate(-6 360 370)" />
+    <rect x="620" y="160" width="340" height="500" rx="6" fill="#f1e2c4" transform="rotate(5 790 410)" />
+    {[0,1,2,3,4,5].map(i=><g key={i} stroke="#97836a" strokeWidth="7" opacity=".65"><path d={`M230 ${220+i*55} h235 M675 ${245+i*55} h210`} /></g>)}
+    <path d="M220 230 L505 205" stroke="#514536" strokeWidth="6" />
+    <path d="M1020 180 L990 570" stroke="#384d58" strokeWidth="18" />
+    <rect width="1200" height="800" fill="url(#vignette)" />
+  </g>;
 }

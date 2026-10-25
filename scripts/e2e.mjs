@@ -23,7 +23,7 @@ const RUNS = [
 function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 
 const browser = await puppeteer.launch({
-  executablePath: await chromium.executablePath(),
+  executablePath: process.env.CHROMIUM_PATH ?? await chromium.executablePath(),
   args: [...chromium.args.filter((a) => a !== '--single-process' && a !== '--no-zygote'), '--lang=ar'],
   headless: true,
   protocolTimeout: 600000,
@@ -33,7 +33,7 @@ const results = [];
 let skippedShots = 0;
 // Headless Chromium here sometimes never returns a frame for a screenshot of the animated stage.
 // A stuck screenshot must not stop the playthrough: give up on that picture after 8 s and keep playing.
-const snap = (page, path) => Promise.race([page.screenshot({ path }).catch(() => { skippedShots++; }), new Promise((r) => setTimeout(() => { skippedShots++; r(); }, 8000))]);
+const snap = (page, path) => process.env.E2E_NO_SHOTS ? Promise.resolve() : Promise.race([page.screenshot({ path }).catch(() => { skippedShots++; }), new Promise((r) => setTimeout(() => { skippedShots++; r(); }, 8000))]);
 for (const run of RUNS.slice(Number(process.env.E2E_FROM ?? 0), Number(process.env.E2E_RUNS ?? RUNS.length))) {
   const r = rng(run.seed);
   const pick = (n) => (run.policy === 'first' ? 0 : run.policy === 'last' ? n - 1 : Math.floor(r() * n));
@@ -46,7 +46,7 @@ for (const run of RUNS.slice(Number(process.env.E2E_FROM ?? 0), Number(process.e
   page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(`console.${m.type()}: ${m.text()}`); });
 
   await page.goto(URL, { waitUntil: 'networkidle0' });
-  await page.evaluate(() => localStorage.clear());
+  await page.evaluate(() => { localStorage.clear(); localStorage.setItem('beitna-fein:settings', JSON.stringify({ textSpeed: 'instant', sound: false, reducedMotion: true })); });
   await page.reload({ waitUntil: 'networkidle0' });
   const tag = `${run.vp}-${run.policy}-${run.seed}`;
   if (process.env.E2E_TRACE) console.log('before title shot'); await snap(page, `${OUT}/${tag}-00-title.png`);
@@ -57,12 +57,13 @@ for (const run of RUNS.slice(Number(process.env.E2E_FROM ?? 0), Number(process.e
   let rtlOk = true;
   let steps = 0, reloadOk = null, overflow = false, ended = false;
   const visited = [];
-  let chapter1Done = false;
+  let chapter1Done = false; let chapterTransitions = 0;
   while (steps < 1200) {
     steps++; if (process.env.E2E_TRACE) console.log("step", steps, new Date().toISOString().slice(11, 19));
     await new Promise((res) => setTimeout(res, 40));
     if (await page.$('[data-screen="end"]')) {
-      if (!chapter1Done && (await page.$('[data-next-chapter]'))) {
+      if (await page.$('[data-next-chapter]')) {
+        chapterTransitions++;
         chapter1Done = true;
         await snap(page, `${OUT}/${tag}-50-ch1-end.png`);
         await page.click('[data-next-chapter]'); continue;
@@ -85,7 +86,7 @@ for (const run of RUNS.slice(Number(process.env.E2E_FROM ?? 0), Number(process.e
 
     const key = info.id.slice(0, 2) + '-' + info.type + (/draw|hw/.test(info.id) ? '-pad' : '') + (/_m|_d2|_out/.test(info.id) ? '-day2' : '') + (/_d\d|_leave|_return|_naima|_un\d/.test(info.id) && info.type === 'line' ? '-door' : '') + (/night|cert|sleep/.test(info.id) ? '-night' : '') + (/teacher/.test(info.id) ? '-school' : '') + (/radio|r_news|r_kids|kids/.test(info.id) ? '-radio' : '');
     TR('evaluated ' + info.id);
-    if (!shot.has(key)) { TR('shot'); shot.add(key); await new Promise((res) => setTimeout(res, 900)); await snap(page, `${OUT}/${tag}-${String(shot.size).padStart(2, '0')}-${key}-${info.id}.png`); }
+    if (!process.env.E2E_NO_SHOTS && !shot.has(key)) { TR('shot'); shot.add(key); await new Promise((res) => setTimeout(res, 900)); await snap(page, `${OUT}/${tag}-${String(shot.size).padStart(2, '0')}-${key}-${info.id}.png`); }
 
     if (run.reloadAt && steps === run.reloadAt) {
       await page.reload({ waitUntil: 'networkidle0' });
@@ -171,12 +172,12 @@ for (const run of RUNS.slice(Number(process.env.E2E_FROM ?? 0), Number(process.e
     menuOk = await page.$eval('[data-save]', (e) => e.textContent.includes('اتحفظت'));
     await snap(page, `${OUT}/${tag}-98-menu.png`);
   }
-  const res = { tag, ended, reachedCh2: chapter1Done, steps, reloadOk, overflow, rtlOk, menuOk, errors: [...new Set(errors)], uniqueNodes: new Set(visited).size };
+  const res = { tag, ended, reachedCh2: chapter1Done, chapterTransitions, steps, reloadOk, overflow, rtlOk, menuOk, errors: [...new Set(errors)], uniqueNodes: new Set(visited).size };
   results.push(res);
   console.log('RUN', JSON.stringify(res));
   await ctx.close();
 }
 await browser.close();
 console.log(JSON.stringify(results, null, 2)); console.log('screenshots skipped (renderer stall):', skippedShots);
-const bad = results.filter((x) => 'ended' in x && (!x.ended || x.errors.length || x.overflow || !x.rtlOk || x.reloadOk === false || !x.menuOk));
+const bad = results.filter((x) => 'ended' in x && (!x.ended || x.chapterTransitions !== 5 || x.errors.length || x.overflow || !x.rtlOk || x.reloadOk === false || !x.menuOk));
 process.exit(bad.length ? 1 : 0);

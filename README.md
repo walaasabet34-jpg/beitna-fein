@@ -1,6 +1,6 @@
 # بيتنا فين؟ — Where Is Home?
 
-Playable: **Chapter 1 — الشنطة** and **Chapter 2 — الكلمة** (about 20 minutes together). Chapters 3–4 are designed but wait for approval.
+Playable story draft: **six connected chapters**, from 4 October to 12 December 1973: الشنطة → صوت الراديو → الكلمة → الخبر → لما ترجعي → الشنطة. The story includes childhood illness, death and grief.
 Mobile-first web prototype · React 18 + TypeScript + Vite + Tailwind · JSON narrative · LocalStorage saves.
 
 > All artwork is original 2D art drawn in SVG code (no on-screen "temporary" labels). Every sound is a **genuine recording** (see docs/AUDIO.md). No synthetic voices or synthesized music; cues with no genuine recording available stay silent.
@@ -11,7 +11,7 @@ Mobile-first web prototype · React 18 + TypeScript + Vite + Tailwind · JSON na
 npm install
 npm run dev          # http://localhost:5173
 npm test             # engine, content validation, save migration, audio assets, radio rights/date rules,
-                     # and thousands of simulated Ch1 → Ch2 playthroughs
+                     # and thousands of simulated six-chapter playthroughs
 npm run build        # type-check + production build into dist/
 ```
 
@@ -19,7 +19,8 @@ Browser playthrough test (headless Chromium, mobile 390×844 and desktop 1440×9
 
 ```bash
 npm run build && npx vite preview --port 4173 &
-npm run e2e -- ./e2e-shots          # full Ch1 → Ch2 playthroughs, phone + desktop
+npm run e2e -- ./e2e-shots          # full six-chapter playthroughs, phone + desktop
+node scripts/story-visual-e2e.mjs   # crossing, hospital, mother and returned-belongings scenes
 node scripts/audio-e2e.mjs          # audio unlock, buses, mute, volumes, persistence
 node scripts/radio-e2e.mjs ./shots  # radio player, subtitles, controls, date gate, rights labels
 ```
@@ -35,7 +36,7 @@ CLI alternative: `npm i -g vercel && vercel --prod` from the project folder.
 
 ## Audio and historical radio
 
-See **docs/AUDIO.md** (what plays where, sources, mix, rebuild) and **docs/ARCHIVE-SOURCES.md**. In short: every sound is a genuine recording listed with its licence in `audio-src/SOURCES.json` (credits: `public/audio-credits.html`). The radio's song slot plays a genuine c. 1914 record by Munira al-Mahdiyya; the 27 Oct and 3 Nov news and the children's programme are silent because no reusable archival recording was found. Archival recordings without cleared rights stay **Pending rights clearance**; local-only archive build: `npm run dev:archive` (never deployed). Broadcasts are gated by the in-game date.
+See **docs/AUDIO.md** (what plays where, sources, mix, rebuild) and **docs/ARCHIVE-SOURCES.md**. In short: every sound is a genuine recording listed with its licence in `audio-src/SOURCES.json` (credits: `public/audio-credits.html`). The radio's song slot plays a genuine c. 1914 record by Munira al-Mahdiyya; unavailable news recordings stay silent; the war chapter conveys events through authored narration, while children's programmes use official Egyptian Radio embeds. Archival recordings without cleared rights stay **Pending rights clearance**; local-only archive build: `npm run dev:archive` (never deployed). Broadcasts are gated by the in-game date.
 
 ## Saves
 
@@ -101,3 +102,7 @@ Hidden variables (never shown): trust, safety, openness, autonomy, distress. Sta
 ## Historical details flagged for verification
 
 See `_notes.verify_history` at the top of the chapter JSON (grocer prices, blue-painted windows / blackout, the Abla Fadila radio slot, the deliberately generic radio communiqué, and the open Suez displacement backstory).
+
+## Historical story revision
+
+See [chronology and sources](docs/STORY-HISTORY-1973.md). Begin a new game to experience the new prewar opening and war chapter; existing node IDs are retained so older saves can continue from their current chapter. The final meeting and belongings choices are independent of the pre-illness relationship, which affects remembered dialogue.
