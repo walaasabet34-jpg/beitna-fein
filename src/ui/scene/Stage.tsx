@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import type { GameState, HubNode } from '../../engine/types';
 import { visibleHotspots, getNode, hodaSpot, useHotspot as pickHotspot, IndexedChapter } from '../../engine/core';
-import { ArtDefs, LandingScene, PaperScene, HospitalScene, LivingRoom, DoorScene, NightScene, DrawingScene, SchoolScene, HomeworkScene, livingTargets, drawingTargets, homeworkTargets, Rect } from '../../art/scenes';
+import { ArtDefs, SickRoomScene, LandingScene, PaperScene, HospitalScene, LivingRoom, DoorScene, NightScene, DrawingScene, SchoolScene, HomeworkScene, livingTargets, drawingTargets, homeworkTargets, Rect } from '../../art/scenes';
 import { currentExpr, useGame } from '../../store/gameStore';
 import { useUiSfx } from '../useUiSfx';
 
@@ -38,7 +38,7 @@ export function Stage({ ic, s, children }: { ic: IndexedChapter; s: GameState; c
   let targets: Record<string, Rect> = {};
   if (scene === 'landing') art = <LandingScene s={s} expr={expr} />;
   else if (scene === 'paper') art = <PaperScene s={s} />;
-  else if (scene === 'sickroom') art = <HospitalScene s={s} />;
+  else if (scene === 'sickroom') art = <SickRoomScene s={s} />;
   else if (scene === 'hospital') art = <HospitalScene s={s} />;
   else if (scene === 'door') art = <DoorScene s={s} expr={expr} />;
   else if (scene === 'night') art = <NightScene s={s} expr={expr} />;

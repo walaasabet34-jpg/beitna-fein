@@ -12,7 +12,7 @@ Status of every historical detail the game relies on. Nothing marked **OPEN** sh
 | 6 | Suez evacuation began after 1967, families returned 1974+ | Backstory ("من سنين") | Supported | Al-Watan family testimonies. |
 | 7 | Abla Fadila's programme on the General Programme | Radio, Ch1–2 | Partly supported | Station confirmed; exact airtime not. Real episodes from Egyptian Radio's official channel play (undated, not presented as the game's dates). |
 | 8 | Blue-painted window glass, early blackout in Cairo | Ch1 window, evening | **OPEN** | General blackout claim removed; blue glass remains an artistic color/detail only. |
-| 9 | Prices in piasters (groceries, notebook, sewing pay) | Kitchen, Ch2 | **OPEN** | Approximate; need period price data. |
+| 9 | Prices in piasters (groceries, notebook, thread, sewing pay, the mother's 30 pt) | Kitchen, Ch1–4 | **OPEN** except bread | Bread was half a piaster per loaf 1952–1977 (csmonitor.com 1984; egyptianstreets.com 2022). All other prices are game values, not claims. |
 | 10 | Monthly allowance for displaced families | Not used yet (Ch3 candidate) | Partly supported | One testimony mentions 14 EGP/month. |
 
 | 11 | Circulating 'original' recordings of the 1973 communiqués | Radio | **WARNING** | Al-Youm Al-Sabea (11 Oct 2026): widely shared recordings use the wrong announcers' voices. Only archive-provenance copies may be labelled authentic. See docs/ARCHIVE-SOURCES.md. |
@@ -24,3 +24,5 @@ The old office/name-list assertions have been replaced by an explicitly informal
 
 ## Audio rights
 All archival recordings stay **Pending rights clearance** (see `docs/AUDIO.md`). Sources without cleared rights are not served in the public build. Cleared sources remain subject to the runtime registry gates.
+| 12 | Domestic telegram (برقية) and the Cairo–Alexandria train in 1973 | Ch4–5 (telegram on 30 Nov, first morning train) | Plausible, not specifically sourced | Telegraph service existed since the 19th c.; one source gives ≈3 h for the express. No 1973 timetable found. |
+| 13 | Wartime factory shifts / cancelled leave | Mother's October letter | Character's own statement | Presented only as what she wrote, not as a documented fact. |

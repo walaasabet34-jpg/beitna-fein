@@ -3,6 +3,8 @@
 Playable story draft: **six connected chapters**, from 4 October to 4 December 1973: الشنطة → صوت الراديو → الكلمة → الخبر → لما ترجعي → الشنطة. The story includes childhood illness, death and grief.
 Mobile-first web prototype · React 18 + TypeScript + Vite + Tailwind · JSON narrative · LocalStorage saves.
 
+> **Shared-life revision (Oct 2026):** the player now *does* things with Hoda — a sock-ball game whose rules she changes, sorting buttons for Fatma's orders beside her, dressing and mending her clothes — and the same actions return, empty, after her death. Characters are drawn with one rigged, shaded model (14 expressions). See [docs/DESIGN-SHARED-LIFE.md](docs/DESIGN-SHARED-LIFE.md) and the canon in [docs/STORY-BIBLE.md](docs/STORY-BIBLE.md).
+>
 > All artwork is original 2D art drawn in SVG code (no on-screen "temporary" labels). Every sound is a **genuine recording** (see docs/AUDIO.md). No synthetic voices or synthesized music; cues with no genuine recording available stay silent.
 
 ## Run locally
@@ -23,6 +25,10 @@ npm run e2e -- ./e2e-shots          # full six-chapter playthroughs, phone + des
 node scripts/story-visual-e2e.mjs   # crossing, hospital, mother and returned-belongings scenes
 node scripts/audio-e2e.mjs          # audio unlock, buses, mute, volumes, persistence
 node scripts/radio-e2e.mjs ./shots  # radio player, subtitles, controls, date gate, rights labels
+# Full story played with real taps/clicks on the shared rituals (needs Playwright):
+PW=/path/to/playwright/index.mjs E2E_VP=mobile node scripts/shared-life-e2e.mjs ./shots
+npx vite-node tools/artsheet/sheet.tsx > sheet.svg      # contact sheet of every pose/expression
+npx vite-node tools/transcript/route.ts -- 3 kind        # the text a player reads on one route
 ```
 
 ## Deploy to Vercel
@@ -40,13 +46,14 @@ See **docs/AUDIO.md** (what plays where, sources, mix, rebuild) and **docs/ARCHI
 
 ## Saves
 
-Saves are versioned (`src/engine/migrate.ts`). v1 saves from the first deployed build upgrade automatically to v2. Moving to the next chapter carries Hoda's memory: hidden variables, every flag, the foods Fatma has learned, and money.
+Saves are versioned (`src/engine/migrate.ts`). v1 saves from the first deployed build upgrade to v2, and v2 to v3 (shared-life revision: thread spools, clothes states, removed nodes mapped to their nearest equivalent). A save pointing at a node this build doesn't have resumes its chapter with everything remembered instead of restarting. Moving to the next chapter carries Hoda's memory: hidden variables, every flag, the foods Fatma has learned, and money.
 
 ## Asset status
 
 | Asset | Status | Where |
 |---|---|---|
-| Hoda (all poses, 10 expressions, portrait), scenes (door, living room day/evening/night/morning, bedroom, notebook, school gate, teacher, Umm Nadia, homework) | Original SVG art, in-game quality for the prototype; could be redrawn by an illustrator one component at a time | `src/art/` |
+| Characters: one jointed 2D rig (`figure.tsx`) for Hoda and every adult (`people.tsx`) — 14 expressions, 20 poses, clothes with visible history (dust, tear, patch, long sleeve, cardigan, red ribbon/button) | Original SVG code; no external, generated or reference-game art | `src/art/` |
+| Scenes (landing, door, living room by hour with the coin tin, thread spools, calendar; sickroom; hospital; night; notebook; school; homework; ritual close-ups) | Original SVG code | `src/art/scenes.tsx`, `src/ui/activities/` |
 | Paper grain / mottling | Generated texture | `src/index.css` |
 | Ambience (4), effects (16), title music | Genuine recordings (public domain / CC0 / CC BY / CC BY-SA); suitcase latch silent | `public/audio`, `audio-src/`, `tools/audio/build_real.py` |
 | Radio | Official Egyptian Radio embeds (Abla Fadila), a 1914 public-domain record; local build adds the supplied gold-palace episode and «عاش اللي قال». News silent. See docs/AUDIO.md | `public/radio`, `public/local-archive/` (local only) |
@@ -89,7 +96,7 @@ Nodes run in file order; `next` is only needed to jump.
 | `line` | one line of dialogue/narration. `variants` pick alternative text by condition |
 | `choice` | player choice. Options can have `if`, `effects`, `once` |
 | `hub` | free-roam room. `hotspots` (spatial + listed), `ambient` behaviour lines, `exitWhen` |
-| `activity` | `kitchen` or `bed` mini-interaction, parameters in JSON |
+| `activity` | `kitchen`, `bed`, or a shared ritual played on the stage: `ball` (variant stairs/count/crossing/wall/bed/alone), `buttons` (helper hoda/bed/none, skill, pay), `dress` (mode dress/pack, school, cold, special, captions) |
 | `branch` | silent routing by condition |
 | `card` | chapter / day title card |
 | `end` | chapter ending with variants + "memories" list |

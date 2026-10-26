@@ -120,7 +120,7 @@
       "id": "s_ordinary",
       "type": "line",
       "speaker": "narrator",
-      "text": "نعيمة خبطت ومعاها جواب. على الظرف ختم إسكندرية، وخط هدى عارفاه قبلك.",
+      "text": "نعيمة خبطت ومعاها جواب. على الظرف ختم إسكندرية، وهدى عرفت الخط قبلك.",
       "next": "mother_read",
       "cast": [
         "hoda",
@@ -681,7 +681,8 @@
       },
       "scene": "sickroom",
       "cast": [
-        "hoda"
+        "hoda",
+        "doctor"
       ]
     },
     {
@@ -700,7 +701,8 @@
       },
       "scene": "sickroom",
       "cast": [
-        "hoda"
+        "hoda",
+        "doctor"
       ],
       "next": "sick_activity"
     },
@@ -735,6 +737,9 @@
             }
           }
         }
+      ],
+      "cast": [
+        "hoda"
       ]
     },
     {
@@ -954,7 +959,7 @@
       "id": "s_mother_reply2",
       "type": "line",
       "speaker": "hoda",
-      "text": "أول الشهر… فاضل أربع أيام.",
+      "text": "أول الشهر… يعني خمس أيام.",
       "scene": "sickroom",
       "cast": [
         "hoda"

@@ -30,7 +30,7 @@ interface Build {
 }
 const CHILD: Build = {
   head: [80, 40], headScale: 1, neck: [80, 66], shL: [58, 84], shR: [102, 84], hipC: [80, 172], hipL: [71, 174], hipR: [89, 174],
-  upper: 47, fore: 41, hand: 12, thigh: 60, shin: 56, r: { sh: 7, el: 5.2, wr: 4, hip: 9, kn: 6.4, an: 4.4 },
+  upper: 47, fore: 41, hand: 12, thigh: 60, shin: 56, r: { sh: 7.6, el: 6, wr: 4.8, hip: 9.4, kn: 6.8, an: 4.8 },
   waistY: 132, hemY: 246, chest: 22, hips: 22,
 };
 const WOMAN: Build = {
@@ -278,7 +278,7 @@ export function Person(props: PersonProps) {
   const shL = rot(T(B.shL)), shR = rot(T(B.shR)), neck = rot(T(B.neck)), head = rot(T(B.head));
   const elL = add(shL, dirL(pose.armL[0], B.upper)), wrL = add(elL, dirL(pose.armL[0] - pose.armL[1], B.fore));
   const elR = add(shR, dirR(pose.armR[0], B.upper)), wrR = add(elR, dirR(pose.armR[0] - pose.armR[1], B.fore));
-  const hdL = add(wrL, dirL(pose.armL[0] - pose.armL[1], B.hand * 0.6)), hdR = add(wrR, dirR(pose.armR[0] - pose.armR[1], B.hand * 0.6));
+  const hdL = add(wrL, dirL(pose.armL[0] - pose.armL[1], B.hand * 0.35)), hdR = add(wrR, dirR(pose.armR[0] - pose.armR[1], B.hand * 0.35));
 
   const hipL = T(B.hipL), hipR = T(B.hipR);
   const knL = add(hipL, dirL(pose.legL[0], B.thigh)), anL = add(knL, dirL(pose.legL[0] - pose.legL[1], B.shin));
@@ -302,7 +302,17 @@ export function Person(props: PersonProps) {
   const cloth: [string, string, string] = [g.color, g.color, g.shade];
   const longSleeves = g.sleeve === 'long' || !!g.layer;
   const sleeveCol: [string, string, string] = g.layer ? [g.layer.color, g.layer.color, g.layer.shade] : cloth;
-  const hand = (w: V, r: number) => <circle cx={f(w[0])} cy={f(w[1])} r={r} fill={p.skin} stroke={p.line} strokeWidth=".8" strokeOpacity=".45" />;
+  // A hand: palm elongated along the forearm, a thumb on the inner side.
+  const hand = (w: V, r: number, from: V, side: 1 | -1) => {
+    const a = (Math.atan2(w[1] - from[1], w[0] - from[0]) * 180) / Math.PI - 90;
+    return (
+      <g transform={`translate(${f(w[0])} ${f(w[1])}) rotate(${f(a)})`}>
+        <ellipse cx="0" cy={f(r * 0.35)} rx={f(r * 0.92)} ry={f(r * 1.3)} fill={p.skin} stroke={p.line} strokeWidth=".8" strokeOpacity=".45" />
+        <ellipse cx={f(-side * r * 0.85)} cy={f(-r * 0.1)} rx={f(r * 0.38)} ry={f(r * 0.7)} transform={`rotate(${side * 28} ${f(-side * r * 0.85)} ${f(-r * 0.1)})`} fill={p.skin} stroke={p.line} strokeWidth=".6" strokeOpacity=".4" />
+        <path d={`M${f(-r * 0.45)} ${f(r * 1.1)} v${f(r * 0.4)} M0 ${f(r * 1.25)} v${f(r * 0.4)} M${f(r * 0.45)} ${f(r * 1.1)} v${f(r * 0.4)}`} stroke={p.skinShade} strokeWidth=".6" opacity=".6" />
+      </g>
+    );
+  };
   const arm = (side: 'L' | 'R', sh: V, el: V, wr: V, hd: V) => {
     const sleeveEnd: V = longSleeves ? [wr[0] + (el[0] - wr[0]) * (g.longSleeve && side === 'L' ? -0.05 : 0.12), wr[1] + (el[1] - wr[1]) * (g.longSleeve && side === 'L' ? -0.05 : 0.12)] : [sh[0] + (el[0] - sh[0]) * 0.55, sh[1] + (el[1] - sh[1]) * 0.55];
     return (
@@ -312,7 +322,7 @@ export function Person(props: PersonProps) {
         {longSleeves
           ? <path d={capsule(sh, el, B.r.sh + 2.2, B.r.el + 1.8) + capsule(el, sleeveEnd, B.r.el + 1.8, B.r.wr + 2)} fill={sleeveCol[1]} stroke={p.line} strokeWidth=".8" strokeOpacity=".5" />
           : <path d={capsule(sh, sleeveEnd, B.r.sh + 2.6, B.r.el + 2.4)} fill={sleeveCol[1]} stroke={p.line} strokeWidth=".8" strokeOpacity=".5" />}
-        {hand(hd, B.r.wr + 1.6)}
+        {hand(hd, B.r.wr + 1.2, wr === hd ? el : wr, side === 'L' ? -1 : 1)}
       </g>
     );
   };

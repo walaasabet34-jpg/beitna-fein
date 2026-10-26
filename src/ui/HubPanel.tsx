@@ -21,15 +21,15 @@ export function HubPanel({ node, s }: { node: HubNode; s: GameState }) {
         {node.hint}
         {timed && <> <span className="whitespace-nowrap">— فاضل وقت لـ <b className="text-rust">{arNum(left)}</b> {left === 1 ? 'حاجة' : 'حاجات'}.</span></>}
       </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
         {spots.map((h) => (
           <button
             key={h.id}
-            className="choice-btn flex items-center justify-between gap-2 !py-2.5"
+            className="choice-btn flex flex-col items-start justify-between gap-1 !py-2 !px-3"
             data-hotspot={h.id}
             onClick={() => { tick(); act((ic, st) => applyHotspot(ic, st, node, h.id)); }}
           >
-            <span className="text-[16px]">{h.label}</span>
+            <span className="text-[15px] leading-6">{h.label}</span>
             {(h.takesTime || costBadge(h.effects)) && <span className="text-xs px-2 py-0.5 rounded-full bg-rust/10 text-rust shrink-0" data-cost>{costBadge({ slots: h.takesTime ? 1 : 0, money: h.effects?.money })}</span>}
           </button>
         ))}

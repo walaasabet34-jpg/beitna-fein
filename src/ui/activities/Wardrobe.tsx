@@ -94,42 +94,43 @@ function Dress({ p, s }: { p: DressParams; s: GameState }) {
   const canYellow = canMend({ ...s, flags: { ...s.flags, cl_yellow: yellow } }, 'yellow');
   const canNavy = canMend({ ...s, flags: { ...s.flags, cl_navy: navy } }, 'navy');
   const rail: { it: Item; x: number; label: string; show: boolean }[] = [
-    { it: 'yellow', x: 820, label: 'الفستان الأصفر', show: true },
-    { it: 'navy', x: 980, label: 'المريلة الكحلي', show: true },
-    { it: 'cardigan', x: 1130, label: 'الجاكتة الصوف', show: w0.cardigan },
+    { it: 'yellow', x: 620, label: 'الأصفر', show: true },
+    { it: 'navy', x: 740, label: 'المريلة', show: true },
+    { it: 'cardigan', x: 660, label: 'الجاكتة', show: w0.cardigan },
   ];
 
   return (
     <>
-      <RitualFrame s={s} label="لبس هدى" focusX={760}>
+      <RitualFrame s={s} label="لبس هدى" focusX={600}>
         <RoomShell s={s} slot={Math.min(s.slot, 3)} morning={s.slot === 0}>
-          <rect x="740" y="120" width="440" height="10" rx="4" fill="#5a4636" />
+          <rect x="590" y="120" width="260" height="10" rx="4" fill="#5a4636" />
           {rail.filter((r) => r.show).map((r) => (
             <g key={r.it} data-wear={r.it} style={{ cursor: 'pointer' }} opacity={(r.it === dress || (r.it === 'cardigan' && layer === 'cardigan')) ? 0.45 : 1}
               onPointerDown={(e) => { e.stopPropagation(); wear(r.it); }}>
               {r.it === 'cardigan'
-                ? <path d="M1080 132 h100 l14 40 l-10 120 h-108 l-10 -120z" fill="#8a6f5a" stroke="#5f4a3b" strokeWidth="3" />
-                : <Garment look={r.it === 'yellow' ? { dress: 'yellow', dust: yellow === 'dusty', tear: yellow === 'torn', patch: yellow === 'flower' ? 'flower' : yellow === 'mended' ? 'plain' : undefined } : { dress: 'navy', longSleeve: navy === 'loose' }} x={r.x} y={132} s={0.9} />}
-              <rect x={r.x - 70} y={300} width="140" height="34" rx="10" fill="#fff8ea" opacity=".9" />
-              <text x={r.x} y={324} textAnchor="middle" direction="rtl" fontFamily="'Noto Naskh Arabic', serif" fontSize="19" fill="#2b2118">{r.label}</text>
+                ? <g transform={`translate(${r.x} 430)`}><path d="M-34 -40 L-12 -46 L0 -20 L12 -46 L34 -40 L52 6 L40 12 L32 -6 L30 44 L-30 44 L-32 -6 L-40 12 L-52 6Z" fill="#8a6f5a" stroke="#5f4a3b" strokeWidth="3" />{[-10, 4, 18, 32].map((b) => <circle key={b} cx="4" cy={b} r="2.6" fill="#d8c8a8" />)}<path d="M-28 30 h56" stroke="#5f4a3b" strokeWidth="2" strokeDasharray="4 3" /></g>
+                : <Garment look={r.it === 'yellow' ? { dress: 'yellow', dust: yellow === 'dusty', tear: yellow === 'torn', patch: yellow === 'flower' ? 'flower' : yellow === 'mended' ? 'plain' : undefined } : { dress: 'navy', longSleeve: navy === 'loose' }} x={r.x} y={132} s={0.72} />}
+              <rect x={r.x - 56} y={r.it === 'cardigan' ? 506 : 268} width="112" height="34" rx="10" fill="#fff8ea" opacity=".92" />
+              <text x={r.x} y={r.it === 'cardigan' ? 530 : 292} textAnchor="middle" direction="rtl" fontFamily="'Noto Naskh Arabic', serif" fontSize="20" fill="#2b2118">{r.label}</text>
             </g>
           ))}
           <g data-wear="ribbon" style={{ cursor: 'pointer' }} onPointerDown={(e) => { e.stopPropagation(); wear('ribbon'); }}>
-            <rect x="800" y="360" width="150" height="64" rx="8" fill="#a07a48" stroke="#6b4a2f" strokeWidth="2" />
-            <path d="M840 392 l-16 -10 v20z M840 392 l16 -10 v20z" fill="#c8392e" /><circle cx="840" cy="392" r="4" fill="#7e1f18" />
-            <text x="905" y="400" textAnchor="middle" fontFamily="'Noto Naskh Arabic', serif" fontSize="18" fill="#fff8ea">الشريطة الحمرا</text>
+            <rect x="600" y="560" width="200" height="60" rx="8" fill="#a07a48" stroke="#6b4a2f" strokeWidth="2" />
+            <path d="M636 590 l-16 -10 v20z M636 590 l16 -10 v20z" fill="#c8392e" /><circle cx="636" cy="590" r="4" fill="#7e1f18" />
+            <text x="720" y="598" textAnchor="middle" fontFamily="'Noto Naskh Arabic', serif" fontSize="20" fill="#fff8ea">الشريطة الحمرا</text>
           </g>
           {(canYellow || canNavy) && (
             <g data-mend style={{ cursor: 'pointer' }} onPointerDown={(e) => { e.stopPropagation(); setMendMenu(canYellow && (dress === 'yellow' || !canNavy) ? 'yellow' : 'navy'); }}>
-              <circle cx="1000" cy="470" r="38" fill="#fff8ea" stroke="#9c4a33" strokeWidth="3" />
-              <path d="M980 490 L1022 448" stroke="#555" strokeWidth="4" strokeLinecap="round" /><ellipse cx="1018" cy="452" rx="3" ry="6" fill="none" stroke="#555" strokeWidth="2" transform="rotate(45 1018 452)" />
-              <path d="M1022 448 q20 10 10 30 q-10 20 10 30" stroke="#b5463a" strokeWidth="2" fill="none" />
-              <text x="1000" y="540" textAnchor="middle" fontFamily="'Noto Naskh Arabic', serif" fontSize="19" fill="#fff8ea" stroke="#2b2118" strokeWidth=".6">تصليح</text>
+              <circle cx="790" cy="420" r="36" fill="#fff8ea" stroke="#9c4a33" strokeWidth="3" />
+              <path d="M770 440 L812 398" stroke="#555" strokeWidth="4" strokeLinecap="round" /><ellipse cx="808" cy="402" rx="3" ry="6" fill="none" stroke="#555" strokeWidth="2" transform="rotate(45 808 402)" />
+              <path d="M812 398 q20 10 10 30 q-10 20 10 30" stroke="#b5463a" strokeWidth="2" fill="none" />
+              <rect x="745" y="462" width="90" height="32" rx="10" fill="#fff8ea" opacity=".92" />
+              <text x="790" y="485" textAnchor="middle" fontFamily="'Noto Naskh Arabic', serif" fontSize="20" fill="#2b2118">تصليح</text>
             </g>
           )}
-          <g transform="translate(330 150) scale(1.55)"><Hoda pose="stand" expr={say.e} outfit={look} /></g>
-          <Bubble x={470} y={150} text={say.t} />
-          {p.today && <g><rect x="40" y="40" width="320" height="44" rx="12" fill="#14181f" opacity=".6" /><text x="200" y="70" textAnchor="middle" direction="rtl" fontFamily="'Noto Naskh Arabic', serif" fontSize="22" fill="#f3e7d1">{p.today}</text></g>}
+          <g transform="translate(350 170) scale(1.5)"><Hoda pose="stand" expr={say.e} outfit={look} /></g>
+          <Bubble x={470} y={200} text={say.t} />
+          {p.today && <g><rect x="420" y="740" width="360" height="42" rx="12" fill="#14181f" opacity=".62" /><text x="600" y="769" textAnchor="middle" direction="rtl" fontFamily="'Noto Naskh Arabic', serif" fontSize="20" fill="#f3e7d1">{p.today}</text></g>}
         </RoomShell>
       </RitualFrame>
       <div className="px-2 sm:px-0 pb-4" data-panel>
@@ -166,33 +167,36 @@ function Pack({ p, s }: { p: DressParams; s: GameState }) {
   const [caption, setCaption] = useState<string | null>(null);
   const capFor = (it: string) => p.captions?.find((c) => c.item === it && evaluate(c.if, s))?.text ?? null;
   const fold = (it: PackItem) => { if (packed.includes(it)) return; play('fabric'); setPacked((x) => [...x, it]); setCaption(capFor(it)); };
-  const pos: Record<PackItem, [number, number]> = { yellow: [200, 300], navy: [380, 250], cardigan: [560, 230], comb: [800, 300], notebook: [960, 280], doll: [1080, 380], redButton: [760, 420], ribbon: [930, 450], ball: [150, 640] };
+  const pos: Record<PackItem, [number, number]> = { yellow: [440, 260], navy: [600, 250], cardigan: [760, 250], comb: [430, 470], notebook: [590, 470], doll: [760, 450], redButton: [430, 380], ribbon: [770, 380], ball: [600, 380] };
   const all = packed.length === avail.length;
   return (
     <>
       <RitualFrame s={s} label="حاجات هدى">
-        <RoomShell s={s} slot={Math.min(s.slot, 3)}>
-          <g transform="translate(470 560) scale(2.4)"><Suitcase open={false} /></g>
-          <rect x="474" y="566" width="216" height="40" fill="#3e2414" opacity={packed.length ? 0.5 : 0} />
+        <g>
+          <rect width="1200" height="800" fill="#b39a7a" /><rect width="1200" height="800" fill="url(#tiles)" opacity=".8" />
+          <rect width="1200" height="800" fill="#2a2018" opacity=".12" />
+          <g transform="translate(490 560) scale(2.4)"><Suitcase open={false} /></g>
+          <path d="M490 584 h221 l-8 -60 h-205z" fill="#3e2414" opacity={packed.length ? 0.55 : 0.35} />
           {avail.filter((it) => !packed.includes(it)).map((it) => {
             const [x, y] = pos[it];
             return (
               <g key={it} data-pack={it} style={{ cursor: 'pointer' }} onPointerDown={(e) => { e.stopPropagation(); fold(it); }}>
-                <circle cx={x} cy={y + 40} r="80" fill="transparent" />
-                {it === 'yellow' && <Garment look={{ dress: 'yellow', tear: w.yellow === 'torn', patch: w.yellow === 'flower' ? 'flower' : w.yellow === 'mended' ? 'plain' : undefined }} x={x} y={y - 60} s={0.8} />}
-                {it === 'navy' && <Garment look={{ dress: 'navy', longSleeve: w.navy === 'loose' }} x={x} y={y - 60} s={0.8} />}
-                {it === 'cardigan' && <path d={`M${x - 50} ${y - 40} h100 l14 40 l-10 110 h-108 l-10 -110z`} fill="#8a6f5a" stroke="#5f4a3b" strokeWidth="3" />}
+                <circle cx={x} cy={y} r="62" fill="transparent" />
+                {it === 'yellow' && <Garment look={{ dress: 'yellow', tear: w.yellow === 'torn', patch: w.yellow === 'flower' ? 'flower' : w.yellow === 'mended' ? 'plain' : undefined }} x={x} y={y - 80} s={0.55} />}
+                {it === 'navy' && <Garment look={{ dress: 'navy', longSleeve: w.navy === 'loose' }} x={x} y={y - 80} s={0.55} />}
+                {it === 'cardigan' && <g transform={`translate(${x} ${y - 20})`}><path d="M-34 -40 L-12 -46 L0 -20 L12 -46 L34 -40 L52 6 L40 12 L32 -6 L30 44 L-30 44 L-32 -6 L-40 12 L-52 6Z" fill="#8a6f5a" stroke="#5f4a3b" strokeWidth="3" />{[-10, 4, 18, 32].map((b) => <circle key={b} cx="4" cy={b} r="2.6" fill="#d8c8a8" />)}<path d="M-28 30 h56" stroke="#5f4a3b" strokeWidth="2" strokeDasharray="4 3" /></g>}
                 {it === 'comb' && <g transform={`translate(${x} ${y})`}><rect x="-50" y="-10" width="100" height="16" rx="4" fill="#3a2a22" />{Array.from({ length: 16 }, (_, i) => (i === 9 ? null : <rect key={i} x={-46 + i * 6} y="6" width="3" height="16" fill="#3a2a22" />))}</g>}
-                {it === 'notebook' && <g transform={`translate(${x} ${y})`}><rect x="-50" y="-36" width="100" height="72" rx="3" fill="#3f6a96" /><rect x="-46" y="-32" width="92" height="64" fill="none" stroke="#e9e1cf" strokeWidth="1.5" /></g>}
-                {it === 'doll' && <Doll x={x - 12} y={y - 20} s={2.2} />}
+                {it === 'notebook' && <g transform={`translate(${x} ${y}) scale(.9)`}><rect x="-50" y="-36" width="100" height="72" rx="3" fill="#3f6a96" /><rect x="-46" y="-32" width="92" height="64" fill="none" stroke="#e9e1cf" strokeWidth="1.5" /></g>}
+                {it === 'doll' && <Doll x={x - 18} y={y - 40} s={2.4} />}
                 {it === 'redButton' && <circle cx={x} cy={y} r="18" fill="#c0352b" stroke="#7a1c16" strokeWidth="2" />}
                 {it === 'ball' && <SockBall x={x} y={y} r={18} />}
                 {it === 'ribbon' && <path d={`M${x} ${y} l-24 -14 v28z M${x} ${y} l24 -14 v28z`} fill="#c8392e" />}
               </g>
             );
           })}
-          {caption && <g className="fade-in"><rect x="160" y="40" width="880" height="64" rx="14" fill="#14181f" opacity=".7" /><text x="600" y="82" textAnchor="middle" direction="rtl" fontFamily="'Noto Naskh Arabic', serif" fontSize="24" fill="#f3e7d1">{caption}</text></g>}
-        </RoomShell>
+          {caption && <g className="fade-in" key={caption}><rect x="370" y="118" width="460" height="64" rx="14" fill="#14181f" opacity=".72" /><text x="600" y="158" textAnchor="middle" direction="rtl" fontFamily="'Noto Naskh Arabic', serif" fontSize={caption.length > 30 ? 18 : 22} fill="#f3e7d1">{caption}</text></g>}
+          <rect width="1200" height="800" fill="url(#vignette)" pointerEvents="none" />
+        </g>
       </RitualFrame>
       <div className="px-2 sm:px-0 pb-4" data-panel>
         <div className="paper paper-edge rounded-2xl p-3 sm:p-4 fade-in flex items-center justify-between gap-3" data-activity="pack">

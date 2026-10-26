@@ -2,7 +2,8 @@
 // two dark braids with red ribbons, a mustard dress with a cream collar (or the navy school pinafore),
 // and whatever history her clothes have picked up in this playthrough — dust, a tear, a patch, a cardigan.
 import type { Expr } from '../engine/types';
-import { Person, POSES, SKIN_HODA, type Pose, type Garment } from './figure';
+import { useId } from 'react';
+import { Person, POSES, SKIN_HODA, HeadArt, type Pose, type Garment } from './figure';
 
 export const HODA = {
   skin: SKIN_HODA.skin, skinShade: SKIN_HODA.skinShade, hair: SKIN_HODA.hair, hairHi: SKIN_HODA.hairHi,
@@ -93,5 +94,25 @@ export function HodaPortrait({ expr, outfit = 'mustard' }: { expr: Expr; outfit?
       <rect x="30" y="0" width="100" height="120" fill="url(#pbg)" />
       <Hoda expr={expr} pose="stand" outfit={outfit} animate={false} />
     </svg>
+  );
+}
+
+/** Hoda lying down (asleep, or ill in bed): head on the pillow, braids on the sheet, blanket to the shoulder. */
+export function HodaInBed({ expr = 'sleepy', cover = '#a56a5a', look, width = 420, hand = true }: { expr?: Expr; cover?: string; look?: Look; width?: number; hand?: boolean }) {
+  const uid = 'b' + useId().replace(/[^a-zA-Z0-9]/g, '');
+  const g = hodaGarment(look ?? { dress: 'yellow' });
+  return (
+    <g>
+      <ellipse cx="62" cy="62" rx="54" ry="24" fill="#efe6d4" stroke="#b9ac92" strokeWidth="2" />
+      <path d="M30 40 Q4 52 10 84 Q30 76 44 84Z" fill={SKIN_HODA.hair} />
+      {[0, 1, 2, 3, 4].map((i) => <ellipse key={i} cx={20 - i * 9} cy={86 + i * 3} rx="6" ry="5" fill={SKIN_HODA.hair} stroke={SKIN_HODA.hairHi} strokeWidth=".7" />)}
+      <g transform="translate(64 50) rotate(-78) scale(1.05)">
+        <HeadArt expr={expr} p={SKIN_HODA} style="braids" uid={uid} rash={look?.rash} button={look?.redButton} />
+      </g>
+      <path d={`M80 52 Q${width * 0.45} 30 ${width} 64 L${width} 150 L84 150 Q66 120 86 88Z`} fill={cover} stroke="#5a3a30" strokeWidth="2" />
+      <path d={`M120 84 Q${width * 0.5} 66 ${width - 30} 96`} stroke="#000" strokeOpacity=".14" strokeWidth="8" fill="none" />
+      <path d="M84 60 q24 -6 40 4 l-6 16 q-16 -6 -34 -2z" fill={g.color} />
+      {hand && <ellipse cx="128" cy="78" rx="12" ry="8" fill={SKIN_HODA.skin} stroke="#3a2418" strokeOpacity=".4" />}
+    </g>
   );
 }

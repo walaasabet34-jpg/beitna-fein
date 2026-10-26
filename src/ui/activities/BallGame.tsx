@@ -73,6 +73,7 @@ function FlyingBall({ flight, onDone }: { flight: Flight | null; onDone: () => v
 const HodaFigure = memo(function HodaFigure({ pose, expr, outfit, bed }: { pose: Pose; expr: Expr; outfit: ReturnType<typeof outfitOf>; bed: boolean }) {
   return (
     <g transform={`translate(${HX} ${HY}) scale(${HS})`}>
+      {bed && <g><rect x="-80" y="196" width="320" height="64" rx="12" fill="#d8ccb2" stroke="#9c8a6a" strokeWidth="2" /><ellipse cx="80" cy="150" rx="70" ry="24" fill="#efe6d4" stroke="#b9ac92" strokeWidth="2" /></g>}
       <Hoda poseOverride={pose} expr={expr} outfit={outfit} animate={false} />
       {bed && <path d="M-40 236 Q80 214 200 236 L210 300 L-50 300Z" fill="#a56a5a" stroke="#6f4438" strokeWidth="2" />}
     </g>

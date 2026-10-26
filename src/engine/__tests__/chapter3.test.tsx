@@ -64,10 +64,11 @@ describe('chapter 3 continuity', () => {
     }
   });
 
-  it('validates chapter 3 against flags from both earlier chapters', () => {
+  it('validates chapter 3 against flags from every earlier chapter in play order', () => {
     const v1 = validateChapter(CHAPTERS.ch1);
-    const v2 = validateChapter(CHAPTERS.ch2, v1.setFlags);
-    expect(validateChapter(CHAPTERS.ch3, new Set([...v1.setFlags, ...v2.setFlags])).errors).toEqual([]);
+    const vw = validateChapter(CHAPTERS.chwar, v1.setFlags);
+    const v2 = validateChapter(CHAPTERS.ch2, vw.setFlags);
+    expect(validateChapter(CHAPTERS.ch3, new Set([...v1.setFlags, ...vw.setFlags, ...v2.setFlags])).errors).toEqual([]);
   });
 
   it('finishes 2,000 three-chapter runs, reaches every chapter 3 node and all outcome branches', () => {

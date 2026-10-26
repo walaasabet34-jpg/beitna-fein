@@ -3,7 +3,7 @@ import type { GameState, Expr } from '../engine/types';
 import { hodaSpot, wardrobe } from '../engine/core';
 import { gameDate } from '../engine/calendar';
 import { CHAPTERS } from '../content';
-import { Hoda, Suitcase, Doll, HODA, type Look } from './Hoda';
+import { Hoda, HodaInBed, Suitcase, Doll, HODA, type Look } from './Hoda';
 import { Naima, Mother, Teacher as TeacherFig, UmmNadia, Doctor, Doorman } from './people';
 
 export type Rect = [number, number, number, number]; // x, y, w, h in the 1200×800 canvas
@@ -528,15 +528,9 @@ export function NightScene({ s, expr }: { s: GameState; expr: Expr }) {
       {/* Hoda */}
       {asleep ? (
         <g>
-          <g transform={isSofa ? 'translate(560 360)' : 'translate(470 480)'}>
-            <ellipse cx="60" cy="60" rx="42" ry="20" fill="#efe3c8" />
-            <path d={`M70 40 Q260 20 ${isSofa ? 470 : 420} 60 L${isSofa ? 470 : 420} 140 L60 140Z`} fill={s.flags.bed_cover === 'wool' ? '#7a5a3e' : '#a56a5a'} />
-            <path d="M120 70 Q240 56 380 80" stroke="#000" strokeOpacity=".15" strokeWidth="6" fill="none" />
-            <ellipse cx="78" cy="52" rx="30" ry="26" fill={HODA.hair} />
-            <ellipse cx="88" cy="56" rx="22" ry="20" fill={HODA.skin} />
-            <path d="M76 56 q4 3 8 0 M92 56 q4 3 8 0" stroke="#2b1d14" strokeWidth="1.8" fill="none" />
-            <path d="M50 64 q-20 30 -10 60" stroke={HODA.hair} strokeWidth="9" fill="none" strokeLinecap="round" />
-            {s.flags.made_doll ? <Doll x={110} y={40} s={1.1} /> : null}
+          <g transform={isSofa ? 'translate(530 360)' : 'translate(440 480)'}>
+            <HodaInBed cover={s.flags.bed_cover === 'wool' ? '#7a5a3e' : '#a56a5a'} look={outfitOf(s)} width={isSofa ? 500 : 440} />
+            {s.flags.made_doll ? <Doll x={140} y={44} s={1.1} /> : null}
           </g>
         </g>
       ) : (
@@ -687,6 +681,23 @@ export function homeworkTargets(): Record<string, Rect> {
   return { tree: [850, 180, 170, 80], school: [600, 180, 180, 80], sea: [370, 180, 130, 80], family: [140, 320, 900, 260] };
 }
 
+/** Ill at home: her bedding moved into the living room, near Fatma's machine, curtain half drawn. */
+export function SickRoomScene({ s }: { s: GameState }) {
+  const look = { ...outfitOf(s), rash: !!s.flags.hoda_rash };
+  return (
+    <RoomShell s={s} slot={Math.min(s.slot, 3)}>
+      <g data-sickroom>
+        <rect x="380" y="560" width="520" height="90" rx="12" fill="#d8ccb2" stroke="#9c8a6a" strokeWidth="3" />
+        {onStage(s, 'hoda') && <g transform="translate(400 470)" data-patient><HodaInBed expr={s.flags.hoda_rash ? 'sick' : 'tired'} cover={s.flags.layer === 'cardigan' ? '#8a6f5a' : '#a56a5a'} look={look} width={480} /></g>}
+        <rect x="910" y="590" width="60" height="50" rx="6" fill="#6b4a2f" />
+        <path d="M925 590 v-24 h30 v24" fill="#e8e0cc" stroke="#9c8a6a" strokeWidth="2" />
+        {s.flags.ball_games ? <SockBall x={880} y={680} r={15} /> : null}
+        {onStage(s, 'doctor') && <g transform="translate(160 236)"><Doctor expr="worried" pose="hold" /></g>}
+      </g>
+    </RoomShell>
+  );
+}
+
 /** Hospital corridor: Hoda is being treated off stage, not shown as a healthy living-room sprite. */
 export function HospitalScene({ s }: { s: GameState }) {
   const night = s.slot >= 4;
@@ -705,9 +716,10 @@ export function HospitalScene({ s }: { s: GameState }) {
     {onStage(s, 'hoda') && <g data-patient>
       <rect x="145" y="370" width="460" height="240" rx="15" fill="#ddd8c4" stroke="#68756f" strokeWidth="10" />
       <path d="M160 610 V685 M590 610 V685" stroke="#68756f" strokeWidth="12" />
-      <g transform="translate(245 215) scale(.9)"><Hoda pose="sit" expr="sleepy" outfit={outfitOf(s)} /></g>
-      <path d="M170 470 Q370 440 585 490 V600 H170Z" fill="#afbeb2" />
+      <g transform="translate(150 360)"><HodaInBed expr="sick" cover="#afbeb2" look={{ ...outfitOf(s), rash: true }} width={440} /></g>
     </g>}
+    {onStage(s, 'doctor') && <g transform="translate(720 220)"><Doctor expr="sad" /></g>}
+    {onStage(s, 'naima') && <g transform="translate(900 236)"><Naima expr="sad" pose="shy" /></g>}
     <rect x="0" y="0" width="1200" height="800" fill="url(#vignette)" />
   </g>;
 }

@@ -25,7 +25,7 @@ const LOOK: Record<Kind, { r: number; fill: string; edge: string; holes: number 
 };
 const RIGHT: [Kind, Kind] = ['bigBrown', 'smallWhite'];
 const CONFUSE: [Kind, Kind] = ['smallBrown', 'bigWhite']; // same colour, wrong size
-const BOWL: [number, number][] = [[330, 640], [870, 640]];
+const BOWL: [number, number][] = [[485, 650], [715, 650]];
 
 function ButtonShape({ b, lift }: { b: Btn; lift?: boolean }) {
   const L = LOOK[b.kind];
@@ -47,8 +47,8 @@ function makePile(hasRed: boolean): Btn[] {
   kinds.forEach((kind, id) => {
     for (let k = 0; k < 40; k++) {
       const a = Math.random() * Math.PI * 2, d = Math.sqrt(Math.random());
-      const x = 600 + Math.cos(a) * d * 300, y = 440 + Math.sin(a) * d * 120;
-      if (out.every((o) => Math.hypot(o.x - x, o.y - y) > 44) || k === 39) { out.push({ id, kind, x, y, where: 'pile' }); break; }
+      const x = 600 + Math.cos(a) * d * 215, y = 445 + Math.sin(a) * d * 105;
+      if (out.every((o) => Math.hypot(o.x - x, o.y - y) > 40) || k === 39) { out.push({ id, kind, x, y, where: 'pile' }); break; }
     }
   });
   return out;
@@ -87,7 +87,7 @@ export function ButtonTin({ p, s }: { p: ButtonsParams; s: GameState }) {
     });
     play('clink');
   };
-  const backToPile = (id: number) => setBtns((cur) => cur.map((b) => (b.id === id ? { ...b, where: 'pile', by: undefined, x: 600 + (Math.random() - 0.5) * 300, y: 420 + (Math.random() - 0.5) * 120 } : b)));
+  const backToPile = (id: number) => setBtns((cur) => cur.map((b) => (b.id === id ? { ...b, where: 'pile', by: undefined, x: 600 + (Math.random() - 0.5) * 300, y: 440 + (Math.random() - 0.5) * 120 } : b)));
 
   // Hoda's turn every couple of seconds.
   useEffect(() => {
@@ -136,6 +136,8 @@ export function ButtonTin({ p, s }: { p: ButtonsParams; s: GameState }) {
   const tapBowl = (bowl: 0 | 1) => { if (sel !== null && !ask) { fatmaPlaced(sel, bowl); setSel(null); } };
   const tapInBowl = (b: Btn) => {
     if (ask) return;
+    // Holding a button: a tap anywhere on a bowl (including on a button already in it) drops it there.
+    if (sel !== null && (b.where === 0 || b.where === 1)) { tapBowl(b.where); return; }
     const wrong = b.where !== 'pile' && b.where !== 'hoda' && b.where !== 'gone' && b.kind !== RIGHT[b.where];
     if (wrong && b.by === 'hoda' && helping) { setAsk({ kind: 'wrong', id: b.id }); return; }
     backToPile(b.id);
@@ -179,7 +181,7 @@ export function ButtonTin({ p, s }: { p: ButtonsParams; s: GameState }) {
     const c = toCanvas(e);
     const b = btns.find((x) => x.id === drag.id);
     if (c && b && Math.hypot(c[0] - b.x, c[1] - b.y) > 30) {
-      const bowl = BOWL.findIndex(([bx, by]) => Math.hypot(c[0] - bx, c[1] - by) < 110);
+      const bowl = BOWL.findIndex(([bx, by]) => Math.hypot(c[0] - bx, c[1] - by) < 105);
       if (bowl === 0 || bowl === 1) { fatmaPlaced(drag.id, bowl); setSel(null); }
     }
     setDrag(null);
@@ -203,26 +205,26 @@ export function ButtonTin({ p, s }: { p: ButtonsParams; s: GameState }) {
           <rect width="1200" height="800" fill="#6b4a2f" />
           <rect width="1200" height="800" fill="url(#tiles)" opacity=".35" />
           {helping && (
-            <g transform={bed ? 'translate(470 -60) scale(1.6)' : 'translate(470 -40) scale(1.6)'}>
+            <g transform={bed ? 'translate(480 70) scale(1.5)' : 'translate(480 80) scale(1.5)'}>
               <Hoda poseOverride={POSES.sort} expr={expr} outfit={outfit} animate={false} />
             </g>
           )}
           {/* the tray */}
-          <ellipse cx="600" cy="452" rx="440" ry="200" fill="#a8a89c" />
-          <ellipse cx="600" cy="444" rx="430" ry="192" fill="#c4c4b8" />
-          <ellipse cx="600" cy="444" rx="400" ry="170" fill="none" stroke="#9a9a8e" strokeWidth="3" />
-          <text x="600" y="320" textAnchor="middle" direction="rtl" fontFamily="'Aref Ruqaa', serif" fontSize="28" fill="#3a3a32" opacity=".75">{p.order}</text>
+          <ellipse cx="600" cy="452" rx="300" ry="170" fill="#a8a89c" />
+          <ellipse cx="600" cy="444" rx="292" ry="162" fill="#c4c4b8" />
+          <ellipse cx="600" cy="444" rx="270" ry="144" fill="none" stroke="#9a9a8e" strokeWidth="3" />
+          <text x="600" y="306" textAnchor="middle" direction="rtl" fontFamily="'Aref Ruqaa', serif" fontSize="28" fill="#3a3a32" opacity=".75">{p.order}</text>
           {([0, 1] as const).map((b) => (
             <g key={b} data-bowl={b} style={{ cursor: 'pointer' }} onPointerDown={(e) => { e.stopPropagation(); tapBowl(b); }}>
-              <ellipse cx={BOWL[b][0]} cy={BOWL[b][1] + 30} rx="120" ry="34" fill="#000" opacity=".2" />
-              <path d={`M${BOWL[b][0] - 115} ${BOWL[b][1] - 20} Q${BOWL[b][0]} ${BOWL[b][1] + 90} ${BOWL[b][0] + 115} ${BOWL[b][1] - 20}Z`} fill="#e9e4d6" stroke="#2f4f6a" strokeWidth="5" />
-              <ellipse cx={BOWL[b][0]} cy={BOWL[b][1] - 20} rx="115" ry="30" fill="#d8d2c2" stroke="#2f4f6a" strokeWidth="5" />
+              <ellipse cx={BOWL[b][0]} cy={BOWL[b][1] + 30} rx="100" ry="30" fill="#000" opacity=".2" />
+              <path d={`M${BOWL[b][0] - 100} ${BOWL[b][1] - 20} Q${BOWL[b][0]} ${BOWL[b][1] + 84} ${BOWL[b][0] + 100} ${BOWL[b][1] - 20}Z`} fill="#e9e4d6" stroke="#2f4f6a" strokeWidth="5" />
+              <ellipse cx={BOWL[b][0]} cy={BOWL[b][1] - 20} rx="100" ry="28" fill="#d8d2c2" stroke="#2f4f6a" strokeWidth="5" />
               <g transform={`translate(${BOWL[b][0]} ${BOWL[b][1] + 62})`}>
-                <rect x="-90" y="-20" width="180" height="40" rx="8" fill="#f3ead6" stroke="#8a6d4a" strokeWidth="2" />
-                <text x="20" y="9" textAnchor="middle" direction="rtl" fontFamily="'Noto Naskh Arabic', serif" fontSize="22" fill="#2b2118">{bowls[b]} {arNum(Math.min(NEED, rightCount(b)))}/{arNum(NEED)}</text>
+                <rect x="-95" y="-20" width="190" height="40" rx="8" fill="#f3ead6" stroke="#8a6d4a" strokeWidth="2" />
+                <text x="20" y="9" textAnchor="middle" direction="rtl" fontFamily="'Noto Naskh Arabic', serif" fontSize="20" fill="#2b2118">{bowls[b]} {arNum(Math.min(NEED, rightCount(b)))}/{arNum(NEED)}</text>
                 <circle cx="-66" cy="0" r={LOOK[RIGHT[b]].r * 0.7} fill={LOOK[RIGHT[b]].fill} stroke={LOOK[RIGHT[b]].edge} strokeWidth="1.5" />
               </g>
-              {sel !== null && <ellipse cx={BOWL[b][0]} cy={BOWL[b][1] - 20} rx="122" ry="36" fill="none" stroke="#f0c27a" strokeWidth="5" strokeDasharray="12 8" />}
+              {sel !== null && <ellipse cx={BOWL[b][0]} cy={BOWL[b][1] - 20} rx="106" ry="34" fill="none" stroke="#f0c27a" strokeWidth="5" strokeDasharray="12 8" />}
             </g>
           ))}
           {sorted.filter((b) => b.where !== 'gone').map((b) => {
@@ -240,7 +242,7 @@ export function ButtonTin({ p, s }: { p: ButtonsParams; s: GameState }) {
               </g>
             );
           })}
-          {bubble && helping && <Bubble x={600} y={bed ? 150 : 170} text={bubble} />}
+          {bubble && helping && <Bubble x={760} y={200} text={bubble} />}
           {bubble && !helping && <Bubble x={600} y={250} text={bubble} tone="quiet" />}
           {hodaHolding && null}
         </g>

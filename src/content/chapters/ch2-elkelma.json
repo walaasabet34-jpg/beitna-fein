@@ -3360,7 +3360,7 @@
       "id": "c2_night",
       "type": "line",
       "speaker": "narrator",
-      "text": "بالليل.",
+      "text": "بالليل، هدى رتّبت شنطة المدرسة لبكرة، وحطّت الكورة جنبها.",
       "scene": "night",
       "cast": [
         "hoda"
@@ -3721,7 +3721,7 @@
           "goto": "c2_d2_paid"
         }
       ],
-      "else": "c2_d2_dress"
+      "else": "c2_d2_1"
     },
     {
       "id": "c2_d2_paid",
@@ -3736,22 +3736,7 @@
       "effects": {
         "money": 10
       },
-      "next": "c2_d2_dress"
-    },
-    {
-      "id": "c2_d2_dress",
-      "type": "activity",
-      "activity": "dress",
-      "params": {
-        "mode": "dress",
-        "school": true,
-        "cold": false,
-        "today": "تاني يوم · مدرسة"
-      },
-      "scene": "morning",
-      "cast": [
-        "hoda"
-      ]
+      "next": "c2_d2_1"
     },
     {
       "id": "c2_d2_1",
@@ -3802,30 +3787,33 @@
       "options": [
         {
           "text": "هاجي معاكي المدرسة، وأكلّم الأبلة.",
-          "goto": "c2_teacher1",
+          "goto": "c2_d2_dress",
           "effects": {
             "slots": 1,
             "flags": {
-              "c2_plan": "teacher"
+              "c2_plan": "teacher",
+              "c2_d2_route": "c2_teacher1"
             }
           }
         },
         {
           "text": "هعدّي على أم نادية.",
-          "goto": "c2_un1",
+          "goto": "c2_d2_dress",
           "effects": {
             "slots": 1,
             "flags": {
-              "c2_plan": "ummnadia"
+              "c2_plan": "ummnadia",
+              "c2_d2_route": "c2_un1"
             }
           }
         },
         {
           "text": "تعالي نتمرّن: هتقولي إيه لو قالتها تاني؟",
-          "goto": "c2_prac1",
+          "goto": "c2_d2_dress",
           "effects": {
             "flags": {
-              "c2_plan": "practice"
+              "c2_plan": "practice",
+              "c2_d2_route": "c2_prac1"
             }
           }
         },
@@ -3844,6 +3832,42 @@
         }
       ],
       "prompt": "موضوع نادية."
+    },
+    {
+      "id": "c2_d2_dress",
+      "type": "activity",
+      "activity": "dress",
+      "params": {
+        "mode": "dress",
+        "school": true,
+        "cold": false,
+        "today": "تاني يوم · مدرسة"
+      },
+      "scene": "morning",
+      "cast": [
+        "hoda"
+      ]
+    },
+    {
+      "id": "c2_d2_route_b",
+      "type": "branch",
+      "cases": [
+        {
+          "if": {
+            "flag": "c2_d2_route",
+            "eq": "c2_teacher1"
+          },
+          "goto": "c2_teacher1"
+        },
+        {
+          "if": {
+            "flag": "c2_d2_route",
+            "eq": "c2_un1"
+          },
+          "goto": "c2_un1"
+        }
+      ],
+      "else": "c2_prac1"
     },
     {
       "id": "c2_teacher1",
@@ -4312,7 +4336,7 @@
       "id": "c2_naima_day2",
       "type": "line",
       "speaker": "naima",
-      "text": "ابني وصل لهم الورقة اللي كتبناها. أول ما ييجي رد هطلّع لك.",
+      "text": "ابني عدّى على عم فوزي تاني. قال إن مشرفة السكن بترد على الجوابات. نستنى.",
       "scene": "door",
       "cast": [
         "naima"
@@ -4327,7 +4351,7 @@
       "id": "c2_naima_day2b",
       "type": "line",
       "speaker": "narrator",
-      "text": "طلعتي السلم ومعاكي نسخة الورقة.",
+      "text": "طلعتي السلم.",
       "scene": "living",
       "cast": [],
       "next": "c2_day2_home"
