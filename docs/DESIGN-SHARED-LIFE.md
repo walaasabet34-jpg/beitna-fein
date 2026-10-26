@@ -47,8 +47,8 @@ Measured with `tools/transcript/word-cost.ts` (300 simulated full routes mixing 
 
 | | Base `d2a1514` | This revision |
 |---|---|---|
-| Words read per full route | 1,977 | ≈1,600 (−19%) |
-| Text screens ("كمّلي") per route | 210 | ≈183 (−13%) |
+| Words read per full route | 1,977 | ≈1,640 (−17%) |
+| Text screens ("كمّلي") per route | 210 | ≈185 (−12%) |
 | Played activities per route (ball, sorting, clothes, kitchen, bed…) | 2 | 11 |
 | Choices per route | 53 | 59 |
 
