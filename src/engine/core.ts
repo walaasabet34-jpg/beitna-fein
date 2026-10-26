@@ -1,7 +1,7 @@
 import type {
   Chapter, Condition, Effect, GameState, StoryNode, Vars, VarKey, Variant, Option,
   Hotspot, HubNode, KitchenParams, BedParams, Expr, BallParams, BallResult, ButtonsParams, ButtonsResult,
-  DressParams, DressResult, FlagVal,
+  DressParams, DressResult, FlagVal, CombParams, CombResult,
 } from './types';
 
 export const VAR_KEYS: VarKey[] = ['trust', 'safety', 'openness', 'autonomy', 'distress'];
@@ -345,6 +345,19 @@ export function resolveDress(ic: IndexedChapter, s: GameState, r: DressResult): 
   }
   let n = applyEffect(s, { flags });
   n = applyEffect(n, p.effects);
+  return enter(ic, n, ic.nextOf.get(node.id)!);
+}
+
+/** Score a morning of combing. The flags remember whether hands were gentle and how much she told. */
+export function resolveComb(ic: IndexedChapter, s: GameState, r: CombResult): GameState {
+  const { node, p } = activityNode<CombParams>(ic, s, 'comb');
+  const rough = clampInt(r.rough, 0, 30), heard = clampInt(r.heard, 0, p.lines.length);
+  const flags: Record<string, FlagVal> = { comb_times: num(s.flags.comb_times) + 1, comb_last_heard: heard, ribbon: r.ribbon === 'red' ? 'red' : 'old' };
+  if (rough >= 2) flags.comb_rough = num(s.flags.comb_rough) + 1;
+  if (rough === 0 && !r.self) flags.comb_gentle = num(s.flags.comb_gentle) + 1;
+  if (r.self) flags.comb_self = true;
+  let n = applyEffect(s, { flags });
+  if (rough < 2) n = applyEffect(n, p.effects);
   return enter(ic, n, ic.nextOf.get(node.id)!);
 }
 

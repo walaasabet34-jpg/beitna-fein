@@ -2,7 +2,7 @@
 import type { ActivityNode, BallParams, BedParams, GameState, KitchenParams } from './types';
 import {
   IndexedChapter, newGame, getNode, advance, visibleOptions, choose, visibleHotspots, useHotspot,
-  resolveKitchen, resolveBed, kitchenValid, resolveBall, resolveButtons, resolveDress, canMend, resume,
+  resolveKitchen, resolveBed, kitchenValid, resolveBall, resolveButtons, resolveDress, canMend, resume, resolveComb,
 } from './core';
 
 export function rng(seed: number) {
@@ -67,6 +67,9 @@ function runActivity(ic: IndexedChapter, s: GameState, n: ActivityNode, r: () =>
     const placed = Math.floor(r() * 8); const wrong = Math.floor(r() * Math.min(3, placed + 1));
     const fixed = Math.floor(r() * (wrong + 1));
     return resolveButtons(ic, s, { hodaPlaced: placed, hodaWrong: wrong, fixedQuietly: fixed, showedHer: wrong - fixed, caughtFatma: Math.floor(r() * 2), keptRed: r() < 0.5 });
+  }
+  if (n.activity === 'comb') {
+    return resolveComb(ic, s, { gentle: 8, rough: Math.floor(r() * 3), heard: Math.floor(r() * 4), ribbon: r() < 0.3 ? 'red' : 'old', self: r() < 0.2 });
   }
   if (n.activity === 'dress') {
     const mended = ['yellow', 'navy'].filter((i) => canMend(s, i) && r() < 0.6);

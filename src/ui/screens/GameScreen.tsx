@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useGame } from '../../store/gameStore';
 import { getNode, resolveLine, visibleOptions, advance, choose, moodExpr } from '../../engine/core';
-import type { ActivityNode, BallParams, BedParams, ButtonsParams, DressParams, KitchenParams } from '../../engine/types';
+import type { ActivityNode, BallParams, BedParams, ButtonsParams, CombParams, DressParams, KitchenParams } from '../../engine/types';
 import { BallGame } from '../activities/BallGame';
 import { ButtonTin } from '../activities/ButtonTin';
 import { Wardrobe } from '../activities/Wardrobe';
+import { CombGame } from '../activities/CombGame';
 import { Stage } from '../scene/Stage';
 import { Hud } from '../hud/Hud';
 import { DialogueBox } from '../dialogue/DialogueBox';
@@ -78,9 +79,10 @@ export function GameScreen() {
   }
   // Shared rituals own the stage: they are played on it, not read under it.
   let ritual: React.ReactNode = null;
-  if (node.type === 'activity' && ['ball', 'buttons', 'dress'].includes(node.activity)) {
+  if (node.type === 'activity' && ['ball', 'buttons', 'dress', 'comb'].includes(node.activity)) {
     const a = node as ActivityNode;
     ritual = a.activity === 'ball' ? <BallGame key={a.id + s.day} p={a.params as BallParams} s={s} />
+      : a.activity === 'comb' ? <CombGame key={a.id + s.day} p={a.params as CombParams} s={s} />
       : a.activity === 'buttons' ? <ButtonTin key={a.id + s.day} p={a.params as ButtonsParams} s={s} />
       : <Wardrobe key={a.id + s.day} p={a.params as DressParams} s={s} />;
   }

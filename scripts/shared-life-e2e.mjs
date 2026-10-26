@@ -83,6 +83,16 @@ async function ritual() {
     if (mend && rnd() < 0.7) { await tap(mend); const opt = await page.$(rnd() < 0.5 ? '[data-mend-flower]' : '[data-mend-plain]') ?? await page.$('[data-mend-sleeve]') ?? await page.$('[data-mend-plain]'); if (opt) await tap(opt); }
     await tap(await page.$('[data-dress-done]')); return 'dress-done';
   }
+  const comb = await page.$('[data-activity="comb"]');
+  if (comb) {
+    if ((await comb.getAttribute('data-done')) === '0') {
+      const b = await page.$('[data-comb-stroke]');
+      await tap(b); if (rnd() < 0.15) { await tap(b); await page.waitForTimeout(700); return 'comb-rough'; }
+      await page.waitForTimeout(800); return 'comb-stroke';
+    }
+    const r = await page.$(rnd() < 0.5 ? '[data-ribbon="red"]' : '[data-ribbon="old"]'); if (r) await tap(r);
+    await tap(await page.$('[data-comb-done]')); return 'comb-done';
+  }
   if (await page.$('[data-activity="pack"]')) {
     const it = await page.$('[data-pack]'); if (it) { await tap(it); return 'pack'; }
     await tap(await page.$('[data-pack-done]')); return 'pack-done';

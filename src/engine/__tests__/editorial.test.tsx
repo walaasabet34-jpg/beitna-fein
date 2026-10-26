@@ -39,15 +39,13 @@ describe('editorial continuity',()=>{
   expect(line(c2,enter(c2,newGame(c2),'c2_o_fam_both'))).toContain('خالتك فاطمة');
   expect(JSON.stringify(getNode(c1,'c1_greet'))).toContain('أنا فاطمة وبس');
  });
- it('takes the rejected lead into both honest choices without claiming the mother was located',()=>{
-  // The supervisor's reply is the wrong woman AND the correction: the mother left the hostel but still works there.
-  const reply=enter(c3,newGame(c3),'c3_a4');expect(line(c3,reply)).toContain('ست سنين');expect(line(c3,reply)).toContain('سابت السكن');
-  let s=enter(c3,newGame(c3),'c3_day2');expect(line(c3,s)).toContain('البوستة');
-  s=advance(c3,s);s=pick(c3,s,'c3_check_careful');s=advance(c3,s);s=advance(c3,s);
-  expect(s.node).toBe('c3_final_choice');
-  const opts=visibleOptions(getNode(c3,s.node),s);
-  expect(opts[0].text).toContain('مش ماما');
-  for(const goto of ['c3_final_clear','c3_final_hope'])expect(line(c3,pick(c3,s,goto))).not.toContain('لقيناها');
+ it('the mother’s reply explains the wait and gives a direct address; the answer goes to the workshop',()=>{
+  // Canon v2: she collects mail on the 1st, the contract ends 30 Nov and pays the ticket; no returned letters.
+  const t=line(c3,enter(c3,newGame(c3),'c3_history'));
+  for(const w of ['أول ديسمبر','العقد','الورشة','التذكرة'])expect(t).toContain(w);
+  expect(line(c3,enter(c3,newGame(c3),'c3_notice'))).toContain('ليه ماتجيش');
+  for(const id of ['c3_check_careful','c3_check_name','c3_check_home'])expect(advance(c3,enter(c3,newGame(c3),id)).node).toBe('c3_return');
+  for(const c of Object.values(CHAPTERS))for(const n of c.nodes)expect(JSON.stringify(n)).not.toMatch(/غير كافٍ|رجع الجواب|المشرفة|إسكندرية/);
  });
  it('offers apology only after an actual needle refusal, never merely stopping the buttons',()=>{
   for(const flags of [{},{buttons_stopped:true},{buttons_together:true},{memory_stitch:true},{memory_refused:true}]){
@@ -113,15 +111,13 @@ describe('editorial continuity',()=>{
   const svg=renderToStaticMarkup(<svg><NightScene s={s} expr="sleepy"/></svg>);
   expect(svg).toContain('fill="#b08d4a"');expect(svg).not.toContain('fill="#8f7339"');
  });
- it('frames the letter reader and removes the cat from the current-house assumption',()=>{
-  // Who reads is a choice; the letter answers the proof Hoda chose; Naima (who cannot read) never writes.
-  const read=getNode(c4,'mother_read');if(read.type!=='choice')throw new Error();
+ it('frames the letter reader, and the reply answers the detail Hoda chose',()=>{
+  // Who reads is a choice; the letter answers the detail Hoda chose on 5 Oct; Naima (who cannot read) never writes.
+  const read=getNode(c3,'c3_paper');if(read.type!=='choice')throw new Error();
   expect(read.options.map(o=>o.effects?.flags?.reply_read_by)).toEqual(['hoda','fatma']);
-  for(const [proof,word] of [['egg','البيض'],['cat','مشمش'],['ball','الكورة'],['count','السلالم']] as const){
-   const s=enter(c4,newGame(c4,{flags:{proof_detail:proof}}),'mother_reply');expect(line(c4,s)).toContain(word);expect(line(c4,s)).not.toContain('فوق الدولاب');
+  for(const [proof,word] of [['egg','البيض'],['cat','مشمش'],['ball','الكورة'],['count','السلالم'],['sky','السما']] as const){
+   const s=enter(c3,newGame(c3,{flags:{proof_detail:proof}}),'clue_compare');expect(line(c3,s)).toContain(word);
   }
-  const s=enter(c4,newGame(c4),'mother_reply');
-  for(const id of ['mother_write','mother_dictate','mother_postpone'])expect(line(c4,enter(c4,s,id))).toContain('ابن نعيمة');
  });
  it('makes the mother’s question refer to a shown name on the fabric',()=>{
   for(const flags of [{},{memory_stitch:true},{memory_refused:true}]){

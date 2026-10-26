@@ -81,7 +81,27 @@
   "c3_evening": "c3_bag1",
   "c3_a3": "c3_a4",
   "c3_bag2": "c3_bag1",
-  "c3_naima": "c3_day2"
+  "c3_naima": "c3_day2",
+  "c3_avoid": "c3_money",
+  "clue_age": "c3_money",
+  "clue_shop": "c3_money",
+  "clue_source": "c3_money",
+  "c3_history_yes": "c3_money",
+  "c3_history_no": "c3_money",
+  "c3_proof_b": "c3_money",
+  "c3_proof": "c3_money",
+  "c3_proof_c": "c3_money",
+  "c3_proof_egg": "c3_money",
+  "c3_proof_cat": "c3_money",
+  "c3_proof_ball": "c3_money",
+  "c3_proof_own": "c3_money",
+  "c3_proof_alone": "c3_money",
+  "c3_proof_alone_c": "c3_money",
+  "c3_proof_send": "c3_money",
+  "c3_final_choice": "c3_place",
+  "c3_final_clear": "c3_place",
+  "c3_final_hope": "c3_place",
+  "c3_final_short": "c3_place"
  },
  "ch5": {
   "g_news": "g_contact",
@@ -92,6 +112,13 @@
  "ch4": {
   "s_mother_reply2": "s_breath",
   "s_waiting": "s_bag",
-  "s_cardigan2": "s_cardigan"
+  "s_cardigan2": "s_cardigan",
+  "mother_read": "s_stitch",
+  "mother_reply": "s_stitch",
+  "mother_reply_hoda": "s_stitch",
+  "mother_reply_pick": "s_stitch",
+  "mother_write": "s_stitch",
+  "mother_dictate": "s_stitch",
+  "mother_postpone": "s_stitch"
  }
 }

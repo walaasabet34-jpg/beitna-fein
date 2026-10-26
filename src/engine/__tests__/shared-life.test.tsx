@@ -74,7 +74,7 @@ describe('clothes keep their history', () => {
 });
 
 describe('the search for the mother is a chain of results', () => {
-  it('each chapter adds a concrete step: shop → factory letter → hostel address → correction → reply → telegram', () => {
+  it('each chapter adds a concrete step: Sonia’s box → our letter → her October letter → her reply → our reply → telegrams', () => {
     const reached = new Set<string>();
     for (let seed = 1; seed <= 200; seed++) {
       let s: GameState | undefined;
@@ -82,7 +82,7 @@ describe('the search for the mother is a chain of results', () => {
         const run = simulate(ic, seed, 3000, 'random', s ? continueToChapter(ic, s) : newGame(ic));
         s = run.state;
       }
-      for (const f of ['search_fawzi', 'search_factory_letter', 'search_hostel_address', 'search_hostel_letter', 'search_supervisor_reply', 'search_second_letter', 'mother_contacted', 'mother_told_illness', 'mother_telegram']) {
+      for (const f of ['search_box', 'search_first_letter', 'mother_oct_letter', 'search_second_letter', 'mother_contacted', 'search_reply_sent', 'mother_told_illness', 'mother_reply_illness', 'mother_telegram']) {
         expect(s!.flags[f], `${seed}: ${f}`).toBeTruthy(); reached.add(f);
       }
       expect(['egg', 'cat', 'ball', 'sky', 'count']).toContain(s!.flags.proof_detail);
@@ -90,20 +90,20 @@ describe('the search for the mother is a chain of results', () => {
   });
   it('the mother answers the very detail Hoda (or Fatma) chose as proof', () => {
     for (const p of ['egg', 'cat', 'ball', 'sky', 'count']) {
-      const s = enter(c4, newGame(c4, { flags: { proof_detail: p } }), 'mother_reply');
+      const s = enter(c3, newGame(c3, { flags: { proof_detail: p } }), 'clue_compare');
       const want = { egg: 'البيض', cat: 'مشمش', ball: 'الكورة', sky: 'السما', count: 'السلالم' }[p]!;
-      expect(text(c4, s)).toContain(want);
+      expect(text(c3, s)).toContain(want);
     }
   });
   it('a cat proof is only offered if the cat came up on this route', () => {
-    const base = enter(c3, newGame(c3), 'c3_proof_c');
-    expect(visibleOptions(getNode(c3, base.node), base).some((o) => o.goto === 'c3_proof_cat')).toBe(false);
-    const cat = enter(c3, newGame(c3, { flags: { cat: 'honest' } }), 'c3_proof_c');
-    expect(visibleOptions(getNode(c3, cat.node), cat).some((o) => o.goto === 'c3_proof_cat')).toBe(true);
+    const base = enter(c1, newGame(c1), 'c1_box_detail');
+    expect(visibleOptions(getNode(c1, base.node), base).some((o) => o.goto === 'c1_proof_cat')).toBe(false);
+    const cat = enter(c1, newGame(c1, { flags: { cat: 'honest' } }), 'c1_box_detail');
+    expect(visibleOptions(getNode(c1, cat.node), cat).some((o) => o.goto === 'c1_proof_cat')).toBe(true);
   });
   it('Naima cannot read; Fatma reads for her, and Hoda corrects Fatma’s spelling', () => {
     expect(text(war, enter(war, newGame(war), 'w_box'))).toContain('مابعرفش أقرا');
-    expect(enter(war, newGame(war), 'w_details').flags.hoda_corrected_fatma).toBe(true);
+    expect(enter(c1, newGame(c1), 'c1_box_tele').flags.hoda_corrected_fatma).toBe(true);
     for (const c of Object.values(CHAPTERS)) for (const n of c.nodes) if (n.type === 'line' && n.speaker === 'naima') expect(n.text).not.toMatch(/كتبت(ها)? الجواب|هكتب/);
   });
 });
@@ -174,5 +174,34 @@ describe('saves', () => {
     const rich = renderToStaticMarkup(<svg><LivingRoom s={{ ...newGame(c1), money: 40, flags: { thread: 3 } }} expr="neutral" /></svg>);
     expect(poor).toContain('data-coins="0"'); expect(rich).toContain('data-coins="7"');
     expect((poor.match(/data-spool/g) ?? []).length).toBe(0); expect((rich.match(/data-spool/g) ?? []).length).toBe(3);
+  });
+});
+
+describe('canon v2: one contact chain, dates that add up', () => {
+  const DEC1 = Date.UTC(1973, 11, 1);
+  const words: Record<string, number> = { 'سبعة وخمسين': 57, 'خمسة وخمسين': 55, 'تمانية وعشرين': 28, 'واحد وعشرين': 21, 'تلاتاشر': 13, 'فاضل تسعة': 9 };
+  it('every “days left” count matches the in-game date', () => {
+    const checks: [typeof c1, string, number][] = [[c1, 'c1_box_cal', 2], [war, 'w_later', 2], [c2, 'c2_factory_back', 1], [c3, 'c3_truth_later', 1], [c4, 's_ordinary', 1], [c4, 's_search', 3]];
+    for (const [ic, id, day] of checks) {
+      const s = enter(ic, { ...newGame(ic), day }, id);
+      const t = text(ic, s);
+      const iso = ic.chapter.calendar?.[String(s.day)];
+      const left = Math.round((DEC1 - Date.parse(iso + 'T00:00:00Z')) / 864e5);
+      const said = Object.entries(words).find(([w]) => t.includes(w));
+      expect(said, `${id}: ${t}`).toBeTruthy();
+      expect(said![1], `${id} on ${iso}`).toBe(left);
+    }
+  });
+  it('the mother never says the address was wrong; a returned letter never happens', () => {
+    for (const c of Object.values(CHAPTERS)) for (const n of c.nodes) expect(JSON.stringify(n)).not.toMatch(/رجع(ت)? الجواب|الظرف.{0,20}رجع|غير كاف|المشرفة|مصنع الملابس/);
+  });
+  it('the money order can become Hoda’s own gift, and the rehearsal of the arrival is reachable', () => {
+    const hub = getNode(c4, 's_hub') as HubNode;
+    expect(hub.events?.some((e) => e.goto === 's_gift')).toBe(true);
+    expect(hub.hotspots.some((h) => h.goto === 's_reh')).toBe(true);
+    const g = enter(c4, newGame(c4, { flags: { mother_money: 'hoda' } }), 's_gift_c');
+    expect(visibleOptions(getNode(c4, g.node), g).length).toBe(2);
+    const tin = enter(c3, newGame(c3, { money: 5 }), 'c3_money');
+    expect(choose(c3, tin, visibleOptions(getNode(c3, tin.node), tin).find((o) => o.goto === 'c3_money_tin')!).money).toBe(55);
   });
 });

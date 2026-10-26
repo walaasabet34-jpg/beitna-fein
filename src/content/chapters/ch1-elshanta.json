@@ -187,7 +187,7 @@
           "door_open": true
         }
       },
-      "text": "نعيمة حطّت في إيدك بقجة هدوم، وورقة بعنوان مشطوب."
+      "text": "نعيمة حطّت في إيدك بقجة هدوم، وورقة بعنوان أوضة سنية، مشطوب: «اتأجّرت»."
     },
     {
       "id": "c1_d7",
@@ -223,19 +223,19 @@
     {
       "id": "intro_sonia",
       "type": "line",
-      "text": "اتحجزت من أسبوعين. مش هتقدر تاخدها.",
+      "text": "اتعملها عملية من أسبوع. النهارده بس فاقت واتكلمت.",
       "speaker": "naima",
       "next": "c1_d7b"
     },
     {
       "id": "intro_address",
       "type": "line",
-      "text": "سبت اسمي عند الساكنين الجداد: أي جواب ييجي لسنية يدّوهولي. وابني هيسأل عند عم فوزي، المحل اللي أمها كانت بتشتغل فيه.",
+      "text": "الأوضة اتأجّرت، وحاجتها عند صاحب البيت. ابني هيجيبها بكرة. جوابات أمها جوّاها.",
       "speaker": "naima",
       "next": "c1_d7b",
       "effects": {
         "flags": {
-          "search_letters_to_naima": true
+          "knows_box": true
         }
       }
     },
@@ -243,7 +243,7 @@
       "id": "c1_d7b",
       "type": "line",
       "speaker": "naima",
-      "text": "خليها عندك كام يوم لحد ما نوصل لأمها. شقتي مليانة. سلّمي على خالتك فاطمة.",
+      "text": "أمها في ليبيا، وجاية أول ديسمبر. شقتي مليانة. خليها عندك لحد ما تيجي. سلّمي على خالتك فاطمة.",
       "next": "c1_d9"
     },
     {
@@ -882,7 +882,7 @@
       "type": "line",
       "speaker": "hoda",
       "text": "إنتي بتمسكي بإيديكي الاتنين زي العيال الصغيرين.",
-      "next": "c1_hub",
+      "next": "c1_father",
       "variants": [
         {
           "if": {
@@ -908,6 +908,60 @@
         }
       ],
       "expr": "smile"
+    },
+    {
+      "id": "c1_father",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "الكورة دي ماما عملتها من شراب بابا. بابا مات وأنا صغيرة.",
+      "expr": "sad"
+    },
+    {
+      "id": "c1_father_c",
+      "type": "choice",
+      "options": [
+        {
+          "text": "(تحطي إيدك على الكورة جنب إيدها)",
+          "goto": "c1_father_hand",
+          "effects": {
+            "flags": {
+              "knows_father": true
+            },
+            "vars": {
+              "trust": 2,
+              "safety": 1
+            }
+          }
+        },
+        {
+          "text": "«جوزي كمان مات. صورته على الحيطة.»",
+          "goto": "c1_father_share",
+          "effects": {
+            "flags": {
+              "knows_father": true,
+              "photo_told": true
+            },
+            "vars": {
+              "openness": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1_father_hand",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "سابت إيدها تحت إيدك ثانيتين. وبعدين شدّت الكورة: «تاني.»",
+      "next": "c1_hub"
+    },
+    {
+      "id": "c1_father_share",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "يعني إحنا الاتنين.",
+      "next": "c1_hub",
+      "expr": "neutral"
     },
     {
       "id": "c1_talk",
@@ -4080,7 +4134,7 @@
           "goto": "c1_m_sew"
         }
       ],
-      "else": "c1_m_close"
+      "else": "comb_c1"
     },
     {
       "id": "c1_m_sew",
@@ -4090,10 +4144,304 @@
       "text": "ممكن أدوس على الماكينة تاني النهارده؟ هدوس بالراحة المرة دي. وعد."
     },
     {
+      "id": "comb_c1",
+      "type": "activity",
+      "activity": "comb",
+      "params": {
+        "strokes": 6,
+        "selfIf": {
+          "var": "trust",
+          "lte": 16
+        },
+        "effects": {
+          "vars": {
+            "trust": 1
+          }
+        },
+        "lines": [
+          "ماما بتعمل ضفيرتين. سنية كانت بتعمل واحدة بس.",
+          "المشط ده سنّته اتكسرت في القطر، لما مشينا من السويس.",
+          "إنتي إيدك أخف من سنية."
+        ]
+      }
+    },
+    {
+      "id": "c1_box1",
+      "type": "line",
+      "speaker": "naima",
+      "text": "جوابات أمها جوّه. اقري إنتي يا فاطمة، أنا مابعرفش أقرا.",
+      "scene": "door",
+      "cast": [
+        "naima",
+        "hoda"
+      ],
+      "lead": "محمود ابن نعيمة طلع بحاجة سنية: علبة صفيح.",
+      "effects": {
+        "flags": {
+          "search_box": true
+        }
+      }
+    },
+    {
+      "id": "c1_box_read",
+      "type": "choice",
+      "options": [
+        {
+          "text": "«افتحيه إنتي يا هدى. ده خط ماما.»",
+          "goto": "c1_box_hoda",
+          "effects": {
+            "flags": {
+              "mother_letter_read": "hoda"
+            },
+            "vars": {
+              "trust": 2,
+              "openness": 2
+            }
+          }
+        },
+        {
+          "text": "(تقريه بصوت عالي، على مهلك)",
+          "goto": "c1_box_fatma",
+          "effects": {
+            "flags": {
+              "mother_letter_read": "fatma"
+            },
+            "vars": {
+              "safety": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1_box_hoda",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "ده خطها! بتكتب الزاي بنقطة كبيرة كده.",
+      "next": "c1_box_letter",
+      "expr": "smile"
+    },
+    {
+      "id": "c1_box_fatma",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "قريتيه كلمة كلمة. عند «المقاول» وقفتي، وهدى قالتها قبلك."
+    },
+    {
+      "id": "c1_box_letter",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "«يا سنية، الشغل في ورشة بنغازي كويس. العقد بيخلص آخر نوفمبر، والمقاول بيدفع التذكرة. أول ديسمبر أكون عندكم. ابعتوا على مكتب المقاول؛ باخد الجوابات أول كل شهر. بوسيلي هدى. — زينب»",
+      "scene": "paper",
+      "effects": {
+        "flags": {
+          "mother_reason_known": true
+        }
+      }
+    },
+    {
+      "id": "c1_box_far",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "أول ديسمبر. هو ده بعيد؟",
+      "scene": "living",
+      "cast": [
+        "hoda"
+      ],
+      "expr": "worried"
+    },
+    {
+      "id": "c1_box_count",
+      "type": "choice",
+      "options": [
+        {
+          "text": "(تشاوري على النتيجة اللي على الحيطة) «تعالي نعدّ.»",
+          "goto": "c1_box_cal",
+          "effects": {
+            "flags": {
+              "calendar_counted": true
+            },
+            "vars": {
+              "trust": 2
+            }
+          }
+        },
+        {
+          "text": "«بعيد شوية. بس جاي.»",
+          "goto": "c1_box_honest",
+          "effects": {
+            "vars": {
+              "trust": 1
+            }
+          }
+        },
+        {
+          "text": "«قريب يا حبيبتي.»",
+          "goto": "c1_box_soon",
+          "effects": {
+            "flags": {
+              "soon_promise": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1_box_cal",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "…خمسة وخمسين، ستة وخمسين، سبعة وخمسين! سبعة وخمسين ورقة.",
+      "lead": "هدى وقفت على الكرسي، وقلبت ورق النتيجة ورقة ورقة.",
+      "next": "c1_box_write",
+      "expr": "focused"
+    },
+    {
+      "id": "c1_box_honest",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "بس جاي. ماما مابتقولش حاجة وماتعملهاش.",
+      "next": "c1_box_write",
+      "expr": "neutral"
+    },
+    {
+      "id": "c1_box_soon",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "قريب قد إيه؟ بكرة؟",
+      "next": "c1_box_write",
+      "expr": "surprised"
+    },
+    {
+      "id": "c1_box_write",
+      "type": "line",
+      "speaker": "fatma",
+      "text": "نكتبلها النهارده. عايزة تقوليلها حاجة؟"
+    },
+    {
+      "id": "c1_box_detail",
+      "type": "choice",
+      "options": [
+        {
+          "text": "«اكتبي عن البيض المسلوق.»",
+          "goto": "c1_proof_egg",
+          "effects": {
+            "flags": {
+              "proof_detail": "egg"
+            }
+          }
+        },
+        {
+          "text": "«اكتبي إنك بتعدّي السلالم هنا كمان.»",
+          "goto": "c1_proof_count",
+          "effects": {
+            "flags": {
+              "proof_detail": "count"
+            }
+          }
+        },
+        {
+          "text": "«ارسمي لها الكورة الشراب.»",
+          "goto": "c1_proof_ball",
+          "effects": {
+            "flags": {
+              "proof_detail": "ball"
+            }
+          }
+        },
+        {
+          "text": "«اكتبي عن مشمش.»",
+          "goto": "c1_proof_cat",
+          "effects": {
+            "flags": {
+              "proof_detail": "cat"
+            }
+          },
+          "if": {
+            "flag": "cat"
+          }
+        },
+        {
+          "text": "«اختاري إنتي.»",
+          "goto": "c1_proof_own",
+          "effects": {
+            "flags": {
+              "proof_detail": "sky"
+            },
+            "vars": {
+              "autonomy": 2
+            }
+          }
+        }
+      ],
+      "prompt": "هدى عايزة تكتب حاجة تضحّك ماما."
+    },
+    {
+      "id": "c1_proof_egg",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "«أنا لسه مابحبش البيض المسلوق.» هي هتضحك.",
+      "next": "c1_box_tele",
+      "expr": "laugh"
+    },
+    {
+      "id": "c1_proof_count",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "«عدّيت سلالم البيت الجديد: اتنين وتلاتين.»",
+      "next": "c1_box_tele",
+      "expr": "proud"
+    },
+    {
+      "id": "c1_proof_cat",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "«مشمش لسه بتسرق سمك أم رضا؟» ماما هتعرف إنها أنا.",
+      "next": "c1_box_tele",
+      "expr": "smile"
+    },
+    {
+      "id": "c1_proof_ball",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "رسمت الكورة الشراب بالخياطة الحمرا اللي في نصها، وكتبت تحتها: «اللي إنتي عملتيها».",
+      "next": "c1_box_tele"
+    },
+    {
+      "id": "c1_proof_own",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "«السما هنا كمان بتدخل من الإزاز الأزرق.» دي بتاعة ماما.",
+      "next": "c1_box_tele",
+      "expr": "proud"
+    },
+    {
+      "id": "c1_box_tele",
+      "type": "line",
+      "speaker": "naima",
+      "text": "تلغراف؟ هيستنى في نفس المكتب لأول الشهر، وبيتحسب بالكلمة. الجواب أحسن.",
+      "effects": {
+        "flags": {
+          "hoda_corrected_fatma": true
+        }
+      }
+    },
+    {
+      "id": "c1_box_send",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "هدى صحّحت «المقاول» على الظرف. الطابع لليبيا خد قرشين من علبة الفلوس اللي على الماكينة.",
+      "effects": {
+        "money": -2,
+        "flags": {
+          "search_first_letter": true
+        }
+      }
+    },
+    {
       "id": "c1_m_close",
       "type": "line",
       "speaker": "narrator",
-      "text": "هدى بصّت ناحية الباب، زي كل ما حد يعدّي على السلم.",
+      "text": "هدى حطّت جواب ماما في شنطتها، ومحمود نزل بجوابنا البوستة.",
       "variants": [
         {
           "if": {

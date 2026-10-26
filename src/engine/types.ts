@@ -113,8 +113,8 @@ export interface HubNode extends NodeBase {
 
 export interface ActivityNode extends NodeBase {
   type: 'activity';
-  activity: 'kitchen' | 'bed' | 'ball' | 'buttons' | 'dress';
-  params: KitchenParams | BedParams | BallParams | ButtonsParams | DressParams;
+  activity: 'kitchen' | 'bed' | 'ball' | 'buttons' | 'dress' | 'comb';
+  params: KitchenParams | BedParams | BallParams | ButtonsParams | DressParams | CombParams;
   next?: string;
 }
 
@@ -231,6 +231,18 @@ export interface DressResult {
   insisted?: boolean;       // the player overrode Hoda's own pick
   packed?: string[];        // mode 'pack'
 }
+
+/** Combing and braiding her hair in the morning. Gentle strokes get her talking; hurried ones hurt. */
+export interface CombParams {
+  /** What she says while her hair is being done, one line every two gentle strokes (her own stories). */
+  lines: string[];
+  strokes?: number;
+  /** When true she braids herself and the player holds the mirror (early, before she trusts Fatma's hands). */
+  selfIf?: Condition;
+  special?: boolean;
+  effects?: Effect;
+}
+export interface CombResult { gentle: number; rough: number; heard: number; ribbon: 'old' | 'red'; self?: boolean }
 
 export interface BedGroup { id: string; label: string; options: BedOption[] }
 export interface BedParams { groups: BedGroup[] }

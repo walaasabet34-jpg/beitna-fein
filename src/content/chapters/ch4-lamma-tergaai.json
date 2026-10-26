@@ -21,7 +21,7 @@
     "18/11",
     "19/11",
     "22/11",
-    "26/11",
+    "28/11",
     "30/11",
     "30/11"
   ],
@@ -29,7 +29,7 @@
     "1": "1973-11-18",
     "2": "1973-11-19",
     "3": "1973-11-22",
-    "4": "1973-11-26",
+    "4": "1973-11-28",
     "5": "1973-11-30",
     "6": "1973-11-30"
   },
@@ -119,127 +119,21 @@
     {
       "id": "s_ordinary",
       "type": "line",
-      "speaker": "narrator",
-      "text": "جواب من إسكندرية. هدى عرفت الخط قبلك.",
-      "next": "mother_read",
+      "speaker": "hoda",
+      "text": "تلاتاشر! فاضل تلاتاشر يوم!",
+      "next": "s_ribbon_ask",
       "cast": [
         "hoda",
         "naima"
-      ]
-    },
-    {
-      "id": "mother_read",
-      "type": "choice",
-      "options": [
-        {
-          "text": "«اقريه إنتي يا هدى.»",
-          "goto": "mother_reply",
-          "effects": {
-            "flags": {
-              "reply_read_by": "hoda"
-            },
-            "vars": {
-              "trust": 1
-            }
-          }
-        },
-        {
-          "text": "(تقريه بصوت عالي، على مهلك)",
-          "goto": "mother_reply",
-          "effects": {
-            "flags": {
-              "reply_read_by": "fatma"
-            }
-          }
-        }
       ],
-      "prompt": "الجواب:"
-    },
-    {
-      "id": "mother_reply",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "«يا هدى، جوابك وصلني. لسه مابتحبيش البيض المسلوق؟ ده عنواني، وهاجي أول الشهر. — ماما» وفي الظرف تلاتين قرش.",
-      "scene": "paper",
-      "cast": [],
-      "effects": {
-        "flags": {
-          "mother_contacted": true
-        },
-        "money": 30
-      },
-      "variants": [
-        {
-          "if": {
-            "flag": "proof_detail",
-            "eq": "egg"
-          },
-          "text": "«يا هدى، جوابك وصلني. لسه مابتحبيش البيض المسلوق؟ ده عنواني، وهاجي أول الشهر. — ماما» وفي الظرف تلاتين قرش."
-        },
-        {
-          "if": {
-            "flag": "proof_detail",
-            "eq": "cat"
-          },
-          "text": "«يا هدى، جوابك وصلني. مشمش لسه بتسرق سمك؟ ده عنواني، وهاجي أول الشهر. — ماما» وفي الظرف تلاتين قرش."
-        },
-        {
-          "if": {
-            "flag": "proof_detail",
-            "eq": "ball"
-          },
-          "text": "«يا هدى، جوابك وصلني. الكورة الشراب لسه معاكي؟ الخياطة الحمرا من فستاني. ده عنواني، وهاجي أول الشهر. — ماما» وفي الظرف تلاتين قرش."
-        },
-        {
-          "if": {
-            "flag": "proof_detail",
-            "eq": "sky"
-          },
-          "text": "«يا هدى، جوابك وصلني. السما لسه بتدخل البيت؟ ده عنواني، وهاجي أول الشهر. — ماما» وفي الظرف تلاتين قرش."
-        },
-        {
-          "if": {
-            "flag": "proof_detail",
-            "eq": "count"
-          },
-          "text": "«يا هدى، جوابك وصلني. لسه بتعدّي السلالم؟ ده عنواني، وهاجي أول الشهر. — ماما» وفي الظرف تلاتين قرش."
-        }
-      ]
-    },
-    {
-      "id": "mother_reply_hoda",
-      "type": "line",
-      "speaker": "hoda",
-      "text": "هي فاكرة!",
-      "scene": "living",
-      "cast": [
-        "hoda"
-      ],
-      "variants": [
-        {
-          "if": {
-            "flag": "reply_read_by",
-            "eq": "hoda"
-          },
-          "text": "قريته كله من غير ما أغلط. حتى «المشرفة».",
-          "expr": "proud"
-        },
-        {
-          "if": {
-            "flag": "proof_detail",
-            "eq": "ball"
-          },
-          "text": "الخياطة الحمرا من فستانها! أنا ماكنتش أعرف.",
-          "expr": "surprised"
-        }
-      ],
-      "expr": "laugh"
+      "expr": "laugh",
+      "lead": "١٨ نوفمبر. هدى قطعت ورقة النتيجة، وعدّت الباقي بصوت عالي."
     },
     {
       "id": "s_ribbon_ask",
       "type": "line",
       "speaker": "hoda",
-      "text": "النهارده ينفع الشريطة الحمرا؟",
+      "text": "الدنيا برد النهارده. ألبس إيه؟",
       "expr": "smile"
     },
     {
@@ -250,79 +144,14 @@
         "mode": "dress",
         "school": false,
         "cold": true,
-        "special": true,
-        "today": "يوم جواب ماما · الجو بقى برد"
+        "special": false,
+        "today": "الجو بقى برد · فاضل ١٣ يوم"
       }
-    },
-    {
-      "id": "mother_reply_pick",
-      "type": "choice",
-      "prompt": "هدى مدت لك القلم.",
-      "options": [
-        {
-          "text": "«اكتبي لها إنتي. هاتي الورقة وأنا أمسكها.»",
-          "goto": "mother_write",
-          "effects": {
-            "flags": {
-              "letter_started": true
-            },
-            "vars": {
-              "trust": 2
-            }
-          }
-        },
-        {
-          "text": "«قوليلي إنتي، وأنا أكتب.»",
-          "goto": "mother_dictate",
-          "effects": {
-            "flags": {
-              "letter_dictated": true
-            },
-            "vars": {}
-          }
-        },
-        {
-          "text": "«نرد بعد ما أخلص الكم.»",
-          "goto": "mother_postpone",
-          "effects": {
-            "flags": {
-              "letter_delayed": true
-            },
-            "vars": {}
-          }
-        }
-      ]
-    },
-    {
-      "id": "mother_write",
-      "type": "line",
-      "text": "عند «الإجازة» وقفت: «بالألف ولا بالهمزة؟» وصحّحتها هي. ابن نعيمة خد الجواب.",
-      "speaker": "narrator",
-      "next": "s_stitch"
-    },
-    {
-      "id": "mother_dictate",
-      "type": "line",
-      "text": "قالت الجملة، وإنتي كتبتي بخطك الكبير. قرت وراكي وصحّحت كلمتين. ابن نعيمة خد الجواب.",
-      "speaker": "narrator",
-      "next": "s_stitch",
-      "effects": {
-        "inc": {
-          "hoda_corrected_fatma": 1
-        }
-      }
-    },
-    {
-      "id": "mother_postpone",
-      "type": "line",
-      "text": "بعد ما خلصتي الكم كتبتوا الرد. ابن نعيمة خده على البوستة.",
-      "speaker": "narrator",
-      "next": "s_stitch"
     },
     {
       "id": "s_stitch",
       "type": "choice",
-      "prompt": "«كتبت اسمي بالقلم على حتة قماش في الشنطة. تورّيني أطرّزه؟»",
+      "prompt": "«كتبت اسمي بالقلم على حتة قماش. تورّيني أطرّزه قبل ما ماما تيجي؟»",
       "options": [
         {
           "text": "توقفي خمس دقايق وتوريها أول حرفين.",
@@ -437,6 +266,23 @@
             ]
           },
           "goto": "s_ev_cold"
+        },
+        {
+          "id": "gift",
+          "if": {
+            "all": [
+              {
+                "flag": "mother_money",
+                "eq": "hoda"
+              },
+              {
+                "slot": {
+                  "gte": 3
+                }
+              }
+            ]
+          },
+          "goto": "s_gift"
         }
       ],
       "ambient": [
@@ -496,7 +342,15 @@
           "id": "hoda",
           "target": "hoda",
           "label": "تقعدي جنبها",
-          "goto": "s_sit"
+          "goto": "s_sit",
+          "once": true
+        },
+        {
+          "id": "rehearse",
+          "target": "doorway",
+          "label": "هدى عايزة تتمرّن على يوم ما ماما تيجي",
+          "once": true,
+          "goto": "s_reh"
         }
       ]
     },
@@ -506,6 +360,143 @@
       "speaker": "narrator",
       "text": "الجو قلب برد. هدى نفخت في إيديها: «إيدي ساقعة.»",
       "next": "s_hub"
+    },
+    {
+      "id": "s_gift",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "غمّضي. …ومدّي إيدك.",
+      "lead": "هدى رجعت من الخردواتي وإيدها ورا ضهرها.",
+      "expr": "smile"
+    },
+    {
+      "id": "s_gift2",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "في كفّك كستبان جديد، لامع. «من فلوسي. بتاعك مخروم من فوق.»"
+    },
+    {
+      "id": "s_gift_c",
+      "type": "choice",
+      "options": [
+        {
+          "text": "(تلبسيه في صباعك) «أهلاً يا ست طاقية.»",
+          "goto": "s_gift_a",
+          "effects": {
+            "flags": {
+              "new_thimble": true
+            },
+            "vars": {
+              "trust": 2
+            }
+          }
+        },
+        {
+          "text": "«دي فلوسك يا هدى…»",
+          "goto": "s_gift_b",
+          "effects": {
+            "flags": {
+              "new_thimble": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "s_gift_a",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "لسه فاكرة! أول يوم!",
+      "next": "s_hub",
+      "expr": "laugh"
+    },
+    {
+      "id": "s_gift_b",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "ما أنا اخترت. حاجة مهمة.",
+      "next": "s_hub",
+      "expr": "proud"
+    },
+    {
+      "id": "s_reh",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "اعملي إنتي ماما وهي داخلة من الباب. وأنا أفتح.",
+      "expr": "laugh"
+    },
+    {
+      "id": "s_reh_c",
+      "type": "choice",
+      "options": [
+        {
+          "text": "«هدى! كبرتي كده إمتى؟»",
+          "goto": "s_reh_a",
+          "effects": {
+            "flags": {
+              "rehearsal": "grown"
+            },
+            "vars": {
+              "trust": 2
+            }
+          }
+        },
+        {
+          "text": "(تفتحي دراعاتك من غير كلام)",
+          "goto": "s_reh_b",
+          "effects": {
+            "flags": {
+              "rehearsal": "arms"
+            },
+            "vars": {
+              "safety": 2
+            }
+          }
+        },
+        {
+          "text": "«فين الضفيرتين؟»",
+          "goto": "s_reh_c2",
+          "effects": {
+            "flags": {
+              "rehearsal": "braids"
+            },
+            "vars": {
+              "openness": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "s_reh_a",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "كبرت تلات سنتي! وبعدّ بالاتنين. وأوريكي الكورة.",
+      "next": "s_reh_end",
+      "expr": "proud"
+    },
+    {
+      "id": "s_reh_b",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "جريت عليكي وخبطت في بطنك. «لأ، استني. هي هتعيّط. نعيدها.» وعادوها مرتين.",
+      "next": "s_reh_end"
+    },
+    {
+      "id": "s_reh_c2",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "خالتي فاطمة بتعملهم! بس ماما هتعملهم أحسن… شوية بس.",
+      "next": "s_reh_end",
+      "expr": "laugh"
+    },
+    {
+      "id": "s_reh_end",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "يوم واحد ديسمبر إنتي تقفي هنا. جنب الباب.",
+      "next": "s_hub",
+      "expr": "smile"
     },
     {
       "id": "s_ball_pre",
@@ -661,7 +652,7 @@
       "id": "s_cough",
       "type": "line",
       "speaker": "narrator",
-      "text": "بالليل كحّت، وجبهتها سخنة.",
+      "text": "بالليل كحّت، وجبهتها سخنة. سعاد كانت قالت إن نص الفصل غايب.",
       "effects": {
         "setTime": {
           "day": 1,
@@ -872,7 +863,7 @@
       "id": "s_search",
       "type": "line",
       "speaker": "narrator",
-      "text": "كتبتي لأمها: «هدى عندها حصبة، والطبيب بيتابعها.»",
+      "text": "كتبتي لأمها على الورشة: «هدى عندها حصبة، والطبيب بيتابعها. ماتقلقيش.» هدى كتبت تحت: «فاضل تسعة.»",
       "effects": {
         "flags": {
           "mother_told_illness": true
@@ -929,7 +920,7 @@
       "id": "s_wait",
       "type": "line",
       "speaker": "hoda",
-      "text": "طب اكتبي العنوان كبير، عشان تقراه.",
+      "text": "طب اكتبي «فاضل تسعة» كبير، عشان تشوفه.",
       "next": "s_mother_reply"
     },
     {
@@ -943,7 +934,7 @@
       "id": "s_mother_reply",
       "type": "line",
       "speaker": "narrator",
-      "text": "يوم ٢٦ جه رد: «قلبي معاها. هاجي أول الشهر.»",
+      "text": "يوم ٢٨ وصل تلغراف من بنغازي: «سلامة هدى. العقد يخلص بعد بكرة. جاية أول ديسمبر.»",
       "scene": "paper",
       "cast": [],
       "effects": {
@@ -957,10 +948,30 @@
       }
     },
     {
+      "id": "s_tel_hoda",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "تلاتة… تلاتة بس.",
+      "scene": "sickroom",
+      "lead": "قريتيه لها مرتين. ابتسمت وعينيها مقفولة.",
+      "expr": "sick"
+    },
+    {
+      "id": "s_cal29",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "٢٩. ماقدرتش تقوم للنتيجة: «قطّعيها إنتي وقولي الرقم.» قطعتيها وقلتي: «اتنين.» ابتسمت.",
+      "effects": {
+        "flags": {
+          "fatma_tore": true
+        }
+      }
+    },
+    {
       "id": "s_breath",
       "type": "line",
       "speaker": "narrator",
-      "text": "نفَسها بقى صعب. في المستشفى: التهاب رئوي بعد الحصبة.",
+      "text": "ليلة ٣٠، نفَسها بقى صعب. الفجر كنتوا في المستشفى: التهاب رئوي بعد الحصبة.",
       "scene": "hospital",
       "cast": [
         "hoda"
@@ -978,7 +989,7 @@
     {
       "id": "s_urgent",
       "type": "line",
-      "text": "نعيمة: «ابني راح يبعت برقية لأمها.»",
+      "text": "نعيمة: «المكالمة لبرّه عايزة حجز لبكرة. ابني بعت تلغراف للورشة: هدى في المستشفى، تعالي.»",
       "speaker": "narrator",
       "effects": {
         "flags": {
@@ -1170,7 +1181,7 @@
       "id": "s_decline",
       "type": "line",
       "speaker": "doctor",
-      "text": "أنا آسف يا مدام فاطمة. هدى ماتت رغم العلاج.",
+      "text": "البقية في حياتك يا ست فاطمة. عملنا كل اللي نقدر عليه.",
       "scene": "hospital",
       "cast": [
         "doctor"
@@ -1237,7 +1248,7 @@
     {
       "id": "s_collect_bag",
       "type": "line",
-      "text": "حطيتي الكراسة والمشط في شنطة القماش. إيدها فضلت في إيدك.",
+      "text": "حطيتي الكراسة والمشط في شنطة القماش، وإيدك لسه دافية من إيدها.",
       "speaker": "narrator",
       "cast": [
         "naima"

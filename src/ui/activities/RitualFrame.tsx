@@ -33,12 +33,21 @@ export function RitualFrame({ s, children, overlay, onTap, focusX = 600, label }
 
 /** A speech bubble drawn in the SVG, anchored above a point. Short words only — she reacts, she doesn't narrate. */
 export function Bubble({ x, y, text, tone = 'hoda' }: { x: number; y: number; text: string; tone?: 'hoda' | 'quiet' }) {
-  const w = Math.max(70, text.length * 17 + 36);
+  // Long lines wrap at about 18 letters so a bubble stays inside the phone crop of the stage.
+  const lines: string[] = [];
+  for (const w of text.split(' ')) {
+    const last = lines[lines.length - 1];
+    if (last !== undefined && (last + ' ' + w).length <= 18) lines[lines.length - 1] = last + ' ' + w; else lines.push(w);
+  }
+  const w = Math.max(70, Math.max(...lines.map((l) => l.length)) * 17 + 36);
+  const h = 14 + lines.length * 34;
   return (
     <g className="bubble-pop" pointerEvents="none" key={text}>
-      <rect x={x - w / 2} y={y - 58} width={w} height="50" rx="22" fill={tone === 'hoda' ? '#fff8ea' : '#e9e1d2'} stroke="#3a2418" strokeWidth="2" strokeOpacity=".6" />
+      <rect x={x - w / 2} y={y - 8 - h} width={w} height={h} rx="22" fill={tone === 'hoda' ? '#fff8ea' : '#e9e1d2'} stroke="#3a2418" strokeWidth="2" strokeOpacity=".6" />
       <path d={`M${x - 10} ${y - 9} L${x} ${y + 8} L${x + 8} ${y - 9}Z`} fill={tone === 'hoda' ? '#fff8ea' : '#e9e1d2'} />
-      <text x={x} y={y - 24} textAnchor="middle" direction="rtl" fontFamily="'Noto Naskh Arabic', serif" fontSize="26" fontWeight="700" fill="#2b2118">{text}</text>
+      {lines.map((l, i) => (
+        <text key={i} x={x} y={y - 8 - h + 38 + i * 34} textAnchor="middle" direction="rtl" fontFamily="'Noto Naskh Arabic', serif" fontSize="26" fontWeight="700" fill="#2b2118">{l}</text>
+      ))}
     </g>
   );
 }

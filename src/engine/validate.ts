@@ -65,6 +65,7 @@ export function validateChapter(ch: Chapter, inherited: Iterable<string> = []): 
           'ball_stairs', 'ball_count', 'ball_crossing', 'ball_wall', 'ball_bed'].forEach((f) => setFlags.add(f));
         if (n.activity === 'buttons') ['buttons_sessions', 'buttons_last_order', 'hoda_sorted', 'buttons_showed', 'buttons_fixed_quietly', 'hoda_caught_fatma', 'red_button', 'buttons_alone', 'buttons_left_wrong'].forEach((f) => setFlags.add(f));
         if (n.activity === 'dress') ['packed', 'packed_all', 'cl_yellow', 'cl_navy', 'c2_outfit', 'outfit', 'layer', 'ribbon', 'dressed_times', 'dress_insisted', 'warm_today', 'cold_today', 'sleeve_loose_today', 'mended_yellow', 'mended_navy'].forEach((f) => setFlags.add(f));
+        if (n.activity === 'comb') ['comb_times', 'comb_last_heard', 'ribbon', 'comb_rough', 'comb_gentle', 'comb_self'].forEach((f) => setFlags.add(f));
         addEffect((n.params as { effects?: Effect }).effects);
         if (n.activity === 'kitchen') {
           (n.params as { items: { id: string }[] }).items.forEach((i) => setFlags.add(`meal_${i.id}`));

@@ -39,16 +39,36 @@
       "broadcast": null
     },
     {
+      "id": "g_burial",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "استنّوها لحد الضهر. دفنوها، ووصلت والناس راجعين، وشنطتها في إيدها. نعيمة راحت لها. إنتي ماقدرتيش تقربي.",
+      "scene": "landing"
+    },
+    {
       "id": "g_home",
       "type": "line",
       "speaker": "narrator",
-      "text": "حطيتي كبايتين. رجعتي واحدة قبل ما تمليها."
+      "text": "حطيتي كبايتين. رجعتي واحدة قبل ما تمليها.",
+      "scene": "living"
     },
     {
       "id": "g_objects",
       "type": "choice",
       "prompt": "الطلبية قدامك. تبدأي بإيه؟",
       "options": [
+        {
+          "text": "(تقطعي ورقة النتيجة)",
+          "goto": "g_cal",
+          "effects": {
+            "flags": {
+              "tore_dec1": true
+            }
+          },
+          "if": {
+            "flag": "calendar_ritual"
+          }
+        },
         {
           "text": "(تطلّعي الكورة من تحت الماكينة)",
           "goto": "ball_alone",
@@ -159,6 +179,13 @@
       "next": "g_war_memory"
     },
     {
+      "id": "g_cal",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "قطعتي ورقة ٣٠ اللي ماحدش قطعها، وبعدين ١ ديسمبر. اليوم اللي كانت بتعدّ له. حطيتيهم في الكراسة.",
+      "next": "g_war_memory"
+    },
+    {
       "id": "g_war_memory",
       "type": "line",
       "speaker": "narrator",
@@ -180,7 +207,7 @@
           "if": {
             "flag": "war_silenced"
           },
-          "text": "افتكرتي صوتك يوم الخبر: «ثانية يا هدى، عايزة أسمع الباقي.» وعينها عليكي بعد ما سكتت."
+          "text": "افتكرتي صوتك يوم العبور: «ثانية يا هدى، عايزة أسمع الباقي.» وعينها عليكي بعد ما سكتت."
         }
       ]
     },
@@ -188,9 +215,9 @@
       "id": "g_contact",
       "type": "line",
       "speaker": "naima",
-      "text": "«جوابكم بس اللي وصلها.» «عايزة حاجات بنتها، وعايزة تسمع منك.»",
+      "text": "عايزة حاجات بنتها، وعايزة تسمع منك. وبعد بكرة مسافرة الفيوم عند سنية.",
       "next": "g_meet",
-      "lead": "نعيمة: «أمها وصلت على البرقية تاني يوم. قلتلها. وعايزة تشوفك.»",
+      "lead": "تاني يوم، نعيمة: «أمها نامت عندي. المقاول ركّبها أول طيارة.»",
       "effects": {
         "setTime": {
           "day": 2,
@@ -632,6 +659,12 @@
       "variants": [
         {
           "if": {
+            "flag": "rehearsal"
+          },
+          "text": "افتكرتي هدى عند الباب: «إنتي تقفي هنا.» وقفتي جنب الباب."
+        },
+        {
+          "if": {
             "flag": "relationship_before_illness",
             "eq": "warm"
           },
@@ -784,7 +817,7 @@
       "speaker": "mother",
       "text": "دي أنا اللي علّمتها. «اللي يعدّ مايتوهش».",
       "expr": "sad",
-      "next": "g_mother_seam"
+      "next": "g_guilt"
     },
     {
       "id": "g_account_bag",
@@ -798,14 +831,14 @@
       "type": "line",
       "speaker": "narrator",
       "text": "هزّيتي راسك. الأم بصّت للقفل شوية، وماقالتش حاجة.",
-      "next": "g_mother_seam"
+      "next": "g_guilt"
     },
     {
       "id": "g_account_true",
       "type": "line",
       "speaker": "fatma",
       "text": "كانت بتدوّر على المشط كل شوية. وتنسى هي حطّته فين.",
-      "next": "g_mother_seam",
+      "next": "g_guilt",
       "variants": [
         {
           "if": {
@@ -820,20 +853,93 @@
       "type": "line",
       "speaker": "mother",
       "text": "قولي لي حصل إيه. وكانت بتعمل إيه لوحدها.",
-      "next": "g_mother_seam"
+      "next": "g_guilt"
     },
     {
       "id": "g_account_hide",
       "type": "line",
       "speaker": "mother",
       "text": "كانت مبسوطة؟ كانت بتتكلم؟",
-      "next": "g_mother_seam"
+      "next": "g_guilt"
     },
     {
       "id": "g_account_silent",
       "type": "line",
       "speaker": "narrator",
       "text": "طلعتي الكراسة من الشنطة وفتحتيها. الأم قلبت الصفحات، ونعيمة قاعدة جنبها.",
+      "next": "g_guilt"
+    },
+    {
+      "id": "g_guilt",
+      "type": "line",
+      "speaker": "mother",
+      "text": "لو كنت سبت الشغل أول ما جوابكم وصلني…",
+      "expr": "sad"
+    },
+    {
+      "id": "g_guilt_c",
+      "type": "choice",
+      "options": [
+        {
+          "text": "«الحصبة كانت في المدرسة كلها. محدش كان يعرف إنها هتقلب كده.»",
+          "goto": "g_guilt_fact",
+          "effects": {
+            "flags": {
+              "guilt_answer": "fact"
+            }
+          }
+        },
+        {
+          "text": "«كانت بتقطع النتيجة كل يوم وتقول الرقم. ماكانتش زعلانة منك.»",
+          "goto": "g_guilt_count",
+          "effects": {
+            "flags": {
+              "guilt_answer": "count"
+            }
+          },
+          "if": {
+            "flag": "calendar_ritual"
+          }
+        },
+        {
+          "text": "(تسكتي، وتقعدي جنبها)",
+          "goto": "g_guilt_quiet",
+          "effects": {
+            "flags": {
+              "guilt_answer": "quiet"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "g_guilt_fact",
+      "type": "line",
+      "speaker": "mother",
+      "text": "…وأنا كنت بعدّ معاها من هناك.",
+      "expr": "sad",
+      "next": "g_mother_seam"
+    },
+    {
+      "id": "g_guilt_count",
+      "type": "line",
+      "speaker": "mother",
+      "text": "آخر رقم قالته كام؟",
+      "expr": "sad",
+      "next": "g_guilt_count2"
+    },
+    {
+      "id": "g_guilt_count2",
+      "type": "line",
+      "speaker": "fatma",
+      "text": "تلاتة. يوم التلغراف بتاعك.",
+      "next": "g_mother_seam"
+    },
+    {
+      "id": "g_guilt_quiet",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "قعدتي جنبها. ولا واحدة فيكم لقت كلام، والسكوت ما كانش تقيل.",
       "next": "g_mother_seam"
     },
     {
@@ -1131,7 +1237,7 @@
           }
         },
         {
-          "text": "(تكتبي عنوانك وتسلّميه لها مع الشنطة)",
+          "text": "(تكتبي سطر: «بابي مفتوح لما تحبي»، وتحطيه في جيب الشنطة)",
           "goto": "final_send_letter",
           "effects": {
             "flags": {
@@ -1159,7 +1265,7 @@
     {
       "id": "final_send_letter",
       "type": "line",
-      "text": "كتبتي عنوانك على ورقة صغيرة. نعيمة حطّتها في جيب الشنطة، وأخدتها ونزلت.",
+      "text": "كتبتي السطر. نعيمة حطّته في جيب الشنطة، وأخدتها ونزلت.",
       "speaker": "narrator",
       "next": "g_reply",
       "effects": {
@@ -1281,6 +1387,24 @@
             "eq": "admitted"
           },
           "text": "قلتي لأمها إنك كنتي بتصدّي هدى. سألتك عنها."
+        },
+        {
+          "if": {
+            "flag": "new_thimble"
+          },
+          "text": "الكستبان الجديد من فلوسها لسه في صباعك."
+        },
+        {
+          "if": {
+            "flag": "calendar_ritual"
+          },
+          "text": "آخر رقم قالته كان «تلاتة»، يوم تلغراف أمها."
+        },
+        {
+          "if": {
+            "flag": "rehearsal"
+          },
+          "text": "اتمرّنتوا على يوم وصول أمها عند الباب."
         }
       ],
       "variants": [
@@ -1392,6 +1516,24 @@
             "eq": "admitted"
           },
           "text": "قلتي لأمها إنك كنتي بتصدّي هدى. سألتك عنها."
+        },
+        {
+          "if": {
+            "flag": "new_thimble"
+          },
+          "text": "الكستبان الجديد من فلوسها لسه في صباعك."
+        },
+        {
+          "if": {
+            "flag": "calendar_ritual"
+          },
+          "text": "آخر رقم قالته كان «تلاتة»، يوم تلغراف أمها."
+        },
+        {
+          "if": {
+            "flag": "rehearsal"
+          },
+          "text": "اتمرّنتوا على يوم وصول أمها عند الباب."
         }
       ],
       "variants": [
@@ -1488,6 +1630,24 @@
             "eq": "admitted"
           },
           "text": "قلتي لأمها إنك كنتي بتصدّي هدى. سألتك عنها."
+        },
+        {
+          "if": {
+            "flag": "new_thimble"
+          },
+          "text": "الكستبان الجديد من فلوسها لسه في صباعك."
+        },
+        {
+          "if": {
+            "flag": "calendar_ritual"
+          },
+          "text": "آخر رقم قالته كان «تلاتة»، يوم تلغراف أمها."
+        },
+        {
+          "if": {
+            "flag": "rehearsal"
+          },
+          "text": "اتمرّنتوا على يوم وصول أمها عند الباب."
         }
       ],
       "variants": [

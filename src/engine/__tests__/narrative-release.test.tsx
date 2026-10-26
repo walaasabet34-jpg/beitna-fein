@@ -4,7 +4,7 @@ import { CHAPTERS } from '../../content';
 import { advance, choose, getNode, indexChapter, newGame, enter, resolveLine } from '../core';
 import { HospitalScene, LivingRoom, LandingScene } from '../../art/scenes';
 import { migrateSave } from '../migrate';
-const c1 = indexChapter(CHAPTERS.ch1), c4 = indexChapter(CHAPTERS.ch4), c5 = indexChapter(CHAPTERS.ch5);
+const c1 = indexChapter(CHAPTERS.ch1), c3 = indexChapter(CHAPTERS.ch3), c4 = indexChapter(CHAPTERS.ch4), c5 = indexChapter(CHAPTERS.ch5);
 it('opens with an action (catching her ball) within 40 words, before any explanation', () => {
  let s = newGame(c1), words = 0;
  for (let i=0;i<10;i++) {
@@ -26,7 +26,8 @@ it('shows the patient while alive, and the mother at the meeting', () => {
  expect(renderToStaticMarkup(<svg><LivingRoom s={mother} expr="neutral" /></svg>)).toContain('data-adult');
 });
 it('makes the actual mother reply and urgent contact part of the visible story', () => {
- const s=enter(c4,newGame(c4),'mother_reply');expect(s.flags.mother_contacted).toBe(true);
+ expect(enter(c3,newGame(c3),'c3_a4').flags.mother_contacted).toBe(true);
+ const s=newGame(c4);
  expect(enter(c4,s,'s_urgent').flags.mother_urgent_message).toBe(true);
  expect(enter(c4,s,'s_breath').day).toBe(5);
  expect(enter(c4,s,'s_urgent').flags.mother_telegram).toBe(true);

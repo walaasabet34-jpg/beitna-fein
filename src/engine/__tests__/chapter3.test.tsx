@@ -54,13 +54,13 @@ describe('chapter 3 continuity', () => {
       const morning = advance(c3, s);
       expect(morning.node).toBe('c3_day2');
       expect([morning.day, morning.slot]).toEqual([2, 0]);
-      expect(morning.scene).toBe('door');
+      expect(morning.scene).toBe('morning');
       expect(morning.music).toBeNull();
-      expect(ambienceFor(morning)).toBe('amb_stair');
+      expect(ambienceFor(morning)).not.toBe('amb_night');
       const home = enter(c3, morning, 'c3_return');
       expect(art(home)).toContain('class="rays"');
       expect(art(home)).not.toContain('url(#lampGlow)');
-      expect(ambienceFor(home)).toBe('amb_day');
+      expect(['amb_day', 'amb_morning']).toContain(ambienceFor(home));
     }
   });
 

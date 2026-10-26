@@ -15,4 +15,18 @@ Branch `feat/huda-shared-life`, base `d2a1514`. Only what was actually run is li
 | Reading measurement | 1,977 → ≈1,640 words per route; 210 → ≈185 text screens; 2 → 11 played activities (`tools/transcript/word-cost.ts`, 300 routes) |
 | Independent continuity review | three complete routes, 25 findings, all fixed |
 
+## After the coherence pass (canon v2, braiding, rehearsal)
+
+| Check | Result |
+|---|---|
+| `npm test` | 87 passed, 1 skipped. New: every "فاضل N يوم" checked against the chapter calendar; no returned letter or old-plot words anywhere; the money order → gift and the rehearsal are reachable; the reply answers each of the five details Hoda can choose. |
+| `npm run build` | passes |
+| Browser, full story, phone, touch, random (seed 44), reload inside a ritual | all six chapters, 507 steps, 0 JS errors, 0 overflow |
+| Browser, full story, desktop, mouse, "last" choices (seed 9) | all six chapters, 542 steps, 0 errors, 0 overflow |
+| Browser, full story, phone (seed 31) and desktop (seed 5) | all six chapters, 0 errors, 0 overflow; braiding played by touch and by mouse |
+| `scripts/saves-layout-e2e.mjs` | 39/39 |
+| Screenshots inspected | braiding on phone and desktop (the first version had the comb on her cheek and the bubble under the top bar on phones; both fixed, bubbles now wrap) |
+| Reading | ≈1,900 words per route (original 1,977); 196 text screens; 14 played activities |
+| Independent review of the new canon | three routes, 30 findings, 28 fixed, 2 kept on purpose (see DESIGN-SHARED-LIFE.md) |
+
 Not done: no human playtest; no audio check on new rituals (they reuse existing genuine recordings: tap, clink, fabric, sewing, tick); the Vercel production deploy depends on GitHub push access, which this session did not have.
