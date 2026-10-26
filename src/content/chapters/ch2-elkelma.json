@@ -117,10 +117,10 @@
       "type": "line",
       "sfx": "fabric",
       "speaker": "narrator",
-      "text": "المريلة القديمة اتغسلت واتعلّقت جنب الشباك. قصّرتي الكم الطويل.",
+      "text": "المريلة الكحلي اتغسلت واتعلّقت جنب الشباك. كمّ أطول من التاني.",
       "effects": {
         "flags": {
-          "c2_outfit": "navy"
+          "c2_navy_out": true
         }
       }
     },
@@ -128,9 +128,9 @@
       "id": "c2_dress_navy2",
       "type": "line",
       "speaker": "hoda",
-      "text": "إنتي اللي ظبّطيها يا خالتي؟ حلوة أوي.",
-      "expr": "smile",
-      "next": "c2_lunch"
+      "text": "هي هتبقى على قدّي؟",
+      "expr": "worried",
+      "next": "c2_dress_act"
     },
     {
       "id": "c2_dress_q",
@@ -155,8 +155,8 @@
               "distress": 4
             },
             "flags": {
-              "c2_outfit": "navy",
-              "c2_bag_opened": true
+              "c2_bag_opened": true,
+              "c2_navy_out": true
             }
           }
         },
@@ -168,7 +168,8 @@
               "autonomy": 1
             },
             "flags": {
-              "c2_outfit": "yellow"
+              "c2_outfit": "yellow",
+              "outfit": "yellow"
             }
           }
         }
@@ -205,16 +206,16 @@
       "id": "c2_dress_ask_yes",
       "type": "line",
       "speaker": "narrator",
-      "text": "طلّعت المريلة وقعدت تمسك طرف القماش وإنتي بتظبّطي الكم.",
+      "text": "طلّعت المريلة من الشنطة بنفسها، وقفلت الشنطة تاني.",
       "effects": {
         "vars": {
           "trust": 2
         },
         "flags": {
-          "c2_outfit": "navy"
+          "c2_navy_out": true
         }
       },
-      "next": "c2_lunch"
+      "next": "c2_dress_act"
     },
     {
       "id": "c2_dress_ask_no",
@@ -224,7 +225,8 @@
       "expr": "guarded",
       "effects": {
         "flags": {
-          "c2_outfit": "yellow"
+          "c2_outfit": "yellow",
+          "outfit": "yellow"
         }
       }
     },
@@ -255,15 +257,27 @@
       "id": "c2_dress_took2",
       "type": "line",
       "speaker": "narrator",
-      "text": "ظبّطتي المريلة على مقاسها وخيطتي الكمّ. لبستها، بس ماقالتش شكرًا.",
-      "next": "c2_lunch"
+      "text": "لبستها وهي ساكتة. ماقالتش شكرًا.",
+      "next": "c2_dress_act"
     },
     {
       "id": "c2_dress_yellow",
       "type": "line",
       "speaker": "hoda",
       "text": "الأصفر حلو على فكرة. بس فيه بقعة هنا.",
-      "expr": "neutral"
+      "expr": "neutral",
+      "next": "c2_lunch"
+    },
+    {
+      "id": "c2_dress_act",
+      "type": "activity",
+      "activity": "dress",
+      "params": {
+        "mode": "dress",
+        "school": true,
+        "cold": false,
+        "today": "أول يوم مدرسة · الصبح طراوة"
+      }
     },
     {
       "id": "c2_lunch",
@@ -571,7 +585,7 @@
       "id": "c2_home1",
       "type": "line",
       "speaker": "narrator",
-      "text": "البيت فاضي من غير صوتها. غريبة إن شهر واحد يكفي عشان تتعوّدي على حد.",
+      "text": "البيت فاضي. الكورة الشراب واقفة جنب رجل الكنبة.",
       "scene": "living",
       "cast": [],
       "music": "music_home",
@@ -683,6 +697,9 @@
       "effects": {
         "flags": {
           "c2_sew1": true
+        },
+        "inc": {
+          "thread": -1
         }
       }
     },
@@ -820,7 +837,7 @@
           "goto": "c2_n_school"
         },
         {
-          "text": "فيه حد يعرف الأهالي بيسألوا على ولادهم إزاي؟",
+          "text": "«الجوابات وصلت لحاجة؟»",
           "goto": "c2_n_office",
           "effects": {
             "flags": {
@@ -863,7 +880,25 @@
       "id": "c2_n_office",
       "type": "line",
       "speaker": "naima",
-      "text": "وصلنا لمحل شغل أمها القديم. سايبة عندهم عنوان تسيبوا عليه جواب.",
+      "text": "الجواب اللي على المصنع رجع، عليه ختم. واللي على سكن العاملات لسه مارجعلوش رد.",
+      "next": "c2_n_office2"
+    },
+    {
+      "id": "c2_n_office2",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "نعيمة ناولتك الظرف الراجع. قريتي لها الختم بالراحة: «العنوان غير كافٍ».",
+      "effects": {
+        "flags": {
+          "search_factory_returned": true
+        }
+      }
+    },
+    {
+      "id": "c2_n_office3",
+      "type": "line",
+      "speaker": "naima",
+      "text": "يعني السكن هو اللي هيوصّل. ابني هيعدّي على عم فوزي تاني يمكن يعرف اسم المشرفة.",
       "next": "c2_naima_end"
     },
     {
@@ -1065,6 +1100,49 @@
       "cast": [
         "hoda"
       ]
+    },
+    {
+      "id": "c2_ret_tear_b",
+      "type": "branch",
+      "cases": [
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "outfit",
+                "eq": "yellow"
+              },
+              {
+                "not": {
+                  "flag": "cl_yellow",
+                  "eq": "torn"
+                }
+              }
+            ]
+          },
+          "goto": "c2_ret_tear"
+        }
+      ],
+      "else": "c2_ret_tidy_b"
+    },
+    {
+      "id": "c2_ret_tear",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "طرف الفستان الأصفر مشقوق من تحت، شق قد صباعين.",
+      "effects": {
+        "flags": {
+          "cl_yellow": "torn"
+        }
+      }
+    },
+    {
+      "id": "c2_ret_tear2",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "لعبنا الأولى. الشبشب طار، وأنا نطّيت وراه.",
+      "next": "c2_ret_tidy_b",
+      "expr": "guarded"
     },
     {
       "id": "c2_ret_tidy_b",
@@ -1763,6 +1841,13 @@
       "ambient": [
         {
           "if": {
+            "flag": "cl_yellow",
+            "eq": "torn"
+          },
+          "text": "هدى قاعدة وإيدها على الشق اللي في طرف فستانها."
+        },
+        {
+          "if": {
             "var": "distress",
             "gte": 62
           },
@@ -1793,6 +1878,17 @@
           "goto": "c2_talk"
         },
         {
+          "id": "ball",
+          "target": "ball",
+          "label": "الكورة على الحيطة",
+          "takesTime": true,
+          "once": true,
+          "effects": {
+            "slots": 1
+          },
+          "goto": "c2_ball_pre"
+        },
+        {
           "id": "hw",
           "target": "table",
           "label": "الواجب",
@@ -1817,7 +1913,7 @@
         {
           "id": "button",
           "target": "sewing",
-          "label": "تعلّميها تركّب زرار",
+          "label": "الزراير وجلابية أبو سيد",
           "takesTime": true,
           "once": true,
           "effects": {
@@ -1977,6 +2073,57 @@
       "text": "الإبرة! وانتي خيّاطة كمان! عيب عليكي.",
       "expr": "laugh",
       "next": "c2_hub2"
+    },
+    {
+      "id": "c2_ball_pre",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "في المدرسة بنعدّ بالاتنين. اتنين، أربعة، ستة! والكورة لازم تخبط في الحيطة الأول.",
+      "cast": [
+        "hoda"
+      ],
+      "expr": "laugh"
+    },
+    {
+      "id": "ball_c2",
+      "type": "activity",
+      "activity": "ball",
+      "params": {
+        "variant": "wall",
+        "rounds": 6,
+        "effects": {
+          "vars": {
+            "trust": 3,
+            "openness": 3,
+            "distress": -4
+          }
+        }
+      }
+    },
+    {
+      "id": "c2_ball_post",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "الحيطة بتاعتكم بترجّع أحسن من بتاعة المدرسة.",
+      "next": "c2_hub2",
+      "variants": [
+        {
+          "if": {
+            "flag": "ball_stopped"
+          },
+          "text": "ماشي. سعاد بتقول إن الكبار بيزهقوا بسرعة.",
+          "expr": "bored"
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 5
+          },
+          "text": "عشرة! اتنين، أربعة، ستة، تمانية، عشرة!",
+          "expr": "proud"
+        }
+      ],
+      "expr": "smile"
     },
     {
       "id": "c2_talk",
@@ -2264,15 +2411,51 @@
     {
       "id": "c2_w_sea",
       "type": "line",
+      "speaker": "narrator",
+      "text": "كاتبة «بحر» تحت الكلمتين."
+    },
+    {
+      "id": "c2_w_sea_c",
+      "type": "choice",
+      "options": [
+        {
+          "text": "«بحر» صح. (تكمّلي)",
+          "goto": "c2_w_sea_ok",
+          "effects": {
+            "vars": {
+              "trust": 1
+            }
+          }
+        },
+        {
+          "text": "«مش ناقصها ألف؟ بحار؟»",
+          "goto": "c2_w_sea_wrong",
+          "effects": {
+            "inc": {
+              "hoda_corrected_fatma": 1
+            },
+            "vars": {
+              "openness": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "c2_w_sea_ok",
+      "type": "line",
       "speaker": "hoda",
       "text": "دي صح. البحر ده أنا عارفاه كويس.",
-      "expr": "smile",
-      "effects": {
-        "vars": {
-          "trust": 1
-        }
-      },
-      "next": "c2_hw_hub"
+      "next": "c2_hw_hub",
+      "expr": "smile"
+    },
+    {
+      "id": "c2_w_sea_wrong",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "بحار دي كتير يا خالتي! البحر واحد.",
+      "next": "c2_hw_hub",
+      "expr": "laugh"
     },
     {
       "id": "c2_fam",
@@ -2944,8 +3127,24 @@
       "id": "c2_button",
       "type": "line",
       "speaker": "narrator",
-      "text": "زرار المريلة القديمة كان واقع. طلّعتي الإبرة والخيط.",
-      "music": "music_play"
+      "text": "جلابية أبو سيد ناقصها زراير. وزرار المريلة القديمة واقع كمان."
+    },
+    {
+      "id": "c2_buttons",
+      "type": "activity",
+      "activity": "buttons",
+      "params": {
+        "order": "جلابية أبو سيد",
+        "helper": "hoda",
+        "skill": 0.72,
+        "effects": {
+          "vars": {
+            "trust": 2,
+            "openness": 2,
+            "distress": -2
+          }
+        }
+      }
     },
     {
       "id": "c2_button_b",
@@ -3522,7 +3721,7 @@
           "goto": "c2_d2_paid"
         }
       ],
-      "else": "c2_d2_1"
+      "else": "c2_d2_dress"
     },
     {
       "id": "c2_d2_paid",
@@ -3536,7 +3735,23 @@
       "sfx": "coins",
       "effects": {
         "money": 10
-      }
+      },
+      "next": "c2_d2_dress"
+    },
+    {
+      "id": "c2_d2_dress",
+      "type": "activity",
+      "activity": "dress",
+      "params": {
+        "mode": "dress",
+        "school": true,
+        "cold": false,
+        "today": "تاني يوم · مدرسة"
+      },
+      "scene": "morning",
+      "cast": [
+        "hoda"
+      ]
     },
     {
       "id": "c2_d2_1",
@@ -4639,6 +4854,39 @@
             "flag": "c2_office_lead"
           },
           "text": "اسم أمها وعنوانها القديم وصلوا لناس بيسألوا."
+        },
+        {
+          "if": {
+            "flag": "ball_wall"
+          },
+          "text": "عدّيتوا بالاتنين، والكورة بتخبط في الحيطة."
+        },
+        {
+          "if": {
+            "flag": "cl_yellow",
+            "eq": "flower"
+          },
+          "text": "خيطتي وردة ستان على شق فستانها."
+        },
+        {
+          "if": {
+            "flag": "cl_yellow",
+            "eq": "mended"
+          },
+          "text": "رقعتي شق فستانها."
+        },
+        {
+          "if": {
+            "flag": "cl_navy",
+            "eq": "fitted"
+          },
+          "text": "قصّرتي كم المريلة على قدّها."
+        },
+        {
+          "if": {
+            "flag": "hoda_corrected_fatma"
+          },
+          "text": "هدى صحّحتلك كلمة، وضحكت."
         }
       ],
       "nextChapterTitle": "الفصل الرابع: الخبر",

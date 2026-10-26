@@ -47,37 +47,100 @@
     {
       "id": "g_objects",
       "type": "choice",
-      "prompt": "الطلبية قدامك، لكن عينك على حاجتها. تبدأي بإيه؟",
+      "prompt": "الطلبية قدامك. تبدأي بإيه؟",
       "options": [
         {
-          "text": "تفتحي الكراسة.",
+          "text": "(تطلّعي الكورة من تحت الماكينة)",
+          "goto": "ball_alone",
+          "if": {
+            "any": [
+              {
+                "flag": "ball_games"
+              },
+              {
+                "flag": "ball_stairs"
+              }
+            ]
+          }
+        },
+        {
+          "text": "(تفتحي علبة الزراير)",
+          "goto": "g_buttons"
+        },
+        {
+          "text": "(تفتحي الكراسة)",
           "goto": "g_notebook",
           "effects": {
             "flags": {
               "grief_opened_book": true
-            },
-            "vars": {}
+            }
           }
         },
         {
-          "text": "تلمي الهدوم المطوية.",
-          "goto": "g_clothes",
-          "effects": {
-            "flags": {
-              "grief_folded": true
-            },
-            "vars": {}
-          }
-        },
-        {
-          "text": "تسيبي كل حاجة مكانها النهارده.",
+          "text": "(تسيبي كل حاجة مكانها النهارده)",
           "goto": "g_leave",
           "effects": {
             "flags": {
               "grief_left_room": true
-            },
-            "vars": {}
+            }
           }
+        }
+      ]
+    },
+    {
+      "id": "ball_alone",
+      "type": "activity",
+      "activity": "ball",
+      "params": {
+        "variant": "alone",
+        "rounds": 3
+      }
+    },
+    {
+      "id": "g_ball_after",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "الكورة وقفت تحت الماكينة. ماحدش قال الرقم.",
+      "next": "g_war_memory",
+      "variants": [
+        {
+          "if": {
+            "flag": "ball_alone_caught"
+          },
+          "text": "مسكتيها. وقفتي مستنية حد يقول الرقم."
+        },
+        {
+          "if": {
+            "flag": "knows_high"
+          },
+          "text": "رميتيها عالي، زي ما كانت بتحب. نزلت ووقفت تحت الماكينة."
+        }
+      ]
+    },
+    {
+      "id": "g_buttons",
+      "type": "activity",
+      "activity": "buttons",
+      "params": {
+        "order": "قميص ابن نعيمة",
+        "helper": "none",
+        "skill": 0,
+        "redLine": "الزرار الأحمر اللي كانت بتحطه على جنب."
+      }
+    },
+    {
+      "id": "g_buttons_after",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "السلطانيتين اتملوا. الصينية ساكتة.",
+      "next": "g_war_memory",
+      "variants": [
+        {
+          "if": {
+            "flag": "red_button",
+            "eq": "hoda"
+          },
+          "text": "السلطانيتين اتملوا. الزرار الأحمر مش في العلبة؛ متخيّط على شريطتها."
         }
       ]
     },
@@ -85,14 +148,7 @@
       "id": "g_notebook",
       "type": "line",
       "speaker": "narrator",
-      "text": "في الكراسة حساب وإملا ورسم ناقص. عند آخر صفحة، القلم متني جوه الغلاف.",
-      "next": "g_war_memory"
-    },
-    {
-      "id": "g_clothes",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "فردتي الكم قبل ما تطويه، مع إنه مش هيتكرمش على دراعها تاني. تحت الهدوم كراستها.",
+      "text": "في الكراسة إملا وحساب ورسم ناقص. في آخر صفحة أرقام بخطها: ٢، ٤، ٦، ٨…",
       "next": "g_war_memory"
     },
     {
@@ -132,7 +188,7 @@
       "id": "g_contact",
       "type": "line",
       "speaker": "narrator",
-      "text": "نعيمة خبطت: «أمها عندي من الليلة اللي رجعنا فيها من المستشفى. طالبة تشوفك.»",
+      "text": "نعيمة خبطت: «أمها وصلت الصبح بدري يوم ما رجعنا، على البرقية. قلتلها. وهي عندي من ساعتها، وطالبة تشوفك.»",
       "scene": "door",
       "cast": [
         "naima"
@@ -148,13 +204,13 @@
       "id": "g_identity",
       "type": "line",
       "speaker": "naima",
-      "text": "«رجعت على عنوان سنية وملقتهاش. سابت عنوانها عند عم فوزي. جوابكم هو اللي وصلها لك.»"
+      "text": "«كانت بتبعت على أوضة سنية، ومارجعلهاش رد غير جوابكم اللي جالها في المصنع.»"
     },
     {
       "id": "g_news",
       "type": "line",
       "speaker": "naima",
-      "text": "«قلت لها إن هدى ماتت قبل ما تطلب تقابلك. عايزة تاخد حاجات بنتها.»"
+      "text": "«عايزة تاخد حاجات بنتها، وعايزة تسمع منك.»"
     },
     {
       "id": "g_meet",
@@ -210,7 +266,7 @@
       "text": "حطيتي كرسيًا تاني جنب الطبلية، ورجعتي للشنطة.",
       "scene": "living",
       "cast": [],
-      "next": "g_prepare"
+      "next": "g_pack"
     },
     {
       "id": "g_later",
@@ -219,7 +275,7 @@
       "text": "«بعد يومين.» نعيمة نزلت تبلغها بالموعد.",
       "scene": "living",
       "cast": [],
-      "next": "g_prepare"
+      "next": "g_pack"
     },
     {
       "id": "g_send",
@@ -230,7 +286,7 @@
       "cast": [
         "naima"
       ],
-      "next": "g_prepare"
+      "next": "g_pack"
     },
     {
       "id": "g_refuse",
@@ -330,6 +386,100 @@
       "text": "حرّكتيها عشان تعرفي تعدّي. مكانها ما وسّعش الأوضة.",
       "speaker": "narrator",
       "next": "g_end_hold"
+    },
+    {
+      "id": "g_pack",
+      "type": "activity",
+      "activity": "dress",
+      "params": {
+        "mode": "pack",
+        "captions": [
+          {
+            "item": "yellow",
+            "if": {
+              "flag": "cl_yellow",
+              "eq": "flower"
+            },
+            "text": "الوردة الستان على الشق اللي من لعب الأولى."
+          },
+          {
+            "item": "yellow",
+            "if": {
+              "flag": "cl_yellow",
+              "eq": "mended"
+            },
+            "text": "الرقعة اللي تحت مش باينة غير لو دوّرتي عليها."
+          },
+          {
+            "item": "yellow",
+            "if": {
+              "flag": "cl_yellow",
+              "eq": "torn"
+            },
+            "text": "الشق اللي من لعب الأولى. ماتخيّطش."
+          },
+          {
+            "item": "yellow",
+            "text": "الفستان اللي جت بيه."
+          },
+          {
+            "item": "navy",
+            "if": {
+              "flag": "cl_navy",
+              "eq": "fitted"
+            },
+            "text": "الكم اللي قصّرتيه على قدّها."
+          },
+          {
+            "item": "navy",
+            "text": "المريلة، وكمّها الطويل."
+          },
+          {
+            "item": "cardigan",
+            "text": "الجاكتة اللي قالت إنها بتشوّك، ولبستها."
+          },
+          {
+            "item": "comb",
+            "text": "المشط أبو سنة مكسورة."
+          },
+          {
+            "item": "notebook",
+            "if": {
+              "flag": "ball_last",
+              "gte": 10
+            },
+            "text": "الكراسة الزرقا. في آخرها «عشرة» بخط كبير."
+          },
+          {
+            "item": "notebook",
+            "text": "الكراسة الزرقا."
+          },
+          {
+            "item": "doll",
+            "text": "زوزو، عينيها مش قد بعض."
+          },
+          {
+            "item": "redButton",
+            "text": "الزرار الأحمر، متخيّط على شريطة."
+          },
+          {
+            "item": "ribbon",
+            "if": {
+              "flag": "ribbon",
+              "eq": "red"
+            },
+            "text": "الشريطة الحمرا اللي لبستها يوم جواب أمها."
+          },
+          {
+            "item": "ribbon",
+            "text": "الشريطة الحمرا. كانت مستنية يوم مخصوص."
+          },
+          {
+            "item": "ball",
+            "text": "الكورة الشراب."
+          }
+        ]
+      }
     },
     {
       "id": "g_prepare",
@@ -516,23 +666,30 @@
       "prompt": "تختاري تحكي إزاي؟",
       "options": [
         {
-          "text": "«كانت بتدور على المشط كل شوية.»",
+          "text": "«كانت بتعدّ كل حاجة.»",
+          "goto": "g_account_count",
+          "effects": {
+            "flags": {
+              "mother_account": "count"
+            }
+          }
+        },
+        {
+          "text": "«كانت بتدوّر على المشط كل شوية.»",
           "goto": "g_account_true",
           "effects": {
             "flags": {
               "mother_account": "truth"
-            },
-            "vars": {}
+            }
           }
         },
         {
-          "text": "«كنت بصدّها لما تطلب مني حاجة…»",
+          "text": "«كنت ساعات بصدّها لما تطلب مني حاجة…»",
           "goto": "g_account_fault",
           "effects": {
             "flags": {
               "mother_account": "admitted"
-            },
-            "vars": {}
+            }
           },
           "if": {
             "any": [
@@ -546,10 +703,44 @@
                 "flag": "news_dismissed"
               },
               {
-                "flag": "lied_bag"
+                "flag": "sew_denied"
               },
               {
-                "flag": "promise_broken"
+                "flag": "ball_waiting"
+              },
+              {
+                "all": [
+                  {
+                    "flag": "ball_promised"
+                  },
+                  {
+                    "not": {
+                      "flag": "ball_games"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "text": "«فتحت شنطتها من غير إذنها.»",
+          "goto": "g_account_bag",
+          "effects": {
+            "flags": {
+              "mother_account": "admitted_bag"
+            }
+          },
+          "if": {
+            "any": [
+              {
+                "flag": "bag_peeked"
+              },
+              {
+                "flag": "c2_peek"
+              },
+              {
+                "flag": "c2_bag_opened"
               }
             ]
           }
@@ -560,8 +751,7 @@
           "effects": {
             "flags": {
               "mother_account": "evasive"
-            },
-            "vars": {}
+            }
           }
         },
         {
@@ -570,11 +760,59 @@
           "effects": {
             "flags": {
               "mother_account": "silent"
-            },
-            "vars": {}
+            }
           }
         }
       ]
+    },
+    {
+      "id": "g_account_count",
+      "type": "line",
+      "speaker": "fatma",
+      "text": "السلالم، والبلاط، والعيال اللي تحت الشباك.",
+      "variants": [
+        {
+          "if": {
+            "flag": "ball_wall"
+          },
+          "text": "كانت بتعدّ بالاتنين زي المدرسة. والكورة لازم تخبط في الحيطة الأول."
+        },
+        {
+          "if": {
+            "any": [
+              {
+                "flag": "ball_games"
+              },
+              {
+                "flag": "ball_stairs"
+              }
+            ]
+          },
+          "text": "السلالم، والكورة. لما تقع، تقول «من الأول»."
+        }
+      ]
+    },
+    {
+      "id": "g_account_count2",
+      "type": "line",
+      "speaker": "mother",
+      "text": "دي أنا اللي علّمتها. «اللي يعدّ مايتوهش».",
+      "expr": "sad",
+      "next": "g_mother_seam"
+    },
+    {
+      "id": "g_account_bag",
+      "type": "line",
+      "speaker": "mother",
+      "text": "وهي عرفت؟",
+      "next": "g_account_bag2"
+    },
+    {
+      "id": "g_account_bag2",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "هزّيتي راسك. الأم بصّت للقفل شوية، وماقالتش حاجة.",
+      "next": "g_mother_seam"
     },
     {
       "id": "g_account_true",
@@ -595,7 +833,7 @@
       "id": "g_account_fault",
       "type": "line",
       "speaker": "mother",
-      "text": "طب احكيلي كانت بتعمل إيه لوحدها.",
+      "text": "قولي لي حصل إيه. وكانت بتعمل إيه لوحدها.",
       "next": "g_mother_seam"
     },
     {
@@ -679,13 +917,51 @@
           "goto": "g_ask_drawing"
         }
       ],
-      "else": "g_handover"
+      "else": "g_ball_b"
     },
     {
       "id": "g_ask_drawing",
       "type": "line",
       "speaker": "mother",
-      "text": "خليني أخدها دلوقتي. لسه ماشفتش كل حاجتها."
+      "text": "خليني أخدها دلوقتي. لسه ماشفتش كل حاجتها.",
+      "next": "g_ball_b"
+    },
+    {
+      "id": "g_ball_b",
+      "type": "branch",
+      "cases": [
+        {
+          "if": {
+            "any": [
+              {
+                "flag": "ball_games"
+              },
+              {
+                "flag": "ball_stairs"
+              }
+            ]
+          },
+          "goto": "g_ball_mother"
+        }
+      ],
+      "else": "g_handover"
+    },
+    {
+      "id": "g_ball_mother",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "الأم شالت الكورة الشراب من فوق الهدوم، ولفّتها في إيدها. الخياطة الحمرا ناحيتك."
+    },
+    {
+      "id": "g_ball_mother2",
+      "type": "line",
+      "speaker": "mother",
+      "text": "دي من شرابات أبوها. …خلّيها هنا. هنا كانت بتلعب.",
+      "effects": {
+        "flags": {
+          "ball_left_by_mother": true
+        }
+      }
     },
     {
       "id": "g_handover",
@@ -778,6 +1054,18 @@
       "prompt": "الطلبية قدامك.",
       "options": [
         {
+          "text": "(تحطي الكورة على الكرسي التاني)",
+          "goto": "final_ball",
+          "effects": {
+            "flags": {
+              "final_work": "ball"
+            }
+          },
+          "if": {
+            "flag": "ball_left_by_mother"
+          }
+        },
+        {
           "text": "(تسحبي الخيط من الإبرة)",
           "goto": "final_unthread",
           "effects": {
@@ -799,6 +1087,13 @@
         }
       ],
       "cast": []
+    },
+    {
+      "id": "final_ball",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "حطيتيها على الكرسي. اتدحرجت شوية، ووقفت. عدّيتي لحد اتنين، ووقفتي.",
+      "next": "g_end_met"
     },
     {
       "id": "final_unthread",
@@ -928,6 +1223,45 @@
       "memories": [
         {
           "if": {
+            "flag": "ball_stairs"
+          },
+          "text": "أول ما شفتيها، كانت بتعدّ السلم بالكورة."
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 10
+          },
+          "text": "عدّت العشرة، وطلبت تكتبيها في الكراسة."
+        },
+        {
+          "if": {
+            "flag": "red_button",
+            "eq": "hoda"
+          },
+          "text": "الزرار الأحمر اللي خدته من العلبة."
+        },
+        {
+          "if": {
+            "flag": "cl_yellow",
+            "eq": "flower"
+          },
+          "text": "وردة ستان على طرف فستانها."
+        },
+        {
+          "if": {
+            "flag": "hoda_corrected_fatma"
+          },
+          "text": "كانت بتصحّحلك الكلمات."
+        },
+        {
+          "if": {
+            "flag": "fatma_counts"
+          },
+          "text": "علّمتك تعدّي بالاتنين."
+        },
+        {
+          "if": {
             "flag": "war_shared_joy"
           },
           "text": "يوم العبور، كفها خبط في كفك."
@@ -1000,6 +1334,45 @@
       "memories": [
         {
           "if": {
+            "flag": "ball_stairs"
+          },
+          "text": "أول ما شفتيها، كانت بتعدّ السلم بالكورة."
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 10
+          },
+          "text": "عدّت العشرة، وطلبت تكتبيها في الكراسة."
+        },
+        {
+          "if": {
+            "flag": "red_button",
+            "eq": "hoda"
+          },
+          "text": "الزرار الأحمر اللي خدته من العلبة."
+        },
+        {
+          "if": {
+            "flag": "cl_yellow",
+            "eq": "flower"
+          },
+          "text": "وردة ستان على طرف فستانها."
+        },
+        {
+          "if": {
+            "flag": "hoda_corrected_fatma"
+          },
+          "text": "كانت بتصحّحلك الكلمات."
+        },
+        {
+          "if": {
+            "flag": "fatma_counts"
+          },
+          "text": "علّمتك تعدّي بالاتنين."
+        },
+        {
+          "if": {
             "flag": "war_shared_joy"
           },
           "text": "يوم العبور، كفها خبط في كفك."
@@ -1055,6 +1428,45 @@
       "cast": [],
       "music": null,
       "memories": [
+        {
+          "if": {
+            "flag": "ball_stairs"
+          },
+          "text": "أول ما شفتيها، كانت بتعدّ السلم بالكورة."
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 10
+          },
+          "text": "عدّت العشرة، وطلبت تكتبيها في الكراسة."
+        },
+        {
+          "if": {
+            "flag": "red_button",
+            "eq": "hoda"
+          },
+          "text": "الزرار الأحمر اللي خدته من العلبة."
+        },
+        {
+          "if": {
+            "flag": "cl_yellow",
+            "eq": "flower"
+          },
+          "text": "وردة ستان على طرف فستانها."
+        },
+        {
+          "if": {
+            "flag": "hoda_corrected_fatma"
+          },
+          "text": "كانت بتصحّحلك الكلمات."
+        },
+        {
+          "if": {
+            "flag": "fatma_counts"
+          },
+          "text": "علّمتك تعدّي بالاتنين."
+        },
         {
           "if": {
             "flag": "war_shared_joy"

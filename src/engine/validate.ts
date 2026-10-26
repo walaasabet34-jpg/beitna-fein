@@ -61,6 +61,11 @@ export function validateChapter(ch: Chapter, inherited: Iterable<string> = []): 
           setFlags.add(`bed_${g.id}`); setFlags.add(`bed_${g.id}_asked`);
           g.options.forEach((o) => { addEffect(o.effects); o.resolve?.forEach((r) => addCond(r.if, n.id)); });
         });
+        if (n.activity === 'ball') ['ball_games', 'ball_best', 'ball_last', 'ball_high', 'knows_high', 'ball_stopped', 'ball_alone', 'ball_alone_caught',
+          'ball_stairs', 'ball_count', 'ball_crossing', 'ball_wall', 'ball_bed'].forEach((f) => setFlags.add(f));
+        if (n.activity === 'buttons') ['buttons_sessions', 'buttons_last_order', 'hoda_sorted', 'buttons_showed', 'buttons_fixed_quietly', 'hoda_caught_fatma', 'red_button', 'buttons_alone', 'buttons_left_wrong'].forEach((f) => setFlags.add(f));
+        if (n.activity === 'dress') ['packed', 'packed_all', 'cl_yellow', 'cl_navy', 'c2_outfit', 'outfit', 'layer', 'ribbon', 'dressed_times', 'dress_insisted', 'warm_today', 'cold_today', 'sleeve_loose_today', 'mended_yellow', 'mended_navy'].forEach((f) => setFlags.add(f));
+        addEffect((n.params as { effects?: Effect }).effects);
         if (n.activity === 'kitchen') {
           (n.params as { items: { id: string }[] }).items.forEach((i) => setFlags.add(`meal_${i.id}`));
         }

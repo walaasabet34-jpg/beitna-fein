@@ -58,8 +58,14 @@ export const useGame = create<Store>((set, get) => {
     continueGame: () => {
       const s = loadGame();
       if (!s || !indexed[s.chapter]) return get().startNew();
-      try { getNode(indexed[s.chapter], s.node); } catch { return get().startNew(); }
-      set({ state: s, screen: 'game', menuOpen: false });
+      let st = s;
+      try { getNode(indexed[st.chapter], st.node); } catch {
+        // A node this build no longer has: resume the chapter from its start, keeping everything she remembers.
+        const ic = indexed[st.chapter];
+        st = st.chapterStart ? (st.chapterStart as GameState) : { ...st, node: ic.chapter.start, scene: ic.chapter.init.scene };
+      }
+      saveGame(st);
+      set({ state: st, screen: 'game', menuOpen: false });
     },
     act: (fn) => {
       const s = get().state; if (!s) return;

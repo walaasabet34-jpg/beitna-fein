@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Expr } from '../../engine/types';
 import { CHARACTERS } from '../../content';
-import { HodaPortrait } from '../../art/Hoda';
+import { HodaPortrait, type Outfit } from '../../art/Hoda';
 import { useGame } from '../../store/gameStore';
 
 const SPEED = { slow: 45, normal: 24, instant: 0 } as const;
 
 export function DialogueBox({ speaker, text, expr, onNext, nodeId, outfit }:
-  { speaker: string; text: string; expr?: Expr; onNext: () => void; nodeId: string; outfit?: 'mustard' | 'navy' }) {
+  { speaker: string; text: string; expr?: Expr; onNext: () => void; nodeId: string; outfit?: Outfit }) {
   const speed = useGame((g) => SPEED[g.settings.textSpeed]);
   const [shown, setShown] = useState(speed === 0 ? text.length : 0);
   const done = shown >= text.length;

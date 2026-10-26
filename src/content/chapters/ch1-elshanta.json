@@ -50,29 +50,80 @@
       "music": null,
       "cast": [
         "hoda"
-      ]
+      ],
+      "effects": {
+        "flags": {
+          "thread": 2
+        }
+      }
     },
     {
       "id": "c1_d1",
       "type": "line",
-      "scene": "landing",
       "speaker": "narrator",
-      "text": "طالعة بالعيش وبكرة خيط. على بابك بنت قاعدة على شنطة."
+      "text": "طالعة بالعيش وبكرة الخيط. فوق، على بسطة بابك، بنت بتخبّط كورة شراب في السلمة وبتعد.",
+      "scene": "landing",
+      "ambience": "amb_stair"
     },
     {
       "id": "c1_d2",
       "type": "line",
       "speaker": "hoda",
-      "text": "…سبعتاشر. تمنتاشر.",
-      "next": "intro_first"
+      "text": "…خمستاشر. ستاشر. سبعتاشر—",
+      "expr": "focused"
+    },
+    {
+      "id": "c1_ball_slip",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "الكورة فلتت منها، ونطّت على السلم ناحيتك."
+    },
+    {
+      "id": "ball_stairs",
+      "type": "activity",
+      "activity": "ball",
+      "params": {
+        "variant": "stairs",
+        "rounds": 1,
+        "effects": {
+          "vars": {
+            "trust": 1,
+            "openness": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "c1_ball_after",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "…خلاص، ضاعت العدّة. إنتي ساكنة هنا؟",
+      "variants": [
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 2
+          },
+          "text": "تمنتاشر… تسعتاشر! إنتي ساكنة هنا؟",
+          "expr": "laugh"
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 1
+          },
+          "text": "تمنتاشر. إنتي ساكنة هنا؟",
+          "expr": "smile"
+        }
+      ],
+      "expr": "guarded"
     },
     {
       "id": "intro_first",
       "type": "choice",
-      "prompt": "",
       "options": [
         {
-          "text": "«بتعدّي السلم؟»",
+          "text": "«أيوه. بتعدّي إيه؟»",
           "goto": "intro_count",
           "effects": {
             "flags": {
@@ -84,7 +135,7 @@
           }
         },
         {
-          "text": "(تقعدي قريب منها وتحطي العيش على رجلك)",
+          "text": "(تقعدي على السلمة وتحطي العيش على رجلك)",
           "goto": "intro_bread",
           "effects": {
             "flags": {
@@ -101,8 +152,7 @@
           "effects": {
             "flags": {
               "first_words": "ask"
-            },
-            "vars": {}
+            }
           }
         }
       ]
@@ -110,14 +160,14 @@
     {
       "id": "intro_count",
       "type": "line",
-      "text": "عدّيته مرتين. نسيت أول مرة.",
+      "text": "السلالم، والنطّات. ماما بتقول اللي يعدّ مايتوهش.",
       "speaker": "hoda",
       "next": "c1_d3"
     },
     {
       "id": "intro_bread",
       "type": "line",
-      "text": "ده من الفرن اللي تحت؟",
+      "text": "ده من الفرن اللي تحت؟ ريحته سخنة.",
       "speaker": "hoda",
       "next": "c1_d3"
     },
@@ -195,22 +245,27 @@
     {
       "id": "intro_sonia",
       "type": "line",
-      "text": "لسه في المستشفى. مش هتعرف تاخدها معاها دلوقتي.",
+      "text": "سنية اتحجزت في المستشفى. وأوضتها صاحب البيت أجّرها لناس تانيين.",
       "speaker": "naima",
       "next": "c1_d7b"
     },
     {
       "id": "intro_address",
       "type": "line",
-      "text": "ناس تانية ساكنة. سيبت لهم اسمي، وهنسأل عند محل شغل أمها القديم.",
+      "text": "سبت اسمي عند الساكنين الجداد: أي جواب ييجي لسنية يدّوهولي. وابني هيسأل عند عم فوزي، المحل اللي أمها كانت بتشتغل فيه.",
       "speaker": "naima",
-      "next": "c1_d7b"
+      "next": "c1_d7b",
+      "effects": {
+        "flags": {
+          "search_letters_to_naima": true
+        }
+      }
     },
     {
       "id": "c1_d7b",
       "type": "line",
       "speaker": "naima",
-      "text": "أسبوع يا فاطمة، لحد ما نوصل لأمها. أنا تحت لو احتجتي حاجة."
+      "text": "خليها عندك كام يوم لحد ما نوصل لأمها. شقتي مليانة عيال ابني، وإنتي عندك الأوضة الصغيرة."
     },
     {
       "id": "c1_d8",
@@ -284,7 +339,7 @@
       "type": "line",
       "speaker": "narrator",
       "text": "صوتها طالع واطي. بس عينها اترفعت ثانية، ورجعت تاني للبلاط.",
-      "next": "c1_d10"
+      "next": "c1_d11"
     },
     {
       "id": "c1_g_bag1",
@@ -304,7 +359,7 @@
       "type": "line",
       "speaker": "naima",
       "text": "سيبيهالها يا فاطمة. من ساعة ما استلمتها وهي مش راضية تسيبها ولا دقيقة.",
-      "next": "c1_d10"
+      "next": "c1_d11"
     },
     {
       "id": "c1_g_wide1",
@@ -318,13 +373,7 @@
       "type": "line",
       "speaker": "narrator",
       "text": "طرف بقها اتحرك. مش ضحكة… بس قريب منها.",
-      "next": "c1_d10"
-    },
-    {
-      "id": "c1_d10",
-      "type": "line",
-      "speaker": "naima",
-      "text": "أنا تحت لو احتجتي أي حاجة. وانتي يا هدى، اسمعي الكلام، ماشي؟"
+      "next": "c1_d11"
     },
     {
       "id": "c1_d11",
@@ -335,20 +384,8 @@
           "naima_left": true
         }
       },
-      "text": "هدى هزّت راسها. الحاجة نعيمة نزلت السلم، وصوت شبشبها فضل يبعد لحد ما اختفى.",
+      "text": "هدى هزّت راسها. نعيمة نزلت، وصوت شبشبها فضل يبعد.",
       "sfx": "steps",
-      "cast": [
-        "hoda"
-      ]
-    },
-    {
-      "id": "c1_d12",
-      "type": "line",
-      "scene": "living",
-      "speaker": "narrator",
-      "text": "الباب اتقفل. والشقة بقت فجأة أوسع من العادة.",
-      "music": "music_home",
-      "sfx": "door_close",
       "cast": [
         "hoda"
       ]
@@ -376,13 +413,17 @@
           "speaker": "narrator",
           "text": "هدى وقفت لازقة في الحيطة جنب الباب، والشنطة بينك وبينها."
         }
+      ],
+      "scene": "living",
+      "cast": [
+        "hoda"
       ]
     },
     {
       "id": "c1_d14",
       "type": "line",
       "speaker": "narrator",
-      "text": "الشمس لسه عالية. قدامك تلات فترات قبل الليل: العشا لازم يتعمل، ومكان نومها لازم يتجهز.",
+      "text": "الشمس لسه عالية. قدامك تلات فترات قبل الليل.",
       "next": "c1_hub"
     },
     {
@@ -391,6 +432,19 @@
       "scene": "living",
       "hint": "كل حاجة عليها ⏳ بتاخد فترة من اليوم. الكلام والحاجات الصغيرة ببلاش.",
       "ambient": [
+        {
+          "if": {
+            "flag": "ball_waiting"
+          },
+          "text": "هدى بتخبّط الكورة في الحيطة وبتعدّ لوحدها، بصوت واطي."
+        },
+        {
+          "if": {
+            "flag": "red_button",
+            "eq": "hoda"
+          },
+          "text": "هدى بتلف الزرار الأحمر بين صوابعها، وبتبصّ لك من بين خرامه."
+        },
         {
           "if": {
             "all": [
@@ -458,11 +512,15 @@
           "goto": "c1_talk"
         },
         {
-          "id": "buttons",
-          "label": "تفرزوا الزراير",
-          "target": "sewing",
+          "id": "ball",
+          "target": "ball",
+          "label": "الكورة الشراب",
+          "takesTime": true,
           "once": true,
-          "goto": "bond_buttons"
+          "effects": {
+            "slots": 1
+          },
+          "goto": "c1_ball_pre"
         },
         {
           "id": "bag",
@@ -514,7 +572,7 @@
         {
           "id": "sew",
           "target": "sewing",
-          "label": "تكمّلي فستان أم سيد",
+          "label": "فستان أم سيد (الزراير والكفّة)",
           "takesTime": true,
           "once": true,
           "effects": {
@@ -553,10 +611,7 @@
           "if": {
             "any": [
               {
-                "flag": "buttons_together"
-              },
-              {
-                "flag": "buttons_counted"
+                "flag": "hoda_sorted"
               },
               {
                 "slot": {
@@ -566,6 +621,36 @@
             ]
           },
           "goto": "c1_ev_th1"
+        },
+        {
+          "id": "ballinvite",
+          "if": {
+            "all": [
+              {
+                "slot": {
+                  "gte": 2
+                }
+              },
+              {
+                "not": {
+                  "flag": "used:c1_hub:ball"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "var": "trust",
+                    "gte": 16
+                  },
+                  {
+                    "var": "openness",
+                    "gte": 13
+                  }
+                ]
+              }
+            ]
+          },
+          "goto": "c1_ev_ball"
         },
         {
           "id": "riddle",
@@ -768,78 +853,119 @@
       "next": "c1_hub"
     },
     {
-      "id": "bond_buttons",
+      "id": "c1_ev_ball",
       "type": "line",
-      "text": "هدى جمعت الزراير الحمرا. حطيتي زرارين فوق بعض؛ اللون واحد، والمقاس مختلف.",
       "speaker": "narrator",
-      "cast": [
-        "hoda"
-      ]
+      "text": "الكورة الشراب جت تتدحرج لحد رجلك. هدى واقفة عند الطرقة، إيديها ورا ضهرها."
     },
     {
-      "id": "bond_buttons_pick",
+      "id": "c1_ev_ball_c",
       "type": "choice",
-      "prompt": "«أعملهم تاني؟»",
       "options": [
         {
-          "text": "«جربي الصغير لوحده والكبير لوحده.»",
-          "goto": "bond_retry",
+          "text": "(ترميهالها)",
+          "goto": "c1_ball_pre",
           "effects": {
+            "slots": 1,
             "flags": {
-              "buttons_together": true
-            },
-            "vars": {
-              "trust": 2,
-              "autonomy": 2
+              "used:c1_hub:ball": true
             }
           }
         },
         {
-          "text": "«أنا هفرز وإنتي عدّيهم.»",
-          "goto": "bond_count",
+          "text": "«بعد العشا. وعد.»",
+          "goto": "c1_ev_ball_later",
           "effects": {
             "flags": {
-              "buttons_counted": true
-            },
-            "vars": {
-              "safety": 2
+              "ball_promised": true
             }
           }
         },
         {
-          "text": "«سيبيهم، الطلبية مستعجلة.»",
-          "goto": "bond_stop",
+          "text": "(ترجّعيها برجلك وتكمّلي)",
+          "goto": "c1_ev_ball_no",
           "effects": {
             "flags": {
-              "buttons_stopped": true
+              "ball_waiting": true
             },
             "vars": {
-              "openness": -1
+              "autonomy": 1
             }
           }
         }
       ]
     },
     {
-      "id": "bond_retry",
+      "id": "c1_ev_ball_later",
       "type": "line",
-      "text": "جرّبت زرار فوق التاني. المرة دي دفعت الطبق ناحيتك تستني رأيك.",
+      "speaker": "hoda",
+      "text": "وعد؟ …ماشي.",
+      "next": "c1_hub",
+      "expr": "neutral"
+    },
+    {
+      "id": "c1_ev_ball_no",
+      "type": "line",
       "speaker": "narrator",
+      "text": "بعد شوية سمعتي الكورة بتخبط في الحيطة، وهي بتعدّ لوحدها.",
       "next": "c1_hub"
     },
     {
-      "id": "bond_count",
+      "id": "c1_ball_pre",
       "type": "line",
-      "text": "عدّتهم، وبعدين رجعت لأول صف: «استني، ده عدّيته مرتين.»",
       "speaker": "narrator",
-      "next": "c1_hub"
+      "text": "هدى وقفت في نص الصالة، والكورة في إيديها الاتنين.",
+      "cast": [
+        "hoda"
+      ]
     },
     {
-      "id": "bond_stop",
+      "id": "ball_c1",
+      "type": "activity",
+      "activity": "ball",
+      "params": {
+        "variant": "count",
+        "rounds": 6,
+        "effects": {
+          "vars": {
+            "trust": 3,
+            "openness": 2,
+            "distress": -4
+          }
+        }
+      }
+    },
+    {
+      "id": "c1_ball_post",
       "type": "line",
-      "text": "بعدت الطبق عن إيدها. زرار صغير وقع؛ رجعته من غير كلام.",
-      "speaker": "narrator",
-      "next": "c1_hub"
+      "speaker": "hoda",
+      "text": "إنتي بتمسكي بإيديكي الاتنين زي العيال الصغيرين.",
+      "next": "c1_hub",
+      "variants": [
+        {
+          "if": {
+            "flag": "ball_stopped"
+          },
+          "text": "خلاص؟ …ماشي.",
+          "expr": "neutral"
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 6
+          },
+          "text": "ستة ورا بعض! بكرة نعدّي العشرة.",
+          "expr": "laugh"
+        },
+        {
+          "if": {
+            "flag": "knows_high"
+          },
+          "text": "ارمي عالي تاني بكرة. عالي أوي.",
+          "expr": "laugh"
+        }
+      ],
+      "expr": "smile"
     },
     {
       "id": "c1_talk",
@@ -2005,7 +2131,7 @@
           "promise_broken": true
         }
       },
-      "text": "إنتي قلتي محدش هيلمسها.",
+      "text": "إنتي قلتي محدش هيلمسها. وشلتيها للدولاب.",
       "next": "c1_bed_light"
     },
     {
@@ -2306,15 +2432,8 @@
     {
       "id": "c1_sew",
       "type": "line",
-      "sfx": "sewing",
       "speaker": "narrator",
-      "effects": {
-        "flags": {
-          "order_done": true
-        }
-      },
-      "text": "قعدتي على الماكينة تكمّلي فستان أم سيد. الدوّاسة بتطلع وتنزل، والإبرة بتدق دقّها المعروف.",
-      "music": null
+      "text": "فستان أم سيد ناقصه زراير الكفّة. علبة الزراير على الترابيزة."
     },
     {
       "id": "c1_sew_b",
@@ -2342,35 +2461,26 @@
       "id": "c1_sew_watch1",
       "type": "line",
       "speaker": "narrator",
-      "text": "بعد شوية، حسّيتي بحد جنبك. هدى قربت خطوة خطوة، لحد ما بقت واقفة عند كتفك."
+      "text": "هدى قربت خطوة خطوة، لحد ما بقت واقفة عند كتفك."
     },
     {
       "id": "c1_sew_watch2",
       "type": "line",
       "speaker": "hoda",
-      "expr": "surprised",
-      "text": "ممكن أدوس أنا على الدوّاسة؟"
+      "text": "أنا أعرف أفرز. ممكن؟",
+      "expr": "surprised"
     },
     {
       "id": "c1_sew_c",
       "type": "choice",
       "options": [
         {
-          "text": "(توسّعيلها) دوسي، بس براحة.",
-          "effects": {
-            "vars": {
-              "trust": 5,
-              "openness": 4,
-              "distress": -3
-            },
-            "flags": {
-              "sewing_together": true
-            }
-          },
-          "goto": "c1_sew_yes1"
+          "text": "«تعالي. الكبار البني هنا، والصغيرين البيض هنا.»",
+          "goto": "c1_buttons_with"
         },
         {
-          "text": "لما تكبري شوية. الإبرة دي بتعوّر.",
+          "text": "«لما تكبري شوية. الإبرة بتعوّر.»",
+          "goto": "c1_sew_no1",
           "effects": {
             "vars": {
               "autonomy": -2,
@@ -2379,63 +2489,139 @@
             "flags": {
               "sew_denied": true
             }
-          },
-          "goto": "c1_sew_no1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1_buttons_with",
+      "type": "activity",
+      "activity": "buttons",
+      "params": {
+        "order": "فستان أم سيد",
+        "helper": "hoda",
+        "skill": 0.5,
+        "effects": {
+          "vars": {
+            "trust": 3,
+            "openness": 3,
+            "distress": -3
+          }
+        }
+      }
+    },
+    {
+      "id": "c1_sew_pedal",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "ممكن أدوس أنا على الدوّاسة؟",
+      "expr": "surprised"
+    },
+    {
+      "id": "c1_sew_pedal_c",
+      "type": "choice",
+      "options": [
+        {
+          "text": "(توسّعيلها) «دوسي، بس براحة.»",
+          "goto": "c1_sew_yes1",
+          "effects": {
+            "vars": {
+              "trust": 3,
+              "openness": 2
+            },
+            "flags": {
+              "sewing_together": true
+            }
+          }
+        },
+        {
+          "text": "«المرة دي أنا. بصّي على الإبرة.»",
+          "goto": "c1_sew_done",
+          "effects": {
+            "vars": {
+              "safety": 1
+            }
+          }
         }
       ]
     },
     {
       "id": "c1_sew_yes1",
       "type": "line",
-      "sfx": "sewing",
       "speaker": "narrator",
-      "text": "داست جامد. الماكينة جريت، والخيط اتلخبط واتعقد."
+      "text": "داست جامد. الماكينة جريت، والخيط اتعقد."
     },
     {
       "id": "c1_sew_yes2",
       "type": "line",
       "speaker": "hoda",
-      "expr": "laugh",
-      "text": "هي اللي جريت لوحدها!"
+      "text": "هي اللي جريت لوحدها!",
+      "expr": "laugh"
     },
     {
       "id": "c1_sew_yes3",
       "type": "line",
       "speaker": "narrator",
-      "text": "ضحكتوا انتو الاتنين. فكّيتي العقدة في خمس دقايق، وهي ماقامتش من جنبك.",
+      "text": "فكّيتي العقدة، وهي ماقامتش من جنبك.",
       "next": "c1_sew_done"
     },
     {
       "id": "c1_sew_no1",
       "type": "line",
       "speaker": "hoda",
-      "expr": "upset",
-      "text": "أنا مش صغيرة."
+      "text": "أنا مش صغيرة.",
+      "expr": "upset"
     },
     {
       "id": "c1_sew_no2",
       "type": "line",
       "speaker": "narrator",
-      "text": "بس فضلت واقفة تتفرج لحد ما خلصتي.",
-      "next": "c1_sew_done"
+      "text": "بس فضلت واقفة تتفرج.",
+      "next": "c1_buttons_alone"
     },
     {
       "id": "c1_sew_alone1",
       "type": "line",
       "speaker": "narrator",
+      "text": "هدى فضلت مكانها. بس صوت الزراير في السلطانية كان بيخليها تبص ناحيتك.",
       "effects": {
         "vars": {
           "safety": 2
         }
-      },
-      "text": "هدى فضلت مكانها. بس صوت الماكينة كان بيخليها تبص ناحيتك كل شوية."
+      }
+    },
+    {
+      "id": "c1_buttons_alone",
+      "type": "activity",
+      "activity": "buttons",
+      "params": {
+        "order": "فستان أم سيد",
+        "helper": "none",
+        "skill": 0
+      }
     },
     {
       "id": "c1_sew_done",
       "type": "line",
       "speaker": "narrator",
       "text": "الفستان خلص. أم سيد هتعدّي تاخده بكرة الصبح وتدفع.",
-      "next": "c1_hub"
+      "effects": {
+        "flags": {
+          "order_done": true
+        },
+        "inc": {
+          "thread": -1
+        }
+      },
+      "next": "c1_hub",
+      "variants": [
+        {
+          "if": {
+            "flag": "buttons_left_wrong"
+          },
+          "text": "الفستان خلص. زرار في الكفّة أصغر من أخواته. أم سيد هتعدّي بكرة الصبح تاخده وتدفع."
+        }
+      ]
     },
     {
       "id": "c1_doll",
@@ -3710,6 +3896,41 @@
       "cases": [
         {
           "if": {
+            "all": [
+              {
+                "flag": "ball_promised"
+              },
+              {
+                "not": {
+                  "flag": "ball_games"
+                }
+              }
+            ]
+          },
+          "goto": "c1_m_fun_promise_no"
+        },
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "ball_promised"
+              },
+              {
+                "flag": "ball_games"
+              }
+            ]
+          },
+          "goto": "c1_m_fun_promise_ok"
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 6
+          },
+          "goto": "c1_m_fun_ball"
+        },
+        {
+          "if": {
             "flag": "counted_five"
           },
           "goto": "c1_m_fun_five"
@@ -3748,6 +3969,30 @@
         }
       ],
       "else": "c1_m_breakfast"
+    },
+    {
+      "id": "c1_m_fun_promise_no",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "إمبارح قلتي بعد العشا… وأنا نمت.",
+      "next": "c1_m_breakfast",
+      "expr": "guarded"
+    },
+    {
+      "id": "c1_m_fun_promise_ok",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "إمبارح لعبنا بعد العشا، زي ما قلتي.",
+      "next": "c1_m_breakfast",
+      "expr": "smile"
+    },
+    {
+      "id": "c1_m_fun_ball",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "النهارده العشرة. أنا هعدّ، وإنتي ترمي.",
+      "next": "c1_m_breakfast",
+      "expr": "laugh"
     },
     {
       "id": "c1_m_fun_five",
@@ -3802,7 +4047,7 @@
       "prompt": "تفطروا إيه؟",
       "options": [
         {
-          "text": "تجيبي فول وطعمية سخنة (٣ قروش). هدى هتفرح، بس الفلوس هتقل.",
+          "text": "فول وطعمية سخنة من عربية الفول.",
           "if": {
             "money": {
               "gte": 3
@@ -3821,7 +4066,7 @@
           "goto": "c1_m_taameya"
         },
         {
-          "text": "تفطروا من عيش وجبنة البيت، وتوفّري الفلوس لبكرة.",
+          "text": "عيش وجبنة البيت.",
           "effects": {
             "flags": {
               "breakfast": "home"
@@ -3830,7 +4075,7 @@
           "goto": "c1_m_home"
         },
         {
-          "text": "تحمّصي العيش البايت وتعملي شاي خفيف. مفيش مصاريف، بس الفطار هيبقى على القد.",
+          "text": "تحمّصي العيش البايت، وشاي خفيف.",
           "effects": {
             "vars": {
               "distress": 2,
@@ -4153,21 +4398,93 @@
                 "flag": "bag_promise"
               },
               {
-                "any": [
-                  {
-                    "flag": "bag_peeked"
-                  },
-                  {
-                    "flag": "promise_broken"
-                  },
-                  {
-                    "flag": "bag_latched"
-                  }
-                ]
+                "flag": "bag_peeked"
               }
             ]
           },
-          "text": "وعدتيها إن محدش هيلمس الشنطة… وماوفيتيش."
+          "text": "وعدتيها إن محدش هيلمس الشنطة، وفتحتيها وهي نايمة."
+        },
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "bag_promise"
+              },
+              {
+                "flag": "promise_broken"
+              },
+              {
+                "not": {
+                  "flag": "bag_peeked"
+                }
+              }
+            ]
+          },
+          "text": "وعدتيها إن محدش هيلمس الشنطة، وشلتيها للدولاب."
+        },
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "bag_promise"
+              },
+              {
+                "flag": "bag_latched"
+              },
+              {
+                "not": {
+                  "flag": "bag_peeked"
+                }
+              },
+              {
+                "not": {
+                  "flag": "promise_broken"
+                }
+              }
+            ]
+          },
+          "text": "وعدتيها إن محدش هيلمس الشنطة، وقفلتي قفلها وهي نايمة."
+        },
+        {
+          "if": {
+            "flag": "ball_stairs"
+          },
+          "text": "أول ما شفتيها، كانت بتعدّ السلم بالكورة."
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 6
+          },
+          "text": "الكورة مارقعتش ست مرات ورا بعض."
+        },
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "ball_promised"
+              },
+              {
+                "not": {
+                  "flag": "ball_games"
+                }
+              }
+            ]
+          },
+          "text": "قلتي «بعد العشا»، ومالعبتوش."
+        },
+        {
+          "if": {
+            "flag": "red_button",
+            "eq": "hoda"
+          },
+          "text": "الزرار الأحمر بقى بتاعها."
+        },
+        {
+          "if": {
+            "flag": "hoda_caught_fatma"
+          },
+          "text": "هدى لقطت زرار إنتي حطيتيه غلط."
         },
         {
           "if": {

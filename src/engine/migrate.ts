@@ -1,6 +1,12 @@
 import type { GameState } from './types';
 
-export const CURRENT_SAVE_VERSION = 2;
+export const CURRENT_SAVE_VERSION = 3;
+
+/** Story nodes removed in the shared-life revision (v3) → the nearest place that still exists. */
+export const REMOVED_NODES: Record<string, Record<string, string>> = {
+  ch1: { bond_buttons: 'c1_hub', bond_buttons_pick: 'c1_hub', bond_retry: 'c1_hub', bond_count: 'c1_hub', bond_stop: 'c1_hub', c1_d10: 'c1_d11', c1_d12: 'c1_d13' },
+  ch5: { g_clothes: 'g_war_memory' },
+};
 
 /**
  * Upgrade any older save to the current shape. Pure function (unit-tested).
@@ -14,6 +20,12 @@ export function migrateSave(raw: unknown): GameState | null {
   if (s.version > CURRENT_SAVE_VERSION) return null;            // written by a newer build
   if (s.version === 1) {
     s = { ...s, version: 2, completed: [], slot: s.slot >= 5 ? 4 : s.slot, music: undefined, ambience: undefined };
+  }
+  if (s.version === 2) {
+    // v2 → v3: the thread spools and clothes became real objects. Old saves start with two spools;
+    // clothes states are derived from the flags they already have (see core.wardrobe).
+    const remap = REMOVED_NODES[s.chapter]?.[s.node];
+    s = { ...s, version: 3, flags: { thread: 2, ...s.flags }, node: remap ?? s.node, lastLine: remap ? undefined : s.lastLine };
   }
   if (s.chapter === 'ch4' && s.node.startsWith('c4_')) {
     s = { ...s, node: 's_start', scene: 'living', day: 1, slot: 0, cast: ['hoda'], visited: [], music: null, ambience: null };

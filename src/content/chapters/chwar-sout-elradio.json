@@ -42,13 +42,18 @@
       "cast": [
         "hoda"
       ],
-      "broadcast": null
+      "broadcast": null,
+      "effects": {
+        "flags": {
+          "cl_yellow": "clean"
+        }
+      }
     },
     {
       "id": "w_oct6",
       "type": "line",
       "speaker": "narrator",
-      "text": "هدى بتدور على مشطها. طرف الكراسة مغطّي نص الترابيزة."
+      "text": "الفستان الأصفر اتغسل ونشف. هدى بتدوّر على مشطها، وطرف كراستها مغطّي نص الترابيزة."
     },
     {
       "id": "w_morning",
@@ -304,103 +309,200 @@
       "type": "line",
       "speaker": "narrator",
       "text": "كتبت «٦ أكتوبر» تحت العلم. قلمها ضغط في الورقة، وانتي ثبّتّيها بعيد عن سخونة الراديو.",
-      "next": "w_oct7"
+      "next": "w_cross"
     },
     {
       "id": "w_flag_book",
       "type": "line",
       "speaker": "narrator",
       "text": "«السارية طلعت مايلة.» قلتي لها: «جرّبي بالمِسطرة.» سابته في الكراسة بعد ما عدّلته.",
-      "next": "w_oct7"
+      "next": "w_cross"
     },
     {
       "id": "w_flag_put",
       "type": "line",
       "speaker": "narrator",
       "text": "قفلت الكراسة. إنتي رجعتي للشغل، ومن الشباك لسه واصل صوت الناس.",
+      "next": "w_cross"
+    },
+    {
+      "id": "w_cross",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "نلعب عبور؟ الطبلية هي القناة، والكورة لازم تعدّي من فوق!",
+      "expr": "laugh"
+    },
+    {
+      "id": "w_cross_c",
+      "type": "choice",
+      "options": [
+        {
+          "text": "«يلا. بس من فوق الطبلية.»",
+          "goto": "ball_crossing"
+        },
+        {
+          "text": "«بعد النشرة.»",
+          "goto": "w_cross_no",
+          "effects": {
+            "flags": {
+              "war_cross_later": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ball_crossing",
+      "type": "activity",
+      "activity": "ball",
+      "params": {
+        "variant": "crossing",
+        "rounds": 5,
+        "effects": {
+          "vars": {
+            "trust": 2,
+            "safety": 2,
+            "distress": -3
+          }
+        }
+      }
+    },
+    {
+      "id": "w_cross_after",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "الساتر وقع!",
+      "next": "w_oct7",
+      "variants": [
+        {
+          "if": {
+            "flag": "ball_stopped"
+          },
+          "text": "خلاص؟ ماشي. بكرة نعبر تاني.",
+          "expr": "neutral"
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 4
+          },
+          "text": "عبرنا أربع مرات! نعيمة، شفتي؟",
+          "expr": "proud"
+        }
+      ],
+      "expr": "laugh"
+    },
+    {
+      "id": "w_cross_no",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "خبّطت الكورة في الحيطة مرتين، وبعدين قعدت تلوّن العلم.",
       "next": "w_oct7"
     },
     {
       "id": "w_oct7",
       "type": "line",
       "speaker": "narrator",
-      "text": "تاني يوم، نعيمة نادت من الباب: «افتحي الراديو.» القتال لسه مستمر شرق القناة.",
+      "text": "تاني يوم الصبح، نعيمة نادت من الباب: «ابني رجع من عند عم فوزي.»",
+      "cast": [
+        "hoda",
+        "naima"
+      ],
       "effects": {
         "setTime": {
           "day": 2,
           "slot": 0
         }
-      },
-      "cast": [
-        "hoda",
-        "naima"
-      ]
+      }
     },
     {
       "id": "w_search",
       "type": "line",
-      "speaker": "narrator",
-      "text": "نعيمة فردت ورقة العنوان القديم. هدى شاورِت على اسم الشارع وشدّت القلم ناحيتها."
+      "speaker": "naima",
+      "text": "أمها سابت المحل في الربيع، واشتغلت في مصنع ملابس في إسكندرية. عنوانها ماعندوش.",
+      "effects": {
+        "flags": {
+          "search_fawzi": true
+        }
+      }
     },
     {
       "id": "w_address",
       "type": "choice",
-      "prompt": "تضيفي إيه للسؤال عن الأم؟",
       "options": [
         {
-          "text": "تسألي هدى عن اسم قريبتها وآخر مكان شافته.",
+          "text": "«نكتب لها على المصنع، باسمها.»",
           "goto": "w_details",
           "effects": {
             "flags": {
               "search_details": true
             },
             "vars": {
-              "trust": 2
+              "trust": 1
             }
           }
         },
         {
-          "text": "تراجعي العنوان مع نعيمة من غير استجواب هدى.",
+          "text": "«هدى، إنتي فاكرة حاجة عن المصنع؟»",
           "goto": "w_naima",
           "effects": {
             "flags": {
-              "search_via_naima": true
+              "search_asked_hoda": true
             },
-            "vars": {}
+            "vars": {
+              "openness": 2
+            }
           }
         },
         {
-          "text": "تأجلي الكلام النهارده، وتطلبي من نعيمة تفضل تسأل.",
+          "text": "«وحاجة سنية؟ صاحب البيت شايلها؟»",
           "goto": "w_later",
           "effects": {
             "flags": {
-              "search_delegated": true
-            },
-            "vars": {}
+              "search_landlord": true
+            }
           }
         }
-      ]
+      ],
+      "prompt": "الخطوة الجاية:"
     },
     {
       "id": "w_details",
       "type": "line",
       "speaker": "narrator",
-      "text": "كتبت اسم أمها واسم محل عم فوزي الترزي. وقفت عند العنوان: «الباقي مش فاكرة.»",
-      "next": "w_oct16"
+      "text": "كتبتي على الظرف اسمها، و«مسنع الملابس، إسكندرية». هدى مدّت صباعها: «مصنع بالصاد يا خالتي.»",
+      "next": "w_letter_send",
+      "effects": {
+        "flags": {
+          "hoda_corrected_fatma": true
+        }
+      }
     },
     {
       "id": "w_naima",
       "type": "line",
-      "speaker": "narrator",
-      "text": "نعيمة كتبت اللي تعرفه. هدى صححت اسم المحل، وسابت القلم جنب الورقة.",
-      "next": "w_oct16"
+      "speaker": "hoda",
+      "text": "كانت بتقول «المصنع اللي جنبه الترعة». وبتيجي بالقطر، وتجيبلي جوافة.",
+      "next": "w_letter_send",
+      "expr": "neutral"
     },
     {
       "id": "w_later",
       "type": "line",
+      "speaker": "naima",
+      "text": "شايلها في المخزن. هيطلّعها لما يلاقي مفتاحه. وكمان نكتب على المصنع، مش هنخسر حاجة.",
+      "next": "w_letter_send"
+    },
+    {
+      "id": "w_letter_send",
+      "type": "line",
       "speaker": "narrator",
-      "text": "نعيمة خدت الورقة تسأل بيها عند المحل. هدى اتأكدت إن فيه نسخة عندك.",
-      "next": "w_oct16"
+      "text": "ابن نعيمة خد الجواب للبوستة: اسمها، والمصنع، وإسكندرية. هدى كتبت تحت: «أنا كويسة».",
+      "effects": {
+        "flags": {
+          "search_factory_letter": true
+        }
+      }
     },
     {
       "id": "w_oct16",
@@ -473,17 +575,181 @@
       "id": "w_oct22",
       "type": "line",
       "speaker": "narrator",
-      "text": "النشرة جابت خبر الدعوة لوقف إطلاق النار. نعيمة استنت لآخرها قبل ما تقوم.",
+      "text": "النشرة جابت خبر الدعوة لوقف إطلاق النار. وبعدها نعيمة طلعت ومعاها علبة صفيح: حاجة سنية من عند صاحب البيت.",
+      "cast": [
+        "hoda",
+        "naima"
+      ],
       "effects": {
         "setTime": {
           "day": 4,
           "slot": 3
+        },
+        "flags": {
+          "search_box": true
         }
-      },
+      }
+    },
+    {
+      "id": "w_box",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "جوه العلبة جوابات بخط واحد. آخر جواب لسه مقفول، وعليه اسم سنية."
+    },
+    {
+      "id": "w_box_naima",
+      "type": "line",
+      "speaker": "naima",
+      "text": "اقري إنتي يا فاطمة. أنا مابعرفش أقرا."
+    },
+    {
+      "id": "w_box_c",
+      "type": "choice",
+      "options": [
+        {
+          "text": "«اقريه إنتي يا هدى.»",
+          "goto": "w_read_hoda",
+          "effects": {
+            "flags": {
+              "mother_letter_read": "hoda"
+            },
+            "vars": {
+              "trust": 2,
+              "openness": 2
+            }
+          }
+        },
+        {
+          "text": "(تفتحيه وتقريه بصوت عالي)",
+          "goto": "w_read_fatma",
+          "effects": {
+            "flags": {
+              "mother_letter_read": "fatma"
+            },
+            "vars": {
+              "safety": 1
+            }
+          }
+        },
+        {
+          "text": "«خدي هدى تحت يا نعيمة. أقراه الأول.»",
+          "goto": "w_read_first",
+          "effects": {
+            "flags": {
+              "mother_letter_read": "first"
+            },
+            "vars": {
+              "autonomy": -2,
+              "distress": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "w_read_hoda",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "ده خط ماما. هي بتكتب الزاي بنقطة كبيرة كده.",
+      "next": "w_letter",
+      "expr": "smile"
+    },
+    {
+      "id": "w_read_fatma",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "قريتيه على مهلك، كلمة كلمة. عند كلمة «ورديتين» وقفتي، وهدى قالتها قبلك.",
+      "next": "w_letter"
+    },
+    {
+      "id": "w_read_first",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "قريتيه لوحدك جنب الشباك. لما هدى طلعت، عينها كانت على العلبة: «ده جواب ماما؟»",
+      "next": "w_letter"
+    },
+    {
+      "id": "w_letter",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "«يا سنية، المصنع شغال ورديتين والإجازات واقفة. لقيت أوضة مع اتنين زمايلي، وأول ما أقبض هاجي آخد هدى. بوسيها. — زينب»",
+      "scene": "paper",
+      "cast": [],
+      "effects": {
+        "flags": {
+          "mother_reason_known": true
+        }
+      }
+    },
+    {
+      "id": "w_hostel",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "على ضهر الظرف: «سكن العاملات، مصنع الملابس». أول عنوان بجد.",
+      "scene": "living",
       "cast": [
         "hoda",
         "naima"
-      ]
+      ],
+      "effects": {
+        "flags": {
+          "search_hostel_address": true
+        }
+      }
+    },
+    {
+      "id": "w_reply_c",
+      "type": "choice",
+      "options": [
+        {
+          "text": "«اكتبي إنتي، وأنا أمسك الورقة.»",
+          "goto": "w_reply_hoda",
+          "effects": {
+            "flags": {
+              "hostel_letter_by": "hoda"
+            },
+            "vars": {
+              "trust": 2
+            }
+          }
+        },
+        {
+          "text": "«أنا أكتب، وإنتي تكتبي اسمك تحت.»",
+          "goto": "w_reply_fatma",
+          "effects": {
+            "flags": {
+              "hostel_letter_by": "fatma"
+            }
+          }
+        }
+      ],
+      "prompt": "الرد على سكن العاملات:"
+    },
+    {
+      "id": "w_reply_hoda",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "اكتبي… لأ، أنا هكتب: «أنا عند خالتي فاطمة، وبعدّ السلالم هنا كمان. سبعة وتمانين.»",
+      "next": "w_reply_sent",
+      "expr": "focused"
+    },
+    {
+      "id": "w_reply_fatma",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "كتبتي عنوانك بخط كبير، وهي كتبت اسمها، وتحته رسمت كورة صغيرة.",
+      "next": "w_reply_sent"
+    },
+    {
+      "id": "w_reply_sent",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "ابن نعيمة خد الجواب على البوستة تاني يوم.",
+      "effects": {
+        "flags": {
+          "search_hostel_letter": true
+        }
+      }
     },
     {
       "id": "w_oct25",
@@ -501,20 +767,20 @@
       "id": "w_question",
       "type": "line",
       "speaker": "hoda",
-      "text": "«يعني نقدر نسأل على ماما تاني؟»",
+      "text": "«الجواب وصل ماما؟»",
       "expr": "worried"
     },
     {
       "id": "w_answer",
       "type": "line",
       "speaker": "narrator",
-      "text": "«هنسأل تاني.» رجعتي للطلبية، وهدى ردّت القلم لمكانه جنب الورقة."
+      "text": "«لسه. لما يوصل، هترد.» هدى عدّت على صوابعها الأيام من ساعة ما ابن نعيمة نزل بيه."
     },
     {
       "id": "w_end",
       "type": "end",
       "title": "صوت الراديو",
-      "text": "في نفس الأوضة فرحتوا، وخفتوا، واستنيتوا. هدى لسه عندها سؤال واحد أكبر من نشرات الأخبار.",
+      "text": "في نفس الأوضة فرحتوا، وخفتوا، واستنيتوا. وفي العلبة الصفيح بقى فيه عنوان.",
       "nextChapter": "ch2",
       "nextChapterTitle": "الفصل التالت: الكلمة",
       "memories": [
@@ -535,6 +801,32 @@
             "flag": "war_flag_kept"
           },
           "text": "علم صغير، وتحته التاريخ بخطها."
+        },
+        {
+          "if": {
+            "flag": "ball_crossing"
+          },
+          "text": "عبرتوا بالكورة من فوق الطبلية."
+        },
+        {
+          "if": {
+            "flag": "hoda_corrected_fatma"
+          },
+          "text": "هدى صحّحت لك «مصنع» على الظرف."
+        },
+        {
+          "if": {
+            "flag": "mother_letter_read",
+            "eq": "hoda"
+          },
+          "text": "هدى قرت جواب أمها بنفسها."
+        },
+        {
+          "if": {
+            "flag": "hostel_letter_by",
+            "eq": "hoda"
+          },
+          "text": "هدى كتبت لأمها إنها بتعدّ السلالم هنا كمان."
         }
       ]
     }

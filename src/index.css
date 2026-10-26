@@ -88,7 +88,7 @@ body {
 @keyframes breathe { 0%,100% { transform: scaleY(1) } 50% { transform: scaleY(1.012) } }
 .sway { animation: sway 7s steps(10) infinite; transform-box: fill-box; transform-origin: 50% 100%; }
 @keyframes sway { 0%,100% { transform: rotate(-.6deg) } 50% { transform: rotate(.6deg) } }
-.blink { animation: blink 5.3s step-end infinite; transform-box: fill-box; transform-origin: 50% 50%; }
+.blink { transform: scaleY(0); animation: blink 5.3s step-end infinite; transform-box: fill-box; transform-origin: 50% 50%; }
 @keyframes blink { 0%, 94%, 100% { transform: scaleY(0) } 96%, 98% { transform: scaleY(1) } }
 .dust { animation: dust 14s steps(20) infinite; }
 @keyframes dust { 0% { transform: translate(0,0); opacity: 0 } 15% { opacity: .9 } 85% { opacity: .7 } 100% { transform: translate(-60px, 120px); opacity: 0 } }
@@ -98,6 +98,8 @@ body {
 @keyframes flicker { 0%,100% { opacity: .9 } 40% { opacity: .78 } 60% { opacity: 1 } }
 .draw-stroke { stroke-dasharray: var(--len, 1200); stroke-dashoffset: var(--len, 1200); animation: draw 1.6s ease-out forwards; animation-delay: var(--delay, 0s); }
 @keyframes draw { to { stroke-dashoffset: 0 } }
+.bubble-pop { animation: bubblePop .25s ease-out both; transform-box: fill-box; transform-origin: 50% 100%; }
+@keyframes bubblePop { from { opacity: 0; transform: scale(.85) } to { opacity: 1; transform: none } }
 .fade-in { animation: fadeIn .5s ease-out both; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
 .scene-fade { animation: sceneFade .8s ease-out both; }

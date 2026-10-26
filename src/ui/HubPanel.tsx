@@ -3,7 +3,7 @@ import { visibleHotspots, ambientLine, NIGHT_SLOT } from '../engine/core';
 import { useGame } from '../store/gameStore';
 import { applyHotspot } from './scene/Stage';
 import { useUiSfx } from './useUiSfx';
-import { arNum } from '../util/ar';
+import { arNum, costBadge } from '../util/ar';
 
 export function HubPanel({ node, s }: { node: HubNode; s: GameState }) {
   const act = useGame((g) => g.act);
@@ -30,7 +30,7 @@ export function HubPanel({ node, s }: { node: HubNode; s: GameState }) {
             onClick={() => { tick(); act((ic, st) => applyHotspot(ic, st, node, h.id)); }}
           >
             <span className="text-[16px]">{h.label}</span>
-            {h.takesTime && <span className="text-xs px-2 py-0.5 rounded-full bg-rust/10 text-rust shrink-0" aria-label="بياخد وقت">⏳ وقت</span>}
+            {(h.takesTime || costBadge(h.effects)) && <span className="text-xs px-2 py-0.5 rounded-full bg-rust/10 text-rust shrink-0" data-cost>{costBadge({ slots: h.takesTime ? 1 : 0, money: h.effects?.money })}</span>}
           </button>
         ))}
       </div>
