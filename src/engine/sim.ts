@@ -1,8 +1,8 @@
 // Headless random playthrough – used by tests to prove the chapter can always be finished.
-import type { ActivityNode, BedParams, GameState, KitchenParams } from './types';
+import type { ActivityNode, BallParams, BedParams, GameState, KitchenParams } from './types';
 import {
   IndexedChapter, newGame, getNode, advance, visibleOptions, choose, visibleHotspots, useHotspot,
-  resolveKitchen, resolveBed, kitchenValid,
+  resolveKitchen, resolveBed, kitchenValid, resolveBall, resolveButtons, resolveDress, canMend, resume, resolveComb,
 } from './core';
 
 export function rng(seed: number) {
@@ -23,7 +23,7 @@ export function simulate(ic: IndexedChapter, seed: number, maxSteps = 2000, poli
     const sorted = [...a].sort((x, y) => score(y.effects) - score(x.effects) || r() - 0.5);
     return policy === 'kind' ? sorted[0] : sorted[sorted.length - 1];
   };
-  let s: GameState = start ?? newGame(ic);
+  let s: GameState = resume(ic, start ?? newGame(ic));
   const path: string[] = [s.node];
   for (let i = 0; i < maxSteps; i++) {
     const n = getNode(ic, s.node);
@@ -56,6 +56,27 @@ function runActivity(ic: IndexedChapter, s: GameState, n: ActivityNode, r: () =>
       if (kitchenValid(p, s, picks)) return resolveKitchen(ic, s, picks);
     }
     return resolveKitchen(ic, s, [p.items.find((i) => i.price === 0)!.id]);
+  }
+  if (n.activity === 'ball') {
+    const p = n.params as BallParams;
+    const catches = Math.floor(r() * (p.rounds + 1));
+    const hoda = p.variant === 'alone' ? 0 : Math.floor(r() * (p.rounds + 1));
+    return resolveBall(ic, s, { catches, hodaCatches: hoda, best: Math.floor(r() * (catches + hoda + 1)), high: Math.floor(r() * 3), stoppedEarly: r() < 0.2 });
+  }
+  if (n.activity === 'buttons') {
+    const placed = Math.floor(r() * 8); const wrong = Math.floor(r() * Math.min(3, placed + 1));
+    const fixed = Math.floor(r() * (wrong + 1));
+    return resolveButtons(ic, s, { hodaPlaced: placed, hodaWrong: wrong, fixedQuietly: fixed, showedHer: wrong - fixed, caughtFatma: Math.floor(r() * 2), keptRed: r() < 0.5 });
+  }
+  if (n.activity === 'comb') {
+    return resolveComb(ic, s, { gentle: 8, rough: Math.floor(r() * 3), heard: Math.floor(r() * 4), ribbon: r() < 0.3 ? 'red' : 'old', self: r() < 0.2 });
+  }
+  if (n.activity === 'dress') {
+    const mended = ['yellow', 'navy'].filter((i) => canMend(s, i) && r() < 0.6);
+    return resolveDress(ic, s, {
+      outfit: r() < 0.5 ? 'navy' : 'yellow', layer: r() < 0.5 ? 'cardigan' : 'none', ribbon: r() < 0.3 ? 'red' : 'old',
+      mended, insisted: r() < 0.2, packed: ['yellow', 'navy', 'comb', 'notebook'].filter(() => r() < 0.8),
+    });
   }
   const p = n.params as BedParams;
   const picks: Record<string, string> = {};

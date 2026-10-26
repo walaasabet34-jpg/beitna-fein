@@ -1,18 +1,23 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import type { GameState, HubNode } from '../../engine/types';
 import { visibleHotspots, getNode, hodaSpot, useHotspot as pickHotspot, IndexedChapter } from '../../engine/core';
-import { ArtDefs, LandingScene, PaperScene, HospitalScene, LivingRoom, DoorScene, NightScene, DrawingScene, SchoolScene, HomeworkScene, livingTargets, drawingTargets, homeworkTargets, Rect } from '../../art/scenes';
+import { ArtDefs, SickRoomScene, LandingScene, PaperScene, HospitalScene, LivingRoom, DoorScene, NightScene, DrawingScene, SchoolScene, HomeworkScene, livingTargets, drawingTargets, homeworkTargets, Rect } from '../../art/scenes';
 import { currentExpr, useGame } from '../../store/gameStore';
 import { useUiSfx } from '../useUiSfx';
 
 const W = 1200, H = 800;
 
 /** Portrait phones get a taller, cropped window onto the 1200×800 canvas that the player can drag. */
-function usePortrait() {
+export function usePortrait() {
   const get = () => typeof window !== 'undefined' && window.innerWidth < 700 && window.innerHeight > window.innerWidth * 1.15;
   const [p, setP] = useState(get);
   useEffect(() => { const on = () => setP(get()); window.addEventListener('resize', on); return () => window.removeEventListener('resize', on); }, []);
   return p;
+}
+/** Stage aspect: landscape keeps the 3:2 canvas; a phone held upright gets a taller window sized to leave room for the text panel. */
+export function stageAspect(portrait: boolean, panel = 250) {
+  if (!portrait || typeof window === 'undefined') return 1.5;
+  return Math.max(0.64, Math.min(0.95, window.innerWidth / Math.max(300, window.innerHeight - panel)));
 }
 
 export function applyHotspot(ic: IndexedChapter, s: GameState, hub: HubNode, id: string) {
@@ -33,7 +38,7 @@ export function Stage({ ic, s, children }: { ic: IndexedChapter; s: GameState; c
   let targets: Record<string, Rect> = {};
   if (scene === 'landing') art = <LandingScene s={s} expr={expr} />;
   else if (scene === 'paper') art = <PaperScene s={s} />;
-  else if (scene === 'sickroom') art = <HospitalScene s={s} />;
+  else if (scene === 'sickroom') art = <SickRoomScene s={s} />;
   else if (scene === 'hospital') art = <HospitalScene s={s} />;
   else if (scene === 'door') art = <DoorScene s={s} expr={expr} />;
   else if (scene === 'night') art = <NightScene s={s} expr={expr} />;
@@ -43,12 +48,12 @@ export function Stage({ ic, s, children }: { ic: IndexedChapter; s: GameState; c
   else { art = <LivingRoom s={s} expr={expr} morning={scene === 'morning'} />; targets = livingTargets(s); }
 
   // ── viewport onto the canvas ──
-  const aspect = portrait ? 0.95 : 1.5;
+  const aspect = stageAspect(portrait);
   const vw = Math.min(W, H * aspect);
   const spot = hodaSpot(s);
   const focus = scene === 'living' || scene === 'morning'
     ? (() => { const t = targets.hoda; return t ? t[0] + t[2] / 2 : 760; })()
-    : scene === 'night' ? 700 : scene === 'homework' ? 650 : 600;
+    : ({ night: 700, homework: 650, landing: 860, door: 560, school: 420, hospital: 420, sickroom: 420 } as Record<string, number>)[scene] ?? 600;
   const [pan, setPan] = useState(0);
   useLayoutEffect(() => setPan(0), [scene, spot, portrait]);
   const maxOx = W - vw;

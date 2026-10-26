@@ -5,7 +5,7 @@
   "start": "c3_start",
   "init": {
     "day": 1,
-    "slot": 0,
+    "slot": 2,
     "money": 0,
     "scene": "morning"
   },
@@ -27,7 +27,7 @@
   },
   "calendarStatus": "provisional",
   "_notes": {
-    "history": "تواريخ الفصل مؤقتة؛ الورقة إشاعة/معلومة غير رسمية وليست سجلًا حكوميًا مثبتًا.",
+    "history": "تواريخ الفصل مؤقتة. الحوالة البريدية والطوابع لليبيا تفاصيل معقولة، مش مصدر رسمي.",
     "continuity": "يعتمد على متغيرات الثقة والأمان والتوتر الموجودة بالفعل."
   },
   "nodes": [
@@ -49,72 +49,136 @@
       "id": "c3_a1",
       "type": "line",
       "speaker": "narrator",
-      "text": "الخيط خلص والطلبية لسه قدامك. سبتيها على الماكينة.",
+      "text": "العصر. هدى رجعت من المدرسة، والخيط خلص والطلبية في نصها.",
       "scene": "living",
       "cast": [
         "hoda"
       ],
-      "music": "music_home"
+      "effects": {
+        "flags": {
+          "thread": 0
+        }
+      }
     },
     {
-      "id": "c3_a2",
+      "id": "c3_thread",
+      "type": "choice",
+      "options": [
+        {
+          "text": "تنزلي تجيبي بكرة من الخردواتي.",
+          "goto": "c3_buy",
+          "effects": {
+            "money": -2,
+            "flags": {
+              "thread": 1,
+              "thread_bought": true
+            }
+          },
+          "if": {
+            "money": {
+              "gte": 2
+            }
+          }
+        },
+        {
+          "text": "تطلبي بكرة من نعيمة لحد ما تقبضي.",
+          "goto": "c3_borrow",
+          "effects": {
+            "flags": {
+              "thread": 1,
+              "thread_borrowed": true
+            }
+          }
+        },
+        {
+          "text": "تفكّي خيط من فستان قديم مقطوع.",
+          "goto": "c3_unpick",
+          "effects": {
+            "slots": 1,
+            "flags": {
+              "thread": 1,
+              "thread_unpicked": true
+            }
+          }
+        }
+      ],
+      "prompt": "الخيط:"
+    },
+    {
+      "id": "c3_buy",
       "type": "line",
       "speaker": "narrator",
-      "text": "الصبح نزلتي تجيبي خيط. البواب نده عليكي عند باب العمارة.",
-      "scene": "door",
-      "cast": [],
-      "sfx": "steps",
-      "music": null
+      "text": "نزلتي. الخردواتي لفّ البكرة في ورقة جرنال.",
+      "next": "c3_a4"
     },
     {
-      "id": "c3_a3",
+      "id": "c3_borrow",
       "type": "line",
-      "speaker": "doorman",
-      "text": "الحاجة نعيمة سايبة لك الورقة دي. واحد ردّ على السؤال."
+      "speaker": "narrator",
+      "text": "نعيمة ادّتك بكرة، وطلّعت من صدرها جواب: «ده من ابني اللي في الجيش. اقريهولي.» قريتيه لها مرتين.",
+      "cast": [
+        "naima"
+      ],
+      "scene": "door",
+      "effects": {
+        "flags": {
+          "read_for_naima": true
+        }
+      },
+      "next": "c3_a4"
+    },
+    {
+      "id": "c3_unpick",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "هدى قعدت تفك معاكي. كل ما الخيط يطول، تقول رقمه: «تلاتين… واحد وتلاتين…»",
+      "effects": {
+        "vars": {
+          "trust": 1
+        }
+      },
+      "next": "c3_a4"
     },
     {
       "id": "c3_a4",
       "type": "line",
-      "speaker": "narrator",
-      "text": "اسم الأم قريب من الاسم اللي عندكم. تحت العنوان مكتوب: طفلة عندها ست سنين.",
-      "sfx": "page",
-      "scene": "paper"
+      "speaker": "hoda",
+      "text": "ده من ليبيا! ده خط ماما!",
+      "scene": "door",
+      "lead": "البواب من تحت: «جواب يا ست فاطمة! طوابع غريبة.»",
+      "effects": {
+        "flags": {
+          "mother_contacted": true,
+          "search_supervisor_reply": true
+        }
+      },
+      "expr": "surprised"
     },
     {
       "id": "c3_paper",
       "type": "choice",
-      "prompt": "تعملي إيه بالورقة؟",
       "options": [
         {
-          "text": "تسألي البواب مين كتب الأسامي.",
+          "text": "«افتحيه إنتي يا هدى. ده بتاعك.»",
           "goto": "c3_ask",
           "effects": {
             "flags": {
-              "c3_followup": "source"
+              "reply_read_by": "hoda"
             },
             "vars": {
-              "openness": 1
+              "trust": 2
             }
           }
         },
         {
-          "text": "تحتفظي بيها لحد ما تسألي الحاجة نعيمة.",
+          "text": "(تقريه بصوت عالي، وهي لازقة فيكي)",
           "goto": "c3_keep",
           "effects": {
             "flags": {
-              "c3_followup": "naima"
-            }
-          }
-        },
-        {
-          "text": "تطويها في جيبك وتروحي. مش عايزة تتعلقي بحاجة.",
-          "goto": "c3_avoid",
-          "effects": {
-            "flags": {
-              "c3_followup": "avoided"
+              "reply_read_by": "fatma"
             },
             "vars": {
-              "distress": 2
+              "safety": 1
             }
           }
         }
@@ -124,184 +188,109 @@
       "id": "c3_ask",
       "type": "line",
       "speaker": "narrator",
-      "text": "البواب هز راسه: «أنا ماعرفش غير إن ابن الحاجة نعيمة جابها. اسأليها هي.»",
-      "next": "c3_sew"
+      "text": "فتحته بصوابع بتترعش. قرت أول سطر بصوت عالي، وبعدين ادّتهولك: «كمّلي إنتي.»",
+      "next": "clue_compare",
+      "scene": "living"
     },
     {
       "id": "c3_keep",
       "type": "line",
       "speaker": "narrator",
-      "text": "حطيتي الورقة في جيب الجلابية، وقلتي لنفسك: أول ما أخلص الطلبية هسأل.",
-      "next": "c3_sew"
-    },
-    {
-      "id": "c3_avoid",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "حطيتي الورقة في جيبك. طول الطريق إيدك فضلت تتحسس مكانها.",
-      "next": "c3_sew"
-    },
-    {
-      "id": "c3_sew",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "رجعتي على الماكينة. الإبرة بتطلع وتنزل، وانتي مش فاكرة آخر غرزة عملتيها.",
-      "scene": "living",
-      "cast": [
-        "hoda"
-      ],
-      "sfx": "sewing",
-      "music": "music_home",
-      "next": "clue_compare"
+      "text": "قريتي على مهلك. هدى بتسبقك بكلمة كل شوية، وصباعها على السطر.",
+      "scene": "living"
     },
     {
       "id": "clue_compare",
-      "type": "choice",
-      "prompt": "إيه اللي محتاج سؤال؟",
-      "options": [
-        {
-          "text": "«الطفلة هنا ست سنين. نسأل عن السن تاني.»",
-          "goto": "clue_age",
-          "effects": {
-            "flags": {
-              "clue_checked": "age"
-            },
-            "vars": {}
-          }
-        },
-        {
-          "text": "«نسألها عن محل عم فوزي.»",
-          "goto": "clue_shop",
-          "effects": {
-            "flags": {
-              "clue_checked": "shop"
-            },
-            "vars": {}
-          }
-        },
-        {
-          "text": "«نخلّي نعيمة تراجع الورقة مع اللي جابها.»",
-          "goto": "clue_source",
-          "effects": {
-            "flags": {
-              "clue_checked": "source"
-            },
-            "vars": {}
-          }
-        }
-      ],
+      "type": "line",
+      "speaker": "narrator",
+      "text": "«يا هدى يا نور عيني. عدّي السلالم لحد ما آجي، وأنا أطلعهم معاكي.»",
       "scene": "paper",
-      "cast": []
-    },
-    {
-      "id": "clue_age",
-      "type": "line",
-      "text": "كتبتي سؤال السنّ على ضهر الورقة. هدى تسع سنين، لكن ممكن اللي نقل الخبر يكون غلط.",
-      "speaker": "narrator",
-      "next": "c3_history",
-      "scene": "living",
-      "cast": [
-        "hoda"
-      ]
-    },
-    {
-      "id": "clue_shop",
-      "type": "line",
-      "text": "كتبتي اسم المحل وسألتي إذا كانت اشتغلت فيه.",
-      "speaker": "narrator",
-      "next": "c3_history",
-      "scene": "living",
-      "cast": [
-        "hoda"
-      ]
-    },
-    {
-      "id": "clue_source",
-      "type": "line",
-      "text": "علّمتي على السطر اللي مش واضح عشان نعيمة تراجعه مع اللي جاب الورقة.",
-      "speaker": "narrator",
-      "next": "c3_history",
-      "scene": "living",
-      "cast": [
-        "hoda"
+      "variants": [
+        {
+          "if": {
+            "flag": "proof_detail",
+            "eq": "egg"
+          },
+          "text": "«يا هدى يا نور عيني. لسه مابتحبيش البيض المسلوق؟ ضحّكتيني وعيّطتيني في نفس الوقت.»"
+        },
+        {
+          "if": {
+            "flag": "proof_detail",
+            "eq": "ball"
+          },
+          "text": "«يا هدى يا نور عيني. الكورة اللي رسمتيها لسه فيها الخياطة الحمرا؟ خلّي بالك منها لحد ما آجي.»"
+        },
+        {
+          "if": {
+            "flag": "proof_detail",
+            "eq": "cat"
+          },
+          "text": "«يا هدى يا نور عيني. مشمش؟ إنتي لسه فاكراها! لما آجي ندوّر لك على قطة في الشارع الجديد.»"
+        },
+        {
+          "if": {
+            "flag": "proof_detail",
+            "eq": "sky"
+          },
+          "text": "«يا هدى يا نور عيني. الإزاز الأزرق؟ أنا كمان بشوف السما من شباك الورشة وأفتكرك.»"
+        }
       ]
     },
     {
       "id": "c3_history",
-      "type": "branch",
-      "cases": [
-        {
-          "if": {
-            "flag": "c2_office_lead"
-          },
-          "goto": "c3_history_yes"
-        }
-      ],
-      "else": "c3_history_no"
-    },
-    {
-      "id": "c3_history_yes",
       "type": "line",
       "speaker": "narrator",
-      "text": "ورقتكم فيها سنّ هدى واسم المحل. فردتي الورقتين جنب بعض.",
-      "next": "c3_notice"
-    },
-    {
-      "id": "c3_history_no",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "الاسم مش كفاية. طلعتي نسخة الورقة اللي عندك.",
-      "next": "c3_notice"
+      "text": "«جوابينكم وصلوني سوا أول الشهر. ألف سلامة على سنية. العقد يخلص آخر نوفمبر، ولو سبته قبلها أخسر التذكرة وفلوس الشهور. أول ديسمبر أكون عندك. ابعتوا على الورشة؛ العنوان ورا الظرف. ست فاطمة، ربنا يخليكي. — ماما»",
+      "scene": "paper"
     },
     {
       "id": "c3_notice",
       "type": "line",
       "speaker": "hoda",
-      "text": "خالتي، الإبرة واقفة. إنتي سرحانة؟",
+      "text": "هي فاكرة! …طب ليه ماتجيش دلوقتي؟ ما هي عرفت.",
+      "scene": "living",
       "expr": "worried"
     },
     {
       "id": "c3_truth",
       "type": "choice",
-      "prompt": "تردّي عليها بإيه؟",
       "options": [
         {
-          "text": "«وصلني اسم شبه اسم ماما، بس لسه مش عارفة يخصها ولا لأ.»",
+          "text": "«لو سابت الشغل قبل ما يخلص، تخسر التذكرة وفلوس شهور. هي هناك عشان تأجر لكم أوضة.»",
           "goto": "c3_truth_yes",
           "effects": {
             "vars": {
               "trust": 3,
-              "openness": 3,
-              "distress": 2
+              "openness": 2
             },
             "flags": {
-              "c3_told": true
+              "c3_why": "truth"
             }
           }
         },
         {
-          "text": "«فيه حاجة هسأل عنها الأول، وبعدها هقولك.»",
+          "text": "(تقربيها من النتيجة) «نعدّ اللي فاضل سوا.»",
           "goto": "c3_truth_later",
           "effects": {
             "vars": {
-              "trust": 1,
-              "distress": 1
+              "trust": 2,
+              "safety": 2
             },
             "flags": {
-              "c3_told": "partial"
+              "c3_why": "count"
             }
           }
         },
         {
-          "text": "«مفيش حاجة. بس تعبانة شوية.»",
+          "text": "«الكبار عندهم حسابات.»",
           "goto": "c3_truth_no",
           "effects": {
             "vars": {
-              "trust": -3,
-              "distress": 4
+              "openness": -2,
+              "distress": 2
             },
             "flags": {
-              "c3_told": false
+              "c3_why": "short"
             }
           }
         }
@@ -310,54 +299,88 @@
     {
       "id": "c3_truth_yes",
       "type": "line",
-      "speaker": "narrator",
-      "text": "هدى سألت: «يعني ممكن تكون ماما؟» قلتي: «ممكن. هسأل نعيمة الأول.»",
-      "next": "c3_evening"
+      "speaker": "hoda",
+      "text": "يعني هي بتشتغل عشاني. زي ما إنتي بتشتغلي على الماكينة.",
+      "next": "c3_money",
+      "expr": "sad"
     },
     {
       "id": "c3_truth_later",
       "type": "line",
-      "speaker": "narrator",
-      "text": "هدى هزت راسها، بس فضلت واقفة لحظة قبل ما ترجع لكراستها.",
-      "next": "c3_evening"
+      "speaker": "hoda",
+      "text": "واحد وعشرين. صوابع إيديا ورجليا… وواحد زيادة.",
+      "next": "c3_money",
+      "expr": "laugh"
     },
     {
       "id": "c3_truth_no",
       "type": "line",
       "speaker": "narrator",
-      "text": "«طيب.» قالتها هدى بسرعة، أسرع من العادي. وخدت كراستها ومشيت.",
-      "next": "c3_evening"
+      "text": "هدى طبّقت الجواب ورجّعته في الظرف، من غير ما تسأل تاني.",
+      "next": "c3_money"
     },
     {
-      "id": "c3_evening",
+      "id": "c3_money",
+      "type": "choice",
+      "options": [
+        {
+          "text": "«الخمسين قرش دول بتوعك يا هدى. نحطهم في ظرف ليكي.»",
+          "goto": "c3_money_hoda",
+          "effects": {
+            "flags": {
+              "mother_money": "hoda"
+            },
+            "vars": {
+              "autonomy": 3,
+              "trust": 1
+            }
+          }
+        },
+        {
+          "text": "«نحطهم في علبة الصفيح، للأكل والجزمة الشتوي.»",
+          "goto": "c3_money_tin",
+          "effects": {
+            "flags": {
+              "mother_money": "tin"
+            },
+            "money": 50
+          }
+        }
+      ],
+      "prompt": "وفي الظرف حوالة بخمسين قرش لهدى. محمود هيصرفها من البوستة."
+    },
+    {
+      "id": "c3_money_hoda",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "بتوعي أنا؟ …هفكّر هشتري إيه. حاجة مهمة.",
+      "next": "c3_bag1",
+      "expr": "proud"
+    },
+    {
+      "id": "c3_money_tin",
       "type": "line",
       "speaker": "narrator",
-      "text": "المغرب، الماكينة سكتت. سمعتي حركة عند مكان نوم هدى.",
-      "scene": "living",
-      "cast": [],
-      "music": null,
-      "sfx": "sewing",
-      "effects": {
-        "setTime": {
-          "slot": 3
-        }
-      }
+      "text": "علبة الصفيح تقلت. أول مرة من شهور تسمعي فيها صوت فلوس كتير. هدى قالت: «ماما بتساعدك.»",
+      "next": "c3_bag1"
     },
     {
       "id": "c3_bag1",
       "type": "line",
-      "speaker": "narrator",
-      "text": "دخلتي لقيتيها قاعدة على الأرض، بتطبق الفستان الأصفر وتحطه في الشنطة.",
+      "speaker": "fatma",
+      "text": "بتعملي إيه يا هدى؟",
+      "lead": "المغرب. هدى بتطبّق الفستان الأصفر في الشنطة، والجواب جنبها.",
+      "next": "c3_bag3",
+      "effects": {
+        "setTime": {
+          "slot": 3
+        }
+      },
       "scene": "living",
       "cast": [
         "hoda"
-      ]
-    },
-    {
-      "id": "c3_bag2",
-      "type": "line",
-      "speaker": "fatma",
-      "text": "بتعملي إيه يا هدى؟"
+      ],
+      "music": null
     },
     {
       "id": "c3_bag3",
@@ -376,7 +399,7 @@
       "id": "c3_bag5",
       "type": "line",
       "speaker": "hoda",
-      "text": "عشان لو ماما جت. آخر مرة مشيت ما لحقتش آخد كل حاجتي.",
+      "text": "عشان لما ماما تيجي أبقى جاهزة. لما مشينا من السويس ما لحقتش آخد كل حاجتي.",
       "expr": "sad"
     },
     {
@@ -405,7 +428,7 @@
       "prompt": "تعملي إيه؟",
       "options": [
         {
-          "text": "«طب سيبيها مفتوحة لحد ما نعرف أكتر.»",
+          "text": "«سيبيها مفتوحة. لسه هتحتاجي هدومك تلات أسابيع.»",
           "goto": "c3_bag_open",
           "effects": {
             "vars": {
@@ -449,7 +472,7 @@
       "id": "c3_bag_open",
       "type": "line",
       "speaker": "narrator",
-      "text": "هدى سابت الفستان على ركبتها. «يعني مش لازم أقفلها دلوقتي؟» قلتي: «مش لازم.»",
+      "text": "هدى سابت الفستان على ركبتها. «يعني أقفلها يوم تلاتين؟» قلتي: «يوم تلاتين.»",
       "next": "c3_question"
     },
     {
@@ -463,14 +486,14 @@
       "id": "c3_bag_fear",
       "type": "line",
       "speaker": "narrator",
-      "text": "هدى سابت المشط من إيدها. «أنا مش ماشية دلوقتي يا خالتي.»",
+      "text": "هدى سابت الفستان من إيدها. «أنا مش ماشية دلوقتي يا خالتي.»",
       "next": "c3_question"
     },
     {
       "id": "c3_question",
       "type": "line",
       "speaker": "hoda",
-      "text": "لو ماما جت… هتزعلي إني أمشي؟",
+      "text": "لما ماما تيجي… هتزعلي إني أمشي؟",
       "expr": "worried"
     },
     {
@@ -523,7 +546,7 @@
       "id": "c3_answer_honest",
       "type": "line",
       "speaker": "hoda",
-      "text": "طب تيجي معايا أول مرة؟",
+      "text": "طب تيجي معانا أول يوم في الأوضة الجديدة؟",
       "next": "c3_night"
     },
     {
@@ -544,7 +567,7 @@
       "id": "c3_night",
       "type": "line",
       "speaker": "narrator",
-      "text": "بالليل، الورقة فضلت في درج الماكينة. ما عرفتيش تنامي غير لما قررتي تسألي عن مصدرها بكرة.",
+      "text": "بالليل، جواب ماما تحت مخدة هدى، وطرفه باين.",
       "scene": "living",
       "cast": [],
       "music": "music_night",
@@ -556,63 +579,71 @@
     },
     {
       "id": "c3_day2",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "الصبح نزلتي للحاجة نعيمة. كانت بتنقّي رز على أول السلم.",
-      "scene": "door",
-      "cast": [
-        "naima"
-      ],
-      "sfx": "steps",
+      "type": "activity",
+      "activity": "comb",
+      "params": {
+        "strokes": 6,
+        "special": true,
+        "effects": {
+          "flags": {
+            "ribbon_day": "letter"
+          }
+        },
+        "lines": [
+          "النهارده الشريطة الحمرا. عشان جواب ماما.",
+          "هكتب لها إن الأبلة قالتلي برافو في الإملا.",
+          "ماما هتضفّرني يوم واحد ديسمبر. وإنتي تتفرجي."
+        ]
+      },
+      "scene": "morning",
       "music": null,
       "effects": {
         "setTime": {
           "day": 2,
           "slot": 0
+        },
+        "vars": {
+          "trust": 1
         }
       }
     },
     {
-      "id": "c3_naima",
+      "id": "c3_check_w",
       "type": "line",
-      "speaker": "naima",
-      "text": "طلعوا ناس تانية؛ البنت أصغر، وأمها ما اشتغلتش في المحل. هنكمّل من عند عم فوزي."
+      "speaker": "fatma",
+      "text": "نرد على الورشة قبل المدرسة؟"
     },
     {
       "id": "c3_check",
       "type": "choice",
-      "prompt": "تعملي إيه بالمعلومة دي؟",
       "options": [
         {
-          "text": "«نسأل عند المحل عن آخر عنوان لها.»",
+          "text": "«اكتبي إنتي. هاتي الورقة وأنا أمسكها.»",
           "goto": "c3_check_careful",
           "effects": {
-            "vars": {
-              "openness": 2
-            },
             "flags": {
-              "c3_note_checked": true
+              "letter_started": true
+            },
+            "vars": {
+              "trust": 2
             }
           }
         },
         {
-          "text": "«خلي ابنك ياخد الاسم كامل المرة دي.»",
+          "text": "«قوليلي إنتي، وأنا أكتب.»",
           "goto": "c3_check_name",
           "effects": {
-            "vars": {
-              "trust": 1
-            },
             "flags": {
-              "c3_note_checked": true
+              "letter_dictated": true
             }
           }
         },
         {
-          "text": "تسيبي لها نسخة السؤال وترجعي.",
+          "text": "«نكتبه بالليل، بعد الطلبية.»",
           "goto": "c3_check_home",
           "effects": {
             "flags": {
-              "c3_note_checked": true
+              "letter_delayed": true
             }
           }
         }
@@ -622,99 +653,41 @@
       "id": "c3_check_careful",
       "type": "line",
       "speaker": "narrator",
-      "text": "بعتّي مع نعيمة العنوان اللي عندك وسؤالًا عن آخر مكان للأم.",
+      "text": "عند «الإجازة» وقفت: «بالألف ولا بالهمزة؟» وصحّحتها لنفسها. وكتبت تحت: «فاضل عشرين.»",
       "next": "c3_return"
     },
     {
       "id": "c3_check_name",
       "type": "line",
       "speaker": "narrator",
-      "text": "نعيمة خدت نسخة الاسم الكامل عشان ميتلخبطش تاني.",
-      "next": "c3_return"
+      "text": "قالت الجملة، وإنتي كتبتي بخطك الكبير. قرت وراكي وصحّحت كلمتين.",
+      "next": "c3_return",
+      "effects": {
+        "inc": {
+          "hoda_corrected_fatma": 1
+        }
+      }
     },
     {
       "id": "c3_check_home",
       "type": "line",
       "speaker": "narrator",
-      "text": "رجعتي الورقة لنعيمة. وسِبتِ لها نسخة السؤال القديم.",
+      "text": "بالليل كتبتوه على الطبلية. هدى نامت قبل ما تكمّل، فكتبتي تحت: «هدى نامت، وبتبوسك.»",
       "next": "c3_return"
     },
     {
       "id": "c3_return",
       "type": "line",
       "speaker": "hoda",
-      "text": "عرفتي حاجة؟",
-      "scene": "living",
-      "cast": [
-        "hoda"
-      ],
-      "expr": "worried"
-    },
-    {
-      "id": "c3_final_choice",
-      "type": "choice",
-      "prompt": "تقولي لها إيه؟",
-      "options": [
-        {
-          "text": "«طلعت ست تانية. لسه بندوّر على ماما.»",
-          "goto": "c3_final_clear",
-          "effects": {
-            "vars": {
-              "trust": 3,
-              "openness": 2
-            },
-            "flags": {
-              "c3_final_truth": true
-            }
-          }
-        },
-        {
-          "text": "«مش ماما. هنرجع نسأل عند المحل.»",
-          "goto": "c3_final_hope",
-          "effects": {
-            "vars": {
-              "trust": 2,
-              "safety": 1
-            },
-            "flags": {
-              "c3_final_truth": true
-            }
-          }
-        },
-        {
-          "text": "«مافيش جديد.»",
-          "goto": "c3_final_short",
-          "effects": {
-            "vars": {
-              "distress": 2
-            },
-            "flags": {
-              "c3_final_truth": false
-            }
-          }
+      "text": "لما ماما تيجي، هوريها الكراسة والكورة. والشنطة هتبقى جاهزة.",
+      "lead": "محمود خد الجواب للبوستة.",
+      "next": "c3_place",
+      "effects": {
+        "flags": {
+          "search_reply_sent": true
         }
-      ]
-    },
-    {
-      "id": "c3_final_clear",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "هدى بصت للفستان، وردّت المشط مكانه. «طيب. قوليلي لما تعرفي.»",
-      "next": "c3_place"
-    },
-    {
-      "id": "c3_final_hope",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "«قوليلي لو وصل رد.» هدى رجّعت الفستان في الشنطة.",
-      "next": "c3_place"
-    },
-    {
-      "id": "c3_final_short",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "هدى ما سألتش تاني. بصت على الدولاب، وبعدين رجعت تبص على شنطتها.",
-      "next": "c3_place"
+      },
+      "expr": "smile"
     },
     {
       "id": "c3_place",
@@ -830,29 +803,22 @@
       "id": "c3_end_closed",
       "type": "line",
       "speaker": "narrator",
-      "text": "هدى فطرت في هدوء. قبل المدرسة اتأكدت إن شنطتها في مكانها. ما سألتش تاني عن الورقة.",
+      "text": "هدى فطرت في هدوء. ما اتكلمتش عن ماما، بس الجواب كان في جيب المريلة.",
       "next": "c3_end"
     },
     {
       "id": "c3_end_middle",
       "type": "line",
       "speaker": "narrator",
-      "text": "هدى قعدت تفطر. بعد شوية قالت: «لو حد سأل عليا، قوليله إني هنا.» قلتي: «هقول.»",
+      "text": "هدى قعدت تفطر. بعد شوية قالت: «لو ماما جت وأنا في المدرسة، قوليلها تستناني.» قلتي: «هقول.»",
       "next": "c3_end"
     },
     {
       "id": "c3_end",
       "type": "end",
       "title": "الخبر",
-      "text": "هدى سابت المشط في الشنطة. الورقة رجعت درج الماكينة، جنب عنوان المحل.",
+      "text": "جواب ماما في جيب مريلة هدى. وجواب جديد في الطريق للورشة. وعلى الحيطة، عشرين ورقة.",
       "memories": [
-        {
-          "if": {
-            "flag": "c3_told",
-            "eq": true
-          },
-          "text": "قلتي لهدى عن الاسم قبل ما تتأكدي."
-        },
         {
           "if": {
             "flag": "c3_answer",
@@ -873,6 +839,53 @@
             "eq": "open"
           },
           "text": "الشنطة فضلت مفتوحة باختيار هدى."
+        },
+        {
+          "if": {
+            "flag": "read_for_naima"
+          },
+          "text": "قريتي لنعيمة جواب ابنها، ونعيمة ادّتك الخيط."
+        },
+        {
+          "if": {
+            "flag": "thread_unpicked"
+          },
+          "text": "هدى عدّت الخيط وإنتو بتفكّوه."
+        },
+        {
+          "if": {
+            "flag": "proof_detail",
+            "eq": "egg"
+          },
+          "text": "هدى كتبت لأمها عن البيض المسلوق."
+        },
+        {
+          "if": {
+            "flag": "proof_detail",
+            "eq": "ball"
+          },
+          "text": "الكورة الشراب راحت لأمها مرسومة."
+        },
+        {
+          "if": {
+            "flag": "c3_why",
+            "eq": "truth"
+          },
+          "text": "قلتي لهدى ليه أمها مش جاية دلوقتي، بالظبط."
+        },
+        {
+          "if": {
+            "flag": "mother_money",
+            "eq": "hoda"
+          },
+          "text": "الخمسين قرش بتوع هدى في ظرف باسمها."
+        },
+        {
+          "if": {
+            "flag": "ribbon",
+            "eq": "red"
+          },
+          "text": "لبست الشريطة الحمرا يوم ما ردّت على أمها."
         }
       ],
       "nextChapterTitle": "الفصل الخامس: لما ترجعي",

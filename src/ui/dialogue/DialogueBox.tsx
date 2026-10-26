@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Expr } from '../../engine/types';
 import { CHARACTERS } from '../../content';
-import { HodaPortrait } from '../../art/Hoda';
+import { HodaPortrait, type Outfit } from '../../art/Hoda';
 import { useGame } from '../../store/gameStore';
 
 const SPEED = { slow: 45, normal: 24, instant: 0 } as const;
 
-export function DialogueBox({ speaker, text, expr, onNext, nodeId, outfit }:
-  { speaker: string; text: string; expr?: Expr; onNext: () => void; nodeId: string; outfit?: 'mustard' | 'navy' }) {
+export function DialogueBox({ speaker, text, expr, onNext, nodeId, outfit, lead }:
+  { speaker: string; text: string; expr?: Expr; onNext: () => void; nodeId: string; outfit?: Outfit; lead?: string }) {
   const speed = useGame((g) => SPEED[g.settings.textSpeed]);
   const [shown, setShown] = useState(speed === 0 ? text.length : 0);
   const done = shown >= text.length;
@@ -42,6 +42,7 @@ export function DialogueBox({ speaker, text, expr, onNext, nodeId, outfit }:
           </div>
         )}
         <div className="flex-1 min-w-0">
+          {lead && <p className="text-[15px] sm:text-[16px] leading-7 text-[#5a4636] mb-1" data-lead>{lead}</p>}
           {!narrator && ch?.name && (
             <div className="font-ruqaa text-lg sm:text-xl mb-0.5" style={{ color: ch.color }}>{ch.name}</div>
           )}
@@ -49,7 +50,7 @@ export function DialogueBox({ speaker, text, expr, onNext, nodeId, outfit }:
             {text.slice(0, shown)}
             <span className="opacity-0">{text.slice(shown)}</span>
           </p>
-          <p className="sr-only" aria-live="polite">{(!narrator && ch?.name ? ch.name + ': ' : '') + text}</p>
+          <p className="sr-only" aria-live="polite">{(lead ? lead + ' ' : '') + (!narrator && ch?.name ? ch.name + ': ' : '') + text}</p>
         </div>
       </div>
       <span className={`absolute bottom-2 left-4 text-rust text-sm ${done ? 'caret' : 'opacity-0'}`} aria-hidden="true">▼ كمّلي</span>

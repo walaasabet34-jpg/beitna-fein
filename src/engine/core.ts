@@ -1,6 +1,7 @@
 import type {
   Chapter, Condition, Effect, GameState, StoryNode, Vars, VarKey, Variant, Option,
-  Hotspot, HubNode, KitchenParams, BedParams, Expr,
+  Hotspot, HubNode, KitchenParams, BedParams, Expr, BallParams, BallResult, ButtonsParams, ButtonsResult,
+  DressParams, DressResult, FlagVal, CombParams, CombResult,
 } from './types';
 
 export const VAR_KEYS: VarKey[] = ['trust', 'safety', 'openness', 'autonomy', 'distress'];
@@ -138,12 +139,23 @@ export function enter(ic: IndexedChapter, s: GameState, id: string, depth = 0): 
   if (node.type === 'hub' && node.exitWhen && evaluate(node.exitWhen, n)) {
     return enter(ic, n, node.exit, depth + 1);
   }
+  // A day with nothing left that takes time ends on its own (never strand the player in a room).
+  if (node.type === 'hub' && node.exitWhen && node.hotspots.some((h) => h.takesTime) && !visibleHotspots(node, n).some((h) => h.takesTime)) {
+    return enter(ic, n, node.exit, depth + 1);
+  }
   if (node.type === 'hub' && node.events) {
     const ev = node.events.find((e) => !n.flags[`ev:${e.id}`] && evaluate(e.if, n));
     if (ev) return enter(ic, { ...applyEffect(n, { flags: { [`ev:${ev.id}`]: true } }), lastLine: undefined }, ev.goto, depth + 1);
   }
   if (node.type === 'line') n.lastExpr = resolveLine(node, n).expr ?? n.lastExpr;
   return n;
+}
+
+/** A loaded save may point at a routing node (a branch, or a hub that should already have exited): settle it. */
+export function resume(ic: IndexedChapter, s: GameState): GameState {
+  const n = getNode(ic, s.node);
+  if (n.type === 'branch' || (n.type === 'hub' && n.exitWhen && evaluate(n.exitWhen, s))) return enter(ic, s, s.node);
+  return s;
 }
 
 export function advance(ic: IndexedChapter, s: GameState): GameState {
@@ -236,6 +248,116 @@ export function resolveBed(ic: IndexedChapter, s: GameState, picks: Record<strin
     flags[`bed_${g.id}`] = value;
   }
   n = applyEffect(n, { flags });
+  return enter(ic, n, ic.nextOf.get(node.id)!);
+}
+
+// ── Shared rituals: ball, buttons, clothes ───────────────────
+const num = (v: FlagVal | undefined) => (typeof v === 'number' ? v : 0);
+const clampInt = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, Math.round(Number.isFinite(n) ? n : 0)));
+
+function activityNode<T>(ic: IndexedChapter, s: GameState, kind: string): { node: StoryNode; p: T } {
+  const node = getNode(ic, s.node);
+  if (node.type !== 'activity' || node.activity !== kind) throw new Error(`Not in ${kind} activity`);
+  return { node, p: node.params as T };
+}
+
+/** Score a sock-ball game. Flags remember the record, her favourite throw and every rule she has invented. */
+export function resolveBall(ic: IndexedChapter, s: GameState, r: BallResult): GameState {
+  const { node, p } = activityNode<BallParams>(ic, s, 'ball');
+  const catches = clampInt(r.catches, 0, p.rounds * 2);
+  const hodaCatches = p.variant === 'alone' ? 0 : clampInt(r.hodaCatches, 0, p.rounds);
+  const best = clampInt(r.best, 0, catches + hodaCatches);
+  const high = clampInt(r.high, 0, p.rounds);
+  const throws = catches + hodaCatches;
+  let n = s;
+  const flags: Record<string, FlagVal> = { [`ball_${p.variant}`]: true, ball_last: best };
+  if (p.variant === 'alone') {
+    flags.ball_alone = num(s.flags.ball_alone) + 1;
+    if (catches > 0) flags.ball_alone_caught = true;
+  } else {
+    flags.ball_games = num(s.flags.ball_games) + 1;
+    if (best > num(s.flags.ball_best)) flags.ball_best = best;
+    if (high > 0) flags.ball_high = num(s.flags.ball_high) + high;
+    if (num(s.flags.ball_high) + high >= 2) flags.knows_high = true;
+    if (r.stoppedEarly) flags.ball_stopped = true;
+    if (throws > 0) n = applyEffect(n, p.effects);
+  }
+  n = applyEffect(n, { flags });
+  return enter(ic, n, ic.nextOf.get(node.id)!);
+}
+
+/** Score a button-sorting session for the current order; pays the order if it has a fee. */
+export function resolveButtons(ic: IndexedChapter, s: GameState, r: ButtonsResult): GameState {
+  const { node, p } = activityNode<ButtonsParams>(ic, s, 'buttons');
+  const helping = p.helper !== 'none';
+  const hodaPlaced = helping ? clampInt(r.hodaPlaced, 0, 40) : 0;
+  const hodaWrong = helping ? clampInt(r.hodaWrong, 0, hodaPlaced) : 0;
+  const flags: Record<string, FlagVal> = { buttons_sessions: num(s.flags.buttons_sessions) + 1, buttons_last_order: p.order };
+  if (helping && hodaPlaced > 0) flags.hoda_sorted = num(s.flags.hoda_sorted) + 1;
+  if (helping && clampInt(r.showedHer, 0, hodaWrong) > 0) flags.buttons_showed = num(s.flags.buttons_showed) + 1;
+  if (helping && clampInt(r.fixedQuietly, 0, hodaWrong) > 0) flags.buttons_fixed_quietly = num(s.flags.buttons_fixed_quietly) + 1;
+  if (helping && clampInt(r.caughtFatma, 0, 20) > 0) flags.hoda_caught_fatma = num(s.flags.hoda_caught_fatma) + 1;
+  if (helping && r.keptRed && !s.flags.red_button) flags.red_button = 'hoda';
+  if (!helping) flags.buttons_alone = true;
+  if (clampInt(r.leftWrong ?? 0, 0, 10) > 0) flags.buttons_left_wrong = true;
+  let n = applyEffect(s, { flags, money: p.pay ?? 0 });
+  if (helping && hodaPlaced > 0) n = applyEffect(n, p.effects);
+  return enter(ic, n, ic.nextOf.get(node.id)!);
+}
+
+/** Clothes Hoda owns and their current state. States change only through play (washing, tearing, mending). */
+export function wardrobe(s: GameState) {
+  return {
+    yellow: String(s.flags.cl_yellow ?? (s.flags.clothes_out || s.chapter !== 'ch1' ? 'clean' : 'dusty')),
+    navy: String(s.flags.cl_navy ?? (s.flags.c2_outfit === 'navy' ? 'fitted' : 'loose')),
+    cardigan: s.flags.cl_cardigan === 'made',
+    redRibbon: true,
+  };
+}
+const MENDABLE: Record<string, string[]> = { yellow: ['torn'], navy: ['loose'] };
+export function canMend(s: GameState, item: string) { return (MENDABLE[item] ?? []).includes((wardrobe(s) as Record<string, unknown>)[item] as string); }
+
+export function resolveDress(ic: IndexedChapter, s: GameState, r: DressResult): GameState {
+  const { node, p } = activityNode<DressParams>(ic, s, 'dress');
+  const flags: Record<string, FlagVal> = {};
+  if (p.mode === 'pack') {
+    const packed = (r.packed ?? []).filter((x) => typeof x === 'string');
+    flags.packed = packed.join(',');
+    flags.packed_all = packed.length > 0;
+  } else {
+    for (const m of r.mended ?? []) {
+      if (!canMend(s, m)) continue;
+      if (m === 'yellow') flags.cl_yellow = s.flags.patch_flower ? 'flower' : 'mended';
+      if (m === 'navy') { flags.cl_navy = 'fitted'; flags.c2_outfit = 'navy'; }
+      flags[`mended_${m}`] = true;
+    }
+    const navyOk = (flags.cl_navy ?? wardrobe(s).navy) === 'fitted' || r.outfit !== 'navy';
+    flags.outfit = r.outfit;
+    if (r.outfit === 'navy') flags.c2_outfit = 'navy';
+    else if (s.chapter === 'ch2' && !s.flags.c2_outfit) flags.c2_outfit = 'yellow';
+    flags.layer = r.layer === 'cardigan' && wardrobe(s).cardigan ? 'cardigan' : 'none';
+    flags.ribbon = r.ribbon === 'red' ? 'red' : 'old';
+    flags.dressed_times = num(s.flags.dressed_times) + 1;
+    if (r.insisted) flags.dress_insisted = num(s.flags.dress_insisted) + 1;
+    if (p.cold && flags.layer === 'cardigan') flags.warm_today = true;
+    if (p.cold && flags.layer !== 'cardigan') flags.cold_today = true;
+    if (!navyOk) flags.sleeve_loose_today = true;
+  }
+  let n = applyEffect(s, { flags });
+  n = applyEffect(n, p.effects);
+  return enter(ic, n, ic.nextOf.get(node.id)!);
+}
+
+/** Score a morning of combing. The flags remember whether hands were gentle and how much she told. */
+export function resolveComb(ic: IndexedChapter, s: GameState, r: CombResult): GameState {
+  const { node, p } = activityNode<CombParams>(ic, s, 'comb');
+  const rough = clampInt(r.rough, 0, 30), heard = clampInt(r.heard, 0, p.lines.length);
+  const flags: Record<string, FlagVal> = { comb_times: num(s.flags.comb_times) + 1, comb_last_heard: heard, ribbon: r.ribbon === 'red' ? 'red' : 'old' };
+  if (rough >= 2) flags.comb_rough = num(s.flags.comb_rough) + 1;
+  if (rough === 0 && !r.self) flags.comb_gentle = num(s.flags.comb_gentle) + 1;
+  if (r.self) flags.comb_self = true;
+  let n = applyEffect(s, { flags });
+  if (rough < 2) n = applyEffect(n, p.effects);
   return enter(ic, n, ic.nextOf.get(node.id)!);
 }
 

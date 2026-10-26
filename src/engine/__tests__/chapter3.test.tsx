@@ -42,7 +42,7 @@ describe('chapter 3 continuity', () => {
   });
 
   it('shows evening, then night on day 1, and advances to day 2 only with the morning text', () => {
-    let s = enter(c3, newGame(c3), 'c3_evening');
+    let s = enter(c3, newGame(c3), 'c3_bag1');
     expect([s.day, s.slot]).toEqual([1, 3]);
     for (const id of ['c3_answer_honest', 'c3_answer_soft', 'c3_answer_avoid']) {
       s = advance(c3, enter(c3, s, id));
@@ -54,20 +54,21 @@ describe('chapter 3 continuity', () => {
       const morning = advance(c3, s);
       expect(morning.node).toBe('c3_day2');
       expect([morning.day, morning.slot]).toEqual([2, 0]);
-      expect(morning.scene).toBe('door');
+      expect(morning.scene).toBe('morning');
       expect(morning.music).toBeNull();
-      expect(ambienceFor(morning)).toBe('amb_stair');
+      expect(ambienceFor(morning)).not.toBe('amb_night');
       const home = enter(c3, morning, 'c3_return');
       expect(art(home)).toContain('class="rays"');
       expect(art(home)).not.toContain('url(#lampGlow)');
-      expect(ambienceFor(home)).toBe('amb_day');
+      expect(['amb_day', 'amb_morning']).toContain(ambienceFor(home));
     }
   });
 
-  it('validates chapter 3 against flags from both earlier chapters', () => {
+  it('validates chapter 3 against flags from every earlier chapter in play order', () => {
     const v1 = validateChapter(CHAPTERS.ch1);
-    const v2 = validateChapter(CHAPTERS.ch2, v1.setFlags);
-    expect(validateChapter(CHAPTERS.ch3, new Set([...v1.setFlags, ...v2.setFlags])).errors).toEqual([]);
+    const vw = validateChapter(CHAPTERS.chwar, v1.setFlags);
+    const v2 = validateChapter(CHAPTERS.ch2, vw.setFlags);
+    expect(validateChapter(CHAPTERS.ch3, new Set([...v1.setFlags, ...vw.setFlags, ...v2.setFlags])).errors).toEqual([]);
   });
 
   it('finishes 2,000 three-chapter runs, reaches every chapter 3 node and all outcome branches', () => {

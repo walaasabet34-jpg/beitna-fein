@@ -50,29 +50,70 @@
       "music": null,
       "cast": [
         "hoda"
-      ]
+      ],
+      "effects": {
+        "flags": {
+          "thread": 2
+        }
+      }
     },
     {
       "id": "c1_d1",
       "type": "line",
+      "speaker": "hoda",
+      "text": "…خمستاشر. ستاشر. سبعتاشر—",
+      "expr": "focused",
+      "lead": "طالعة بالعيش وبكرة الخيط. فوق، على بسطة بابك، بنت بتخبّط كورة شراب في السلمة وبتعد.",
+      "next": "ball_stairs",
       "scene": "landing",
-      "speaker": "narrator",
-      "text": "طالعة بالعيش وبكرة خيط. على بابك بنت قاعدة على شنطة."
+      "ambience": "amb_stair"
     },
     {
-      "id": "c1_d2",
+      "id": "ball_stairs",
+      "type": "activity",
+      "activity": "ball",
+      "params": {
+        "variant": "stairs",
+        "rounds": 1,
+        "effects": {
+          "vars": {
+            "trust": 1,
+            "openness": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "c1_ball_after",
       "type": "line",
       "speaker": "hoda",
-      "text": "…سبعتاشر. تمنتاشر.",
-      "next": "intro_first"
+      "text": "…خلاص، ضاعت العدّة. إنتي ساكنة هنا؟",
+      "variants": [
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 2
+          },
+          "text": "تمنتاشر… تسعتاشر! إنتي ساكنة هنا؟",
+          "expr": "laugh"
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 1
+          },
+          "text": "تمنتاشر. إنتي ساكنة هنا؟",
+          "expr": "smile"
+        }
+      ],
+      "expr": "guarded"
     },
     {
       "id": "intro_first",
       "type": "choice",
-      "prompt": "",
       "options": [
         {
-          "text": "«بتعدّي السلم؟»",
+          "text": "«أيوه. بتعدّي إيه؟»",
           "goto": "intro_count",
           "effects": {
             "flags": {
@@ -84,7 +125,7 @@
           }
         },
         {
-          "text": "(تقعدي قريب منها وتحطي العيش على رجلك)",
+          "text": "(تقعدي على السلمة وتحطي العيش على رجلك)",
           "goto": "intro_bread",
           "effects": {
             "flags": {
@@ -101,8 +142,7 @@
           "effects": {
             "flags": {
               "first_words": "ask"
-            },
-            "vars": {}
+            }
           }
         }
       ]
@@ -110,39 +150,33 @@
     {
       "id": "intro_count",
       "type": "line",
-      "text": "عدّيته مرتين. نسيت أول مرة.",
+      "text": "السلالم، والنطّات. ماما بتقول اللي يعدّ مايتوهش.",
       "speaker": "hoda",
-      "next": "c1_d3"
+      "next": "c1_d4"
     },
     {
       "id": "intro_bread",
       "type": "line",
-      "text": "ده من الفرن اللي تحت؟",
+      "text": "ده من الفرن اللي تحت؟ ريحته سخنة.",
       "speaker": "hoda",
-      "next": "c1_d3"
+      "next": "c1_d4"
     },
     {
       "id": "intro_wait",
       "type": "line",
       "text": "نعيمة. هي طالعة.",
       "speaker": "hoda",
-      "next": "c1_d3"
-    },
-    {
-      "id": "c1_d3",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "صوت شبشب على السلم. نعيمة سندت على الدرابزين.",
-      "cast": [
-        "hoda",
-        "naima"
-      ]
+      "next": "c1_d4"
     },
     {
       "id": "c1_d4",
       "type": "line",
       "speaker": "naima",
-      "text": "سبقتيني يا هدى؟ طب استني الشنطة ما تقعش."
+      "text": "سبقتيني يا هدى؟ طب استني الشنطة ما تقعش.",
+      "cast": [
+        "hoda",
+        "naima"
+      ]
     },
     {
       "id": "c1_d5",
@@ -153,13 +187,7 @@
           "door_open": true
         }
       },
-      "text": "نعيمة حطت بقجة هدوم في إيدك. من جيبها طلعت ورقة بعنوان مشطوب."
-    },
-    {
-      "id": "c1_d6",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "البنت زحزحت الشنطة بعيد عن الباب. رجليها فضلت حواليها."
+      "text": "نعيمة حطّت في إيدك بقجة هدوم، وورقة بعنوان أوضة سنية، مشطوب: «اتأجّرت»."
     },
     {
       "id": "c1_d7",
@@ -195,28 +223,28 @@
     {
       "id": "intro_sonia",
       "type": "line",
-      "text": "لسه في المستشفى. مش هتعرف تاخدها معاها دلوقتي.",
+      "text": "اتعملها عملية من أسبوع. النهارده بس فاقت واتكلمت.",
       "speaker": "naima",
       "next": "c1_d7b"
     },
     {
       "id": "intro_address",
       "type": "line",
-      "text": "ناس تانية ساكنة. سيبت لهم اسمي، وهنسأل عند محل شغل أمها القديم.",
+      "text": "الأوضة اتأجّرت، وحاجتها عند صاحب البيت. ابني هيجيبها بكرة. جوابات أمها جوّاها.",
       "speaker": "naima",
-      "next": "c1_d7b"
+      "next": "c1_d7b",
+      "effects": {
+        "flags": {
+          "knows_box": true
+        }
+      }
     },
     {
       "id": "c1_d7b",
       "type": "line",
       "speaker": "naima",
-      "text": "أسبوع يا فاطمة، لحد ما نوصل لأمها. أنا تحت لو احتجتي حاجة."
-    },
-    {
-      "id": "c1_d8",
-      "type": "line",
-      "speaker": "naima",
-      "text": "سلّمي على خالتك فاطمة."
+      "text": "أمها في ليبيا، وجاية أول ديسمبر. شقتي مليانة. خليها عندك لحد ما تيجي. سلّمي على خالتك فاطمة.",
+      "next": "c1_d9"
     },
     {
       "id": "c1_d9",
@@ -283,28 +311,24 @@
       "id": "c1_g_kneel2",
       "type": "line",
       "speaker": "narrator",
-      "text": "صوتها طالع واطي. بس عينها اترفعت ثانية، ورجعت تاني للبلاط.",
-      "next": "c1_d10"
+      "text": "صوتها واطي. بس عينها اترفعت ثانية.",
+      "next": "c1_d13"
     },
     {
       "id": "c1_g_bag1",
       "type": "line",
-      "speaker": "narrator",
-      "text": "قبل ما صوابعك تلمس الإيد، الشنطة اتسحبت لورا."
-    },
-    {
-      "id": "c1_g_bag2",
-      "type": "line",
       "speaker": "hoda",
       "expr": "upset",
-      "text": "لأ. أنا اللي هشيلها."
+      "text": "لأ. أنا اللي هشيلها.",
+      "lead": "قبل ما صوابعك تلمس الإيد، الشنطة اتسحبت لورا.",
+      "next": "c1_g_bag3"
     },
     {
       "id": "c1_g_bag3",
       "type": "line",
       "speaker": "naima",
-      "text": "سيبيهالها يا فاطمة. من ساعة ما استلمتها وهي مش راضية تسيبها ولا دقيقة.",
-      "next": "c1_d10"
+      "text": "سيبيهالها يا فاطمة. مش بتسيبها ولا دقيقة.",
+      "next": "c1_d13"
     },
     {
       "id": "c1_g_wide1",
@@ -318,40 +342,7 @@
       "type": "line",
       "speaker": "narrator",
       "text": "طرف بقها اتحرك. مش ضحكة… بس قريب منها.",
-      "next": "c1_d10"
-    },
-    {
-      "id": "c1_d10",
-      "type": "line",
-      "speaker": "naima",
-      "text": "أنا تحت لو احتجتي أي حاجة. وانتي يا هدى، اسمعي الكلام، ماشي؟"
-    },
-    {
-      "id": "c1_d11",
-      "type": "line",
-      "speaker": "narrator",
-      "effects": {
-        "flags": {
-          "naima_left": true
-        }
-      },
-      "text": "هدى هزّت راسها. الحاجة نعيمة نزلت السلم، وصوت شبشبها فضل يبعد لحد ما اختفى.",
-      "sfx": "steps",
-      "cast": [
-        "hoda"
-      ]
-    },
-    {
-      "id": "c1_d12",
-      "type": "line",
-      "scene": "living",
-      "speaker": "narrator",
-      "text": "الباب اتقفل. والشقة بقت فجأة أوسع من العادة.",
-      "music": "music_home",
-      "sfx": "door_close",
-      "cast": [
-        "hoda"
-      ]
+      "next": "c1_d13"
     },
     {
       "id": "c1_d13",
@@ -376,14 +367,16 @@
           "speaker": "narrator",
           "text": "هدى وقفت لازقة في الحيطة جنب الباب، والشنطة بينك وبينها."
         }
-      ]
-    },
-    {
-      "id": "c1_d14",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "الشمس لسه عالية. قدامك تلات فترات قبل الليل: العشا لازم يتعمل، ومكان نومها لازم يتجهز.",
-      "next": "c1_hub"
+      ],
+      "scene": "living",
+      "cast": [
+        "hoda"
+      ],
+      "effects": {
+        "flags": {
+          "naima_left": true
+        }
+      }
     },
     {
       "id": "c1_hub",
@@ -391,6 +384,19 @@
       "scene": "living",
       "hint": "كل حاجة عليها ⏳ بتاخد فترة من اليوم. الكلام والحاجات الصغيرة ببلاش.",
       "ambient": [
+        {
+          "if": {
+            "flag": "ball_waiting"
+          },
+          "text": "هدى بتخبّط الكورة في الحيطة وبتعدّ لوحدها، بصوت واطي."
+        },
+        {
+          "if": {
+            "flag": "red_button",
+            "eq": "hoda"
+          },
+          "text": "هدى بتلف الزرار الأحمر بين صوابعها، وبتبصّ لك من بين خرامه."
+        },
         {
           "if": {
             "all": [
@@ -458,11 +464,15 @@
           "goto": "c1_talk"
         },
         {
-          "id": "buttons",
-          "label": "تفرزوا الزراير",
-          "target": "sewing",
+          "id": "ball",
+          "target": "ball",
+          "label": "الكورة الشراب",
+          "takesTime": true,
           "once": true,
-          "goto": "bond_buttons"
+          "effects": {
+            "slots": 1
+          },
+          "goto": "ball_c1"
         },
         {
           "id": "bag",
@@ -514,7 +524,7 @@
         {
           "id": "sew",
           "target": "sewing",
-          "label": "تكمّلي فستان أم سيد",
+          "label": "فستان أم سيد (الزراير والكفّة)",
           "takesTime": true,
           "once": true,
           "effects": {
@@ -546,17 +556,14 @@
           "gte": 4
         }
       },
-      "exit": "c1_evening",
+      "exit": "c1_ev_food",
       "events": [
         {
           "id": "thimble",
           "if": {
             "any": [
               {
-                "flag": "buttons_together"
-              },
-              {
-                "flag": "buttons_counted"
+                "flag": "hoda_sorted"
               },
               {
                 "slot": {
@@ -566,6 +573,36 @@
             ]
           },
           "goto": "c1_ev_th1"
+        },
+        {
+          "id": "ballinvite",
+          "if": {
+            "all": [
+              {
+                "slot": {
+                  "gte": 2
+                }
+              },
+              {
+                "not": {
+                  "flag": "used:c1_hub:ball"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "var": "trust",
+                    "gte": 16
+                  },
+                  {
+                    "var": "openness",
+                    "gte": 13
+                  }
+                ]
+              }
+            ]
+          },
+          "goto": "c1_ev_ball"
         },
         {
           "id": "riddle",
@@ -599,16 +636,12 @@
     {
       "id": "c1_ev_th1",
       "type": "line",
-      "speaker": "narrator",
-      "text": "هدى لقت الكستبان بتاعك على ترابيزة الماكينة، ولبسته في صباعها الكبير.",
-      "music": "music_play"
-    },
-    {
-      "id": "c1_ev_th2",
-      "type": "line",
       "speaker": "hoda",
       "text": "بصّي! طاقية لصباعي!",
-      "expr": "laugh"
+      "expr": "laugh",
+      "lead": "هدى لبست الكستبان بتاعك في صباعها الكبير.",
+      "next": "c1_ev_th_c",
+      "music": "music_play"
     },
     {
       "id": "c1_ev_th_c",
@@ -667,7 +700,7 @@
       "id": "c1_ev_th_b2",
       "type": "line",
       "speaker": "narrator",
-      "text": "وقعدتوا الاتنين تكلّموا صوابعكم شوية، ولأول مرة من ساعة ما جت، ضحكت من غير ما تبص على الشنطة.",
+      "text": "كلّمتوا صوابعكم شوية، وضحكت من غير ما تبص على الشنطة.",
       "next": "c1_hub"
     },
     {
@@ -768,78 +801,167 @@
       "next": "c1_hub"
     },
     {
-      "id": "bond_buttons",
+      "id": "c1_ev_ball",
       "type": "line",
-      "text": "هدى جمعت الزراير الحمرا. حطيتي زرارين فوق بعض؛ اللون واحد، والمقاس مختلف.",
       "speaker": "narrator",
-      "cast": [
-        "hoda"
-      ]
+      "text": "الكورة الشراب اتدحرجت لحد رجلك. هدى واقفة عند الطرقة."
     },
     {
-      "id": "bond_buttons_pick",
+      "id": "c1_ev_ball_c",
       "type": "choice",
-      "prompt": "«أعملهم تاني؟»",
       "options": [
         {
-          "text": "«جربي الصغير لوحده والكبير لوحده.»",
-          "goto": "bond_retry",
+          "text": "(ترميهالها)",
+          "goto": "ball_c1",
           "effects": {
+            "slots": 1,
             "flags": {
-              "buttons_together": true
-            },
-            "vars": {
-              "trust": 2,
-              "autonomy": 2
+              "used:c1_hub:ball": true
             }
           }
         },
         {
-          "text": "«أنا هفرز وإنتي عدّيهم.»",
-          "goto": "bond_count",
+          "text": "«بعد شوية. وعد.»",
+          "goto": "c1_ev_ball_later",
           "effects": {
             "flags": {
-              "buttons_counted": true
-            },
-            "vars": {
-              "safety": 2
+              "ball_promised": true
             }
           }
         },
         {
-          "text": "«سيبيهم، الطلبية مستعجلة.»",
-          "goto": "bond_stop",
+          "text": "(ترجّعيها برجلك وتكمّلي)",
+          "goto": "c1_ev_ball_no",
           "effects": {
             "flags": {
-              "buttons_stopped": true
+              "ball_waiting": true
             },
             "vars": {
-              "openness": -1
+              "autonomy": 1
             }
           }
         }
       ]
     },
     {
-      "id": "bond_retry",
+      "id": "c1_ev_ball_later",
       "type": "line",
-      "text": "جرّبت زرار فوق التاني. المرة دي دفعت الطبق ناحيتك تستني رأيك.",
+      "speaker": "hoda",
+      "text": "وعد؟ …ماشي.",
+      "next": "c1_hub",
+      "expr": "neutral"
+    },
+    {
+      "id": "c1_ev_ball_no",
+      "type": "line",
       "speaker": "narrator",
+      "text": "بعد شوية سمعتي الكورة بتخبط في الحيطة، وهي بتعدّ لوحدها.",
       "next": "c1_hub"
     },
     {
-      "id": "bond_count",
+      "id": "ball_c1",
+      "type": "activity",
+      "activity": "ball",
+      "params": {
+        "variant": "count",
+        "rounds": 6,
+        "effects": {
+          "vars": {
+            "trust": 3,
+            "openness": 2,
+            "distress": -4
+          }
+        }
+      },
+      "cast": [
+        "hoda"
+      ]
+    },
+    {
+      "id": "c1_ball_post",
       "type": "line",
-      "text": "عدّتهم، وبعدين رجعت لأول صف: «استني، ده عدّيته مرتين.»",
+      "speaker": "hoda",
+      "text": "إنتي بتمسكي بإيديكي الاتنين زي العيال الصغيرين.",
+      "next": "c1_father",
+      "variants": [
+        {
+          "if": {
+            "flag": "ball_stopped"
+          },
+          "text": "خلاص؟ …ماشي.",
+          "expr": "neutral"
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 6
+          },
+          "text": "ستة ورا بعض! بكرة نعدّي العشرة.",
+          "expr": "laugh"
+        },
+        {
+          "if": {
+            "flag": "knows_high"
+          },
+          "text": "ارمي عالي تاني بكرة. عالي أوي.",
+          "expr": "laugh"
+        }
+      ],
+      "expr": "smile"
+    },
+    {
+      "id": "c1_father",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "الكورة دي ماما عملتها من شراب بابا. بابا مات وأنا صغيرة.",
+      "expr": "sad"
+    },
+    {
+      "id": "c1_father_c",
+      "type": "choice",
+      "options": [
+        {
+          "text": "(تحطي إيدك على الكورة جنب إيدها)",
+          "goto": "c1_father_hand",
+          "effects": {
+            "flags": {
+              "knows_father": true
+            },
+            "vars": {
+              "trust": 2,
+              "safety": 1
+            }
+          }
+        },
+        {
+          "text": "«جوزي كمان مات. صورته على الحيطة.»",
+          "goto": "c1_father_share",
+          "effects": {
+            "flags": {
+              "knows_father": true,
+              "photo_told": true
+            },
+            "vars": {
+              "openness": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1_father_hand",
+      "type": "line",
       "speaker": "narrator",
+      "text": "سابت إيدها تحت إيدك ثانيتين. وبعدين شدّت الكورة: «تاني.»",
       "next": "c1_hub"
     },
     {
-      "id": "bond_stop",
+      "id": "c1_father_share",
       "type": "line",
-      "text": "بعدت الطبق عن إيدها. زرار صغير وقع؛ رجعته من غير كلام.",
-      "speaker": "narrator",
-      "next": "c1_hub"
+      "speaker": "hoda",
+      "text": "يعني إحنا الاتنين.",
+      "next": "c1_hub",
+      "expr": "neutral"
     },
     {
       "id": "c1_talk",
@@ -945,32 +1067,23 @@
       "id": "c1_t_food_yes1",
       "type": "line",
       "speaker": "hoda",
-      "expr": "smile",
-      "effects": {
-        "likes": [
-          "potato",
-          "egg"
-        ],
-        "flags": {
-          "knows_food": true
-        },
-        "vars": {
-          "openness": 2
-        }
-      },
-      "text": "بطاطس محمّرة. وبيض… بس مش مسلوق، المسلوق ريحته وحشة."
-    },
-    {
-      "id": "c1_t_food_yes2",
-      "type": "line",
-      "speaker": "hoda",
       "expr": "neutral",
       "effects": {
         "dislikes": [
           "lentil"
-        ]
+        ],
+        "flags": {
+          "knows_food": true
+        },
+        "likes": [
+          "potato",
+          "egg"
+        ],
+        "vars": {
+          "openness": 2
+        }
       },
-      "text": "ومش عايزة عدس. كنا بناكل عدس كل يوم.",
+      "text": "بطاطس محمّرة. وبيض… بس مش مسلوق، المسلوق ريحته وحشة. ومش عايزة عدس. كنا بناكل عدس كل يوم.",
       "next": "c1_hub"
     },
     {
@@ -999,21 +1112,17 @@
     {
       "id": "c1_t_water1",
       "type": "line",
-      "sfx": "pour",
-      "speaker": "narrator",
+      "speaker": "hoda",
+      "expr": "neutral",
+      "text": "شكراً.",
+      "lead": "جبتيلها كوباية ميّة من القُلّة اللي على الشباك.",
+      "next": "c1_t_water3",
       "effects": {
         "vars": {
           "safety": 2
         }
       },
-      "text": "جبتيلها كوباية ميّة من القُلّة اللي على الشباك."
-    },
-    {
-      "id": "c1_t_water2",
-      "type": "line",
-      "speaker": "hoda",
-      "expr": "neutral",
-      "text": "شكراً."
+      "sfx": "pour"
     },
     {
       "id": "c1_t_water3",
@@ -1025,15 +1134,11 @@
     {
       "id": "c1_t_tour1",
       "type": "line",
-      "speaker": "narrator",
-      "text": "لفّيتي بيها الشقة: المطبخ الصغير، والحمّام، والأوضة، والبلكونة اللي بتطل على الشارع."
-    },
-    {
-      "id": "c1_t_tour2",
-      "type": "line",
       "speaker": "hoda",
       "expr": "neutral",
-      "text": "مين اللي في الصورة ده؟"
+      "text": "مين اللي في الصورة ده؟",
+      "lead": "لفّيتي بيها الشقة: المطبخ الصغير، والحمّام، والأوضة، والبلكونة اللي بتطل على الشارع.",
+      "next": "c1_t_tour3"
     },
     {
       "id": "c1_t_tour3",
@@ -1108,7 +1213,7 @@
       "id": "c1_t_photo6",
       "type": "line",
       "speaker": "narrator",
-      "text": "وبعدها على طول سألت عن البلكونة، وعن الحمّام، وليه الإزاز أزرق، وإيه اللي جوه الدولاب، وليه الحنفية بتصفّر.",
+      "text": "وبعدها على طول سألت عن البلكونة، والحنفية اللي بتصفّر، والإزاز الأزرق.",
       "next": "c1_hub"
     },
     {
@@ -1248,15 +1353,8 @@
       "id": "c1_b_ask_yes1",
       "type": "line",
       "speaker": "hoda",
-      "expr": "neutral",
-      "text": "حاجاتي."
-    },
-    {
-      "id": "c1_b_ask_yes2",
-      "type": "line",
-      "speaker": "hoda",
       "expr": "sad",
-      "text": "…وحاجات من عند ماما.",
+      "text": "حاجاتي. …وحاجات من عند ماما.",
       "next": "c1_hub"
     },
     {
@@ -1386,7 +1484,11 @@
     {
       "id": "c1_b_clothes_yes1",
       "type": "line",
-      "speaker": "narrator",
+      "speaker": "hoda",
+      "expr": "neutral",
+      "text": "ده بتاع المدرسة. ماتغسليهوش بالمية السخنة، بيكِش.",
+      "next": "c1_hub",
+      "lead": "هدى سكتت شوية، كأنها بتفكّر. وبعدين فتحت الشنطة حتة صغيرة، من غير ما تفتحها كلها، وطلّعت فستان كحلي مكرمش وقفلتها تاني.",
       "effects": {
         "flags": {
           "clothes_out": true
@@ -1394,16 +1496,7 @@
         "vars": {
           "trust": 2
         }
-      },
-      "text": "هدى سكتت شوية، كأنها بتفكّر. وبعدين فتحت الشنطة حتة صغيرة، من غير ما تفتحها كلها، وطلّعت فستان كحلي مكرمش وقفلتها تاني."
-    },
-    {
-      "id": "c1_b_clothes_yes2",
-      "type": "line",
-      "speaker": "hoda",
-      "expr": "neutral",
-      "text": "ده بتاع المدرسة. ماتغسليهوش بالمية السخنة، بيكِش.",
-      "next": "c1_hub"
+      }
     },
     {
       "id": "c1_b_clothes_no",
@@ -1509,13 +1602,6 @@
     {
       "id": "c1_basket1",
       "type": "line",
-      "sfx": "basket",
-      "speaker": "narrator",
-      "text": "دلّيتي السَّبَت من البلكونة للبقال، وهدى جت وقفت جنبك تتفرج على الحبل وهو بينزل."
-    },
-    {
-      "id": "c1_basket2",
-      "type": "line",
       "speaker": "hoda",
       "expr": "laugh",
       "effects": {
@@ -1523,7 +1609,10 @@
           "openness": 3
         }
       },
-      "text": "إحنا كمان كنا بنعمل كده! بس ماما كانت بتزعّق للبقال لو اتأخر."
+      "text": "إحنا كمان كنا بنعمل كده! بس ماما كانت بتزعّق للبقال لو اتأخر.",
+      "lead": "دلّيتي السَّبَت من البلكونة للبقال، وهدى بتتفرج على الحبل.",
+      "next": "c1_serve",
+      "sfx": "basket"
     },
     {
       "id": "c1_serve",
@@ -1684,7 +1773,7 @@
           "goto": "c1_meal_onion"
         }
       ],
-      "else": "c1_meal_end"
+      "else": "c1_hub"
     },
     {
       "id": "c1_meal_poor",
@@ -1696,7 +1785,7 @@
         }
       },
       "text": "كلت نص الطبق، وسابت الباقي يبرد.",
-      "next": "c1_meal_end"
+      "next": "c1_hub"
     },
     {
       "id": "c1_meal_onion",
@@ -1707,14 +1796,7 @@
           "tomato"
         ]
       },
-      "text": "طلّعت البصل من طبقها حتة حتة، ورصّته على جنب الطبق في خط مستقيم."
-    },
-    {
-      "id": "c1_meal_end",
-      "type": "line",
-      "sfx": "clink",
-      "speaker": "narrator",
-      "text": "الطبق رجع المطبخ، وصوت الحلل خلّى البيت يبان مسكون شوية.",
+      "text": "طلّعت البصل من طبقها حتة حتة، ورصّته على جنب الطبق في خط مستقيم.",
       "next": "c1_hub"
     },
     {
@@ -1903,21 +1985,21 @@
       "id": "c1_bed_place",
       "type": "line",
       "speaker": "narrator",
-      "text": "فرشتي الكنبة بملاية نضيفة ومخدة. هدى قعدت عليها وهزّت رجليها في الهوا.",
+      "text": "فرشتي الكنبة بملاية نضيفة. هدى قعدت وهزّت رجليها.",
       "variants": [
         {
           "if": {
             "flag": "bed_place",
             "eq": "mattress"
           },
-          "text": "فرشتي المرتبة جنب سريرك. هدى قعدت على طرفها، وحطّت إيدها على الملاية كأنها بتتأكد إنها حقيقية."
+          "text": "فرشتي المرتبة جنب سريرك. هدى حطّت إيدها على الملاية كأنها بتتأكد."
         },
         {
           "if": {
             "flag": "bed_place",
             "eq": "sewing_room"
           },
-          "text": "فرشتيلها في أوضة الخياطة. صغيرة، بس بتاعتها لوحدها. هدى لفّت فيها مرتين، وقفلت الباب، وفتحته تاني."
+          "text": "فرشتيلها في أوضة الخياطة. هدى قفلت الباب، وفتحته تاني."
         }
       ],
       "effects": {
@@ -2005,7 +2087,7 @@
           "promise_broken": true
         }
       },
-      "text": "إنتي قلتي محدش هيلمسها.",
+      "text": "إنتي قلتي محدش هيلمسها. وشلتيها للدولاب.",
       "next": "c1_bed_light"
     },
     {
@@ -2040,7 +2122,7 @@
           "goto": "c1_bed_light_ans"
         }
       ],
-      "else": "c1_bed_end"
+      "else": "c1_hub"
     },
     {
       "id": "c1_bed_light_ans",
@@ -2057,13 +2139,7 @@
           "expr": "worried",
           "text": "سيبي نور الطرقة… لو مش هيضايقك."
         }
-      ]
-    },
-    {
-      "id": "c1_bed_end",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "المكان اتجهز. بقى فيه حتة في البيت ده بتاعة هدى.",
+      ],
       "next": "c1_hub"
     },
     {
@@ -2091,32 +2167,20 @@
     {
       "id": "c1_r_news1",
       "type": "line",
-      "sfx": "radio",
-      "speaker": "narrator",
+      "speaker": "hoda",
+      "expr": "worried",
+      "text": "هو قال السويس؟",
+      "lead": "سمعتي شوية من الراديو. هدى قرّبت أول ما سمعت اسم مدينة، مستنية اسم السويس. الاسم طلع لمدينة تانية. هدى وقفت مكانها، وإيدها اتشدّت على الشنطة.",
+      "next": "c1_r_news_c",
       "effects": {
         "flags": {
           "heard_news": true
-        }
-      },
-      "text": "سمعتي شوية من الراديو. هدى قرّبت أول ما سمعت اسم مدينة، مستنية اسم السويس."
-    },
-    {
-      "id": "c1_r_news2",
-      "type": "line",
-      "speaker": "narrator",
-      "effects": {
+        },
         "vars": {
           "distress": 8
         }
       },
-      "text": "الاسم طلع لمدينة تانية. هدى وقفت مكانها، وإيدها اتشدّت على الشنطة."
-    },
-    {
-      "id": "c1_r_news3",
-      "type": "line",
-      "speaker": "hoda",
-      "expr": "worried",
-      "text": "هو قال السويس؟"
+      "sfx": "radio"
     },
     {
       "id": "c1_r_news_c",
@@ -2193,8 +2257,11 @@
     {
       "id": "c1_r_kids1",
       "type": "line",
-      "sfx": "radio",
-      "speaker": "narrator",
+      "speaker": "hoda",
+      "expr": "laugh",
+      "text": "أبلة فضيلة!",
+      "lead": "صوت ست بيحكي حدوتة للعيال، دافي ومتأنّي.",
+      "next": "c1_r_kids3",
       "effects": {
         "vars": {
           "distress": -6
@@ -2203,28 +2270,17 @@
           "heard_kids": true
         }
       },
-      "text": "صوت ست بيحكي حدوتة للعيال، دافي ومتأنّي.",
-      "broadcast": "kids_programme"
-    },
-    {
-      "id": "c1_r_kids2",
-      "type": "line",
-      "speaker": "hoda",
-      "expr": "laugh",
-      "text": "أبلة فضيلة!"
+      "broadcast": "kids_programme",
+      "sfx": "radio"
     },
     {
       "id": "c1_r_kids3",
       "type": "line",
-      "speaker": "narrator",
-      "text": "هدى قعدت قدام الراديو على الأرض، وضمّت ركبها."
-    },
-    {
-      "id": "c1_r_kids4",
-      "type": "line",
       "speaker": "hoda",
       "expr": "smile",
-      "text": "ماما كانت بتسيبني أسمعها وهي بتطبخ. وبعدين تسألني الحدوتة كانت عن إيه."
+      "text": "ماما كانت بتسيبني أسمعها وهي بتطبخ. وبعدين تسألني الحدوتة كانت عن إيه.",
+      "lead": "هدى قعدت قدام الراديو على الأرض، وضمّت ركبها.",
+      "next": "c1_r_kids_c"
     },
     {
       "id": "c1_r_kids_c",
@@ -2278,23 +2334,19 @@
     {
       "id": "c1_r_song1",
       "type": "line",
-      "sfx": "radio",
-      "speaker": "narrator",
+      "speaker": "hoda",
+      "expr": "laugh",
+      "text": "دي عم حسن البقال كان بيغنيها وهو بيوزن!",
+      "lead": "أغنية قديمة، والصوت بيطلع وينزل مع الإرسال.",
+      "next": "c1_r_song3",
       "effects": {
         "vars": {
           "safety": 2,
           "distress": -3
         }
       },
-      "text": "أغنية قديمة، والصوت بيطلع وينزل مع الإرسال.",
-      "broadcast": "radio_song"
-    },
-    {
-      "id": "c1_r_song2",
-      "type": "line",
-      "speaker": "hoda",
-      "expr": "laugh",
-      "text": "دي عم حسن البقال كان بيغنيها وهو بيوزن!"
+      "broadcast": "radio_song",
+      "sfx": "radio"
     },
     {
       "id": "c1_r_song3",
@@ -2306,15 +2358,8 @@
     {
       "id": "c1_sew",
       "type": "line",
-      "sfx": "sewing",
       "speaker": "narrator",
-      "effects": {
-        "flags": {
-          "order_done": true
-        }
-      },
-      "text": "قعدتي على الماكينة تكمّلي فستان أم سيد. الدوّاسة بتطلع وتنزل، والإبرة بتدق دقّها المعروف.",
-      "music": null
+      "text": "فستان أم سيد ناقصه زراير الكفّة. علبة الزراير على الترابيزة."
     },
     {
       "id": "c1_sew_b",
@@ -2341,36 +2386,23 @@
     {
       "id": "c1_sew_watch1",
       "type": "line",
-      "speaker": "narrator",
-      "text": "بعد شوية، حسّيتي بحد جنبك. هدى قربت خطوة خطوة، لحد ما بقت واقفة عند كتفك."
-    },
-    {
-      "id": "c1_sew_watch2",
-      "type": "line",
       "speaker": "hoda",
+      "text": "أنا أعرف أفرز. ممكن؟",
       "expr": "surprised",
-      "text": "ممكن أدوس أنا على الدوّاسة؟"
+      "lead": "هدى قربت خطوة خطوة، لحد ما بقت واقفة عند كتفك.",
+      "next": "c1_sew_c"
     },
     {
       "id": "c1_sew_c",
       "type": "choice",
       "options": [
         {
-          "text": "(توسّعيلها) دوسي، بس براحة.",
-          "effects": {
-            "vars": {
-              "trust": 5,
-              "openness": 4,
-              "distress": -3
-            },
-            "flags": {
-              "sewing_together": true
-            }
-          },
-          "goto": "c1_sew_yes1"
+          "text": "«تعالي. الكبار البني هنا، والصغيرين البيض هنا.»",
+          "goto": "c1_buttons_with"
         },
         {
-          "text": "لما تكبري شوية. الإبرة دي بتعوّر.",
+          "text": "«لما تكبري شوية. الإبرة بتعوّر.»",
+          "goto": "c1_sew_no1",
           "effects": {
             "vars": {
               "autonomy": -2,
@@ -2379,77 +2411,145 @@
             "flags": {
               "sew_denied": true
             }
-          },
-          "goto": "c1_sew_no1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1_buttons_with",
+      "type": "activity",
+      "activity": "buttons",
+      "params": {
+        "order": "فستان أم سيد",
+        "helper": "hoda",
+        "skill": 0.5,
+        "effects": {
+          "vars": {
+            "trust": 3,
+            "openness": 3,
+            "distress": -3
+          }
+        }
+      }
+    },
+    {
+      "id": "c1_sew_pedal",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "ممكن أدوس أنا على الدوّاسة؟",
+      "expr": "surprised"
+    },
+    {
+      "id": "c1_sew_pedal_c",
+      "type": "choice",
+      "options": [
+        {
+          "text": "(توسّعيلها) «دوسي، بس براحة.»",
+          "goto": "c1_sew_yes1",
+          "effects": {
+            "vars": {
+              "trust": 3,
+              "openness": 2
+            },
+            "flags": {
+              "sewing_together": true
+            }
+          }
+        },
+        {
+          "text": "«المرة دي أنا. بصّي على الإبرة.»",
+          "goto": "c1_sew_done",
+          "effects": {
+            "vars": {
+              "safety": 1
+            }
+          }
         }
       ]
     },
     {
       "id": "c1_sew_yes1",
       "type": "line",
-      "sfx": "sewing",
-      "speaker": "narrator",
-      "text": "داست جامد. الماكينة جريت، والخيط اتلخبط واتعقد."
-    },
-    {
-      "id": "c1_sew_yes2",
-      "type": "line",
       "speaker": "hoda",
+      "text": "هي اللي جريت لوحدها!",
       "expr": "laugh",
-      "text": "هي اللي جريت لوحدها!"
+      "lead": "داست جامد. الماكينة جريت، والخيط اتعقد.",
+      "next": "c1_sew_yes3"
     },
     {
       "id": "c1_sew_yes3",
       "type": "line",
       "speaker": "narrator",
-      "text": "ضحكتوا انتو الاتنين. فكّيتي العقدة في خمس دقايق، وهي ماقامتش من جنبك.",
+      "text": "فكّيتي العقدة، وهي ماقامتش من جنبك.",
       "next": "c1_sew_done"
     },
     {
       "id": "c1_sew_no1",
       "type": "line",
       "speaker": "hoda",
-      "expr": "upset",
-      "text": "أنا مش صغيرة."
+      "text": "أنا مش صغيرة.",
+      "expr": "upset"
     },
     {
       "id": "c1_sew_no2",
       "type": "line",
       "speaker": "narrator",
-      "text": "بس فضلت واقفة تتفرج لحد ما خلصتي.",
-      "next": "c1_sew_done"
+      "text": "بس فضلت واقفة تتفرج.",
+      "next": "c1_buttons_alone"
     },
     {
       "id": "c1_sew_alone1",
       "type": "line",
       "speaker": "narrator",
+      "text": "هدى فضلت مكانها. بس صوت الزراير في السلطانية كان بيخليها تبص ناحيتك.",
       "effects": {
         "vars": {
           "safety": 2
         }
-      },
-      "text": "هدى فضلت مكانها. بس صوت الماكينة كان بيخليها تبص ناحيتك كل شوية."
+      }
+    },
+    {
+      "id": "c1_buttons_alone",
+      "type": "activity",
+      "activity": "buttons",
+      "params": {
+        "order": "فستان أم سيد",
+        "helper": "none",
+        "skill": 0
+      }
     },
     {
       "id": "c1_sew_done",
       "type": "line",
       "speaker": "narrator",
       "text": "الفستان خلص. أم سيد هتعدّي تاخده بكرة الصبح وتدفع.",
-      "next": "c1_hub"
+      "effects": {
+        "flags": {
+          "order_done": true
+        },
+        "inc": {
+          "thread": -1
+        }
+      },
+      "next": "c1_hub",
+      "variants": [
+        {
+          "if": {
+            "flag": "buttons_left_wrong"
+          },
+          "text": "الفستان خلص. زرار في الكفّة أصغر من أخواته. أم سيد هتعدّي بكرة الصبح تاخده وتدفع."
+        }
+      ]
     },
     {
       "id": "c1_doll",
       "type": "line",
-      "sfx": "fabric",
-      "speaker": "narrator",
-      "text": "في سبت القصاقيص تحت الماكينة، حتت قماش من كل لون: كستور مقلّم، وستان أحمر، وبفتة بيضا.",
-      "music": "music_play"
-    },
-    {
-      "id": "c1_doll2",
-      "type": "line",
       "speaker": "fatma",
-      "text": "تعالي يا هدى. نعمل عروسة؟"
+      "text": "تعالي يا هدى. نعمل عروسة؟",
+      "lead": "في سبت القصاقيص تحت الماكينة، حتت قماش من كل لون: كستور مقلّم، وستان أحمر، وبفتة بيضا.",
+      "next": "c1_doll3",
+      "music": "music_play",
+      "sfx": "fabric"
     },
     {
       "id": "c1_doll3",
@@ -2574,12 +2674,6 @@
     {
       "id": "c1_window2",
       "type": "line",
-      "speaker": "narrator",
-      "text": "لون الإزاز مخلّي نور الأوضة مختلف. هدى وقفت تبص من الحتة اللي جنب الشيش."
-    },
-    {
-      "id": "c1_window3",
-      "type": "line",
       "speaker": "hoda",
       "expr": "neutral",
       "text": "في البيت اللي كنا فيه كانوا بيدهنوه أزرق برضه. ماما كانت بتقول السما دخلت جوه البيت.",
@@ -2593,15 +2687,8 @@
           "text": "هدى ماقربتش من الشباك. بس سمعتيها بتعدّ العيال اللي بيلعبوا تحت، بصوت واطي."
         }
       ],
-      "next": "c1_hub"
-    },
-    {
-      "id": "c1_evening",
-      "type": "line",
-      "scene": "living",
-      "speaker": "narrator",
-      "text": "الليل نزل على الحتة، والنور في الشارع اتطفى بدري زي كل يوم.",
-      "music": null
+      "next": "c1_hub",
+      "lead": "لون الإزاز مخلّي نور الأوضة مختلف. هدى وقفت تبص من الحتة اللي جنب الشيش."
     },
     {
       "id": "c1_ev_food",
@@ -2616,18 +2703,15 @@
           "goto": "c1_ev_nofood1"
         }
       ],
-      "else": "c1_ev_bed"
+      "else": "c1_ev_bed",
+      "scene": "living",
+      "music": null
     },
     {
       "id": "c1_ev_nofood1",
       "type": "line",
       "speaker": "narrator",
-      "text": "والعشا… العشا لسه ماتعملش."
-    },
-    {
-      "id": "c1_ev_nofood2",
-      "type": "line",
-      "speaker": "narrator",
+      "text": "والعشا… العشا لسه ماتعملش. عملتي لهدى سندوتشين عيش وجبنة على السريع. كلتهم وهي ساكتة.",
       "effects": {
         "vars": {
           "distress": 5,
@@ -2637,7 +2721,7 @@
           "skipped_dinner": true
         }
       },
-      "text": "عملتي لهدى سندوتشين عيش وجبنة على السريع. كلتهم وهي ساكتة."
+      "next": "c1_ev_bed"
     },
     {
       "id": "c1_ev_bed",
@@ -2675,7 +2759,7 @@
       "type": "line",
       "scene": "night",
       "speaker": "narrator",
-      "text": "قبل ما تنام، هدى فتحت الشنطة حتة صغيرة، وطلّعت كراسة مدرسة وقلم رصاص قصير.",
+      "text": "قبل ما تنام، طلّعت من الشنطة كراسة وقلم رصاص قصير، وقعدت ترسم.",
       "variants": [
         {
           "if": {
@@ -2690,24 +2774,10 @@
               }
             ]
           },
-          "text": "قبل ما تنام، نزّلتي لها الشنطة من فوق الدولاب. فتحتها وطلّعت كراسة وقلم رصاص قصير."
+          "text": "نزّلتي لها الشنطة من فوق الدولاب. طلّعت كراسة وقلم رصاص، وقعدت ترسم."
         }
       ],
       "music": "music_night"
-    },
-    {
-      "id": "c1_night2",
-      "type": "line",
-      "speaker": "narrator",
-      "expr": "focused",
-      "text": "قعدت ترسم، ولسانها طالع من طرف بقها من التركيز.",
-      "next": "c1_draw_hub",
-      "sfx": "pencil",
-      "effects": {
-        "flags": {
-          "bag_returned": true
-        }
-      }
     },
     {
       "id": "c1_draw_hub",
@@ -2795,7 +2865,12 @@
         "flag": "draw_q",
         "gte": 3
       },
-      "exit": "c1_dr_toomany1"
+      "exit": "c1_dr_toomany1",
+      "effects": {
+        "flags": {
+          "bag_returned": true
+        }
+      }
     },
     {
       "id": "c1_dr_house",
@@ -2823,15 +2898,9 @@
       "id": "c1_dr_cat1",
       "type": "line",
       "speaker": "hoda",
-      "expr": "laugh",
-      "text": "دي مشمش. قطة الجيران في البيت اللي كنا فيه بعد ما مشينا. بس كانت بتنام عندنا."
-    },
-    {
-      "id": "c1_dr_cat2",
-      "type": "line",
-      "speaker": "hoda",
       "expr": "worried",
-      "text": "تفتكري حد بيأكّلها دلوقتي؟"
+      "text": "دي مشمش. قطة الجيران في البيت اللي كنا فيه بعد ما مشينا. بس كانت بتنام عندنا. تفتكري حد بيأكّلها دلوقتي؟",
+      "next": "c1_dr_cat_c"
     },
     {
       "id": "c1_dr_cat_c",
@@ -2920,7 +2989,11 @@
     {
       "id": "c1_dr_woman_no1",
       "type": "line",
-      "speaker": "narrator",
+      "speaker": "hoda",
+      "expr": "guarded",
+      "text": "دي ولا حاجة.",
+      "next": "c1_draw_hub",
+      "lead": "هدى قلبت الصفحة بسرعة، وكمّلت ترسم في صفحة جديدة.",
       "effects": {
         "vars": {
           "distress": 3
@@ -2928,16 +3001,7 @@
         "flags": {
           "drawing_hid": true
         }
-      },
-      "text": "هدى قلبت الصفحة بسرعة، وكمّلت ترسم في صفحة جديدة."
-    },
-    {
-      "id": "c1_dr_woman_no2",
-      "type": "line",
-      "speaker": "hoda",
-      "expr": "guarded",
-      "text": "دي ولا حاجة.",
-      "next": "c1_draw_hub"
+      }
     },
     {
       "id": "c1_dr_toomany1",
@@ -2963,23 +3027,15 @@
       "type": "line",
       "speaker": "narrator",
       "effects": {
+        "flags": {
+          "drawing_shown": true
+        },
         "vars": {
           "safety": 5,
           "distress": -3
         }
       },
-      "text": "قعدتي جنبها ولا كلمة. القلم بيخربش على الورق، وراديو الجيران جاي من بعيد."
-    },
-    {
-      "id": "c1_dr_quiet2",
-      "type": "line",
-      "speaker": "narrator",
-      "effects": {
-        "flags": {
-          "drawing_shown": true
-        }
-      },
-      "text": "لما خلصت، زقّت الكراسة ناحيتك شوية. مش أوي. بس كفاية إنك تشوفي.",
+      "text": "قعدتي جنبها ولا كلمة. القلم بيخربش على الورق، وراديو الجيران جاي من بعيد. لما خلصت، زقّت الكراسة ناحيتك شوية. مش أوي. بس كفاية إنك تشوفي.",
       "next": "c1_bedtime"
     },
     {
@@ -3105,7 +3161,7 @@
       "type": "line",
       "scene": "night",
       "speaker": "narrator",
-      "text": "طفيتي النور. الأوضة بقت ضلمة، إلا من نور القمر على الشيش.",
+      "text": "طفيتي النور.",
       "variants": [
         {
           "if": {
@@ -3212,7 +3268,7 @@
           "goto": "c1_bedtime_doll"
         }
       ],
-      "else": "c1_peek_intro"
+      "else": "c1_peek_intro2"
     },
     {
       "id": "c1_bedtime_doll",
@@ -3221,45 +3277,39 @@
       "text": "العروسة القماش نامت تحت دراعها."
     },
     {
-      "id": "c1_peek_intro",
-      "type": "line",
-      "speaker": "narrator",
-      "effects": {
-        "flags": {
-          "hoda_asleep": true
-        }
-      },
-      "text": "بعد ساعة، هدى نامت. نفسها بقى تقيل ومنتظم.",
-      "music": null
-    },
-    {
       "id": "c1_peek_intro2",
       "type": "line",
       "speaker": "narrator",
-      "text": "الشنطة جنب السرير، والقفل بتاعها مش مقفول كويس.",
+      "text": "الشنطة جنب مكان نومها، وقفلها مش مقفول كويس.",
       "variants": [
         {
           "if": {
             "flag": "bed_bag",
             "eq": "closet"
           },
-          "text": "الشنطة في الدولاب، وبابه موارب. والقفل بتاعها مش مقفول كويس."
+          "text": "الشنطة في الدولاب، وبابه موارب. وقفلها مش مقفول كويس."
         },
         {
           "if": {
             "flag": "bed_bag",
             "eq": "hug"
           },
-          "text": "الشنطة وقعت من حضنها على الأرض جنب الكنبة. والقفل بتاعها مش مقفول كويس."
+          "text": "الشنطة وقعت من حضنها على الأرض جنب الكنبة. وقفلها مش مقفول كويس."
         },
         {
           "if": {
             "flag": "bed_bag",
             "eq": "under"
           },
-          "text": "الشنطة عند رجليها، والقفل بتاعها مش مقفول كويس."
+          "text": "الشنطة عند رجليها، وقفلها مش مقفول كويس."
         }
-      ]
+      ],
+      "effects": {
+        "flags": {
+          "hoda_asleep": true
+        }
+      },
+      "music": null
     },
     {
       "id": "c1_peek_c",
@@ -3299,25 +3349,14 @@
       "type": "line",
       "sfx": "bag_open",
       "speaker": "narrator",
-      "text": "فستانين متطبّقين. شريطة حمرا تانية، أجدد من اللي في شعرها. علبة صفيح فيها بِلي."
-    },
-    {
-      "id": "c1_peek2",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "وصورة صغيرة أبيض وأسود: ست بتضحك، وجنبها بنت صغيرة بضفيرتين بتبوّق للكاميرا."
+      "text": "فستانين متطبّقين. شريطة حمرا تانية، أجدد من اللي في شعرها. علبة صفيح فيها بِلي. وصورة صغيرة أبيض وأسود: ست بتضحك، وجنبها بنت صغيرة بضفيرتين بتبوّق للكاميرا.",
+      "next": "c1_peek3"
     },
     {
       "id": "c1_peek3",
       "type": "line",
       "speaker": "narrator",
-      "text": "تحت الصورة علبة بِلي، وورقة مطبّقة على قد جيب الشنطة."
-    },
-    {
-      "id": "c1_peek4",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "وانتي بترجّعي الحاجات، الشريطة الحمرا وقعت منك. رجّعتيها… بس مش في نفس مكانها بالظبط.",
+      "text": "تحت الصورة ورقة مطبّقة على قد جيب الشنطة. وانتي بترجّعي الحاجات، الشريطة الحمرا وقعت منك. رجّعتيها… بس مش في نفس مكانها بالظبط.",
       "next": "c1_morning"
     },
     {
@@ -3359,7 +3398,7 @@
           "goto": "c1_m_pay"
         }
       ],
-      "else": "c1_m1"
+      "else": "c1_m2"
     },
     {
       "id": "c1_m_pay",
@@ -3374,13 +3413,6 @@
         }
       },
       "text": "أم سيد خبطت بدري، خدت الفستان، وسابت تمنه على الترابيزة. عشرين قرش."
-    },
-    {
-      "id": "c1_m1",
-      "type": "line",
-      "scene": "morning",
-      "speaker": "narrator",
-      "text": "الصبح دخل من الشيش خطوط خطوط على البلاط."
     },
     {
       "id": "c1_m2",
@@ -3399,7 +3431,8 @@
           "goto": "c1_m_latch1"
         }
       ],
-      "else": "c1_m_seat_b"
+      "else": "c1_m_seat_b",
+      "scene": "morning"
     },
     {
       "id": "c1_m_peek1",
@@ -3583,7 +3616,7 @@
           "if": {
             "flag": "lied_bag"
           },
-          "text": "وطول الفطار، الشنطة كانت بين رجليها، وإيدها عليها."
+          "text": "هدى جت الطبلية، والشنطة بين رجليها وإيدها عليها."
         },
         {
           "if": {
@@ -3681,33 +3714,56 @@
           "goto": "c1_m_clothes1"
         }
       ],
-      "else": "c1_m_dusty"
+      "else": "c1_m_fun_b"
     },
     {
       "id": "c1_m_clothes1",
       "type": "line",
-      "speaker": "narrator",
-      "text": "الفستان الكحلي اتغسل واتنشر في البلكونة من بدري."
-    },
-    {
-      "id": "c1_m_clothes2",
-      "type": "line",
       "speaker": "hoda",
       "text": "ده بتاع المدرسة… هو أنا هروح مدرسة هنا؟",
       "expr": "surprised",
-      "next": "c1_m_fun_b"
-    },
-    {
-      "id": "c1_m_dusty",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "فستانها الأصفر لسه عليه تراب السكة. نامت بيه.",
-      "next": "c1_m_fun_b"
+      "next": "c1_m_fun_b",
+      "lead": "الفستان الكحلي اتغسل واتنشر في البلكونة من بدري."
     },
     {
       "id": "c1_m_fun_b",
       "type": "branch",
       "cases": [
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "ball_promised"
+              },
+              {
+                "not": {
+                  "flag": "ball_games"
+                }
+              }
+            ]
+          },
+          "goto": "c1_m_fun_promise_no"
+        },
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "ball_promised"
+              },
+              {
+                "flag": "ball_games"
+              }
+            ]
+          },
+          "goto": "c1_m_fun_promise_ok"
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 6
+          },
+          "goto": "c1_m_fun_ball"
+        },
         {
           "if": {
             "flag": "counted_five"
@@ -3748,6 +3804,30 @@
         }
       ],
       "else": "c1_m_breakfast"
+    },
+    {
+      "id": "c1_m_fun_promise_no",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "إمبارح قلتي بعد شوية… وأنا نمت.",
+      "next": "c1_m_breakfast",
+      "expr": "guarded"
+    },
+    {
+      "id": "c1_m_fun_promise_ok",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "إمبارح لعبنا، زي ما قلتي.",
+      "next": "c1_m_breakfast",
+      "expr": "smile"
+    },
+    {
+      "id": "c1_m_fun_ball",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "النهارده العشرة. أنا هعدّ، وإنتي ترمي.",
+      "next": "c1_m_breakfast",
+      "expr": "laugh"
     },
     {
       "id": "c1_m_fun_five",
@@ -3802,7 +3882,7 @@
       "prompt": "تفطروا إيه؟",
       "options": [
         {
-          "text": "تجيبي فول وطعمية سخنة (٣ قروش). هدى هتفرح، بس الفلوس هتقل.",
+          "text": "فول وطعمية سخنة من عربية الفول.",
           "if": {
             "money": {
               "gte": 3
@@ -3821,7 +3901,7 @@
           "goto": "c1_m_taameya"
         },
         {
-          "text": "تفطروا من عيش وجبنة البيت، وتوفّري الفلوس لبكرة.",
+          "text": "عيش وجبنة البيت.",
           "effects": {
             "flags": {
               "breakfast": "home"
@@ -3830,7 +3910,7 @@
           "goto": "c1_m_home"
         },
         {
-          "text": "تحمّصي العيش البايت وتعملي شاي خفيف. مفيش مصاريف، بس الفطار هيبقى على القد.",
+          "text": "تحمّصي العيش البايت، وشاي خفيف.",
           "effects": {
             "vars": {
               "distress": 2,
@@ -3867,7 +3947,7 @@
       "type": "line",
       "scene": "morning",
       "speaker": "narrator",
-      "text": "قلبتي آخر رغيف على الصاج، وقسمتيه بينك وبين هدى. حطيتي قدامها النص الأكبر من غير ما تقولي حاجة.",
+      "text": "قلبتي آخر رغيف على الصاج، وحطيتي قدامها النص الأكبر.",
       "next": "c1_m_cost_b"
     },
     {
@@ -3925,14 +4005,14 @@
           "money_worry": true
         }
       },
-      "text": "وإنتِ بترتبي الباقي في علبة الصفيح، افتكرتي إن أم سيد لسه ما دفعتش. التلات قروش دول كانوا ممكن يكفّوا حاجة ناقصة للماكينة.",
+      "text": "الطعمية خدت تلات قروش من علبة الصفيح، ومفيش فلوس جاية النهارده.",
       "next": "c1_m_light_b"
     },
     {
       "id": "c1_m_cost_saved",
       "type": "line",
       "speaker": "narrator",
-      "text": "فضلت القروش في علبة الصفيح. فستان أم سيد لسه مستني يتخلص، ومفيش دخل مضمون النهارده.",
+      "text": "القروش فضلت في علبة الصفيح.",
       "next": "c1_m_light_b"
     },
     {
@@ -4037,15 +4117,11 @@
     {
       "id": "c1_m_wall1",
       "type": "line",
-      "speaker": "narrator",
-      "text": "الرسمة متعلّقة على الحيطة. البيت، والبحر، والقطة. والبلكونة."
-    },
-    {
-      "id": "c1_m_wall2",
-      "type": "line",
       "speaker": "hoda",
       "expr": "smile",
-      "text": "بيتنا شكله صغير هنا. هبقى أرسمه أكبر."
+      "text": "بيتنا شكله صغير هنا. هبقى أرسمه أكبر.",
+      "lead": "الرسمة متعلّقة على الحيطة. البيت، والبحر، والقطة. والبلكونة.",
+      "next": "c1_m_sew_b"
     },
     {
       "id": "c1_m_sew_b",
@@ -4058,7 +4134,7 @@
           "goto": "c1_m_sew"
         }
       ],
-      "else": "c1_m_close"
+      "else": "comb_c1"
     },
     {
       "id": "c1_m_sew",
@@ -4068,10 +4144,304 @@
       "text": "ممكن أدوس على الماكينة تاني النهارده؟ هدوس بالراحة المرة دي. وعد."
     },
     {
+      "id": "comb_c1",
+      "type": "activity",
+      "activity": "comb",
+      "params": {
+        "strokes": 6,
+        "selfIf": {
+          "var": "trust",
+          "lte": 16
+        },
+        "effects": {
+          "vars": {
+            "trust": 1
+          }
+        },
+        "lines": [
+          "ماما بتعمل ضفيرتين. سنية كانت بتعمل واحدة بس.",
+          "المشط ده سنّته اتكسرت في القطر، لما مشينا من السويس.",
+          "إنتي إيدك أخف من سنية."
+        ]
+      }
+    },
+    {
+      "id": "c1_box1",
+      "type": "line",
+      "speaker": "naima",
+      "text": "جوابات أمها جوّه. اقري إنتي يا فاطمة، أنا مابعرفش أقرا.",
+      "scene": "door",
+      "cast": [
+        "naima",
+        "hoda"
+      ],
+      "lead": "محمود ابن نعيمة طلع بحاجة سنية: علبة صفيح.",
+      "effects": {
+        "flags": {
+          "search_box": true
+        }
+      }
+    },
+    {
+      "id": "c1_box_read",
+      "type": "choice",
+      "options": [
+        {
+          "text": "«افتحيه إنتي يا هدى. ده خط ماما.»",
+          "goto": "c1_box_hoda",
+          "effects": {
+            "flags": {
+              "mother_letter_read": "hoda"
+            },
+            "vars": {
+              "trust": 2,
+              "openness": 2
+            }
+          }
+        },
+        {
+          "text": "(تقريه بصوت عالي، على مهلك)",
+          "goto": "c1_box_fatma",
+          "effects": {
+            "flags": {
+              "mother_letter_read": "fatma"
+            },
+            "vars": {
+              "safety": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1_box_hoda",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "ده خطها! بتكتب الزاي بنقطة كبيرة كده.",
+      "next": "c1_box_letter",
+      "expr": "smile"
+    },
+    {
+      "id": "c1_box_fatma",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "قريتيه كلمة كلمة. عند «المقاول» وقفتي، وهدى قالتها قبلك."
+    },
+    {
+      "id": "c1_box_letter",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "«يا سنية، الشغل في ورشة بنغازي كويس. العقد بيخلص آخر نوفمبر، والمقاول بيدفع التذكرة. أول ديسمبر أكون عندكم. ابعتوا على مكتب المقاول؛ باخد الجوابات أول كل شهر. بوسيلي هدى. — زينب»",
+      "scene": "paper",
+      "effects": {
+        "flags": {
+          "mother_reason_known": true
+        }
+      }
+    },
+    {
+      "id": "c1_box_far",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "أول ديسمبر. هو ده بعيد؟",
+      "scene": "living",
+      "cast": [
+        "hoda"
+      ],
+      "expr": "worried"
+    },
+    {
+      "id": "c1_box_count",
+      "type": "choice",
+      "options": [
+        {
+          "text": "(تشاوري على النتيجة اللي على الحيطة) «تعالي نعدّ.»",
+          "goto": "c1_box_cal",
+          "effects": {
+            "flags": {
+              "calendar_counted": true
+            },
+            "vars": {
+              "trust": 2
+            }
+          }
+        },
+        {
+          "text": "«بعيد شوية. بس جاي.»",
+          "goto": "c1_box_honest",
+          "effects": {
+            "vars": {
+              "trust": 1
+            }
+          }
+        },
+        {
+          "text": "«قريب يا حبيبتي.»",
+          "goto": "c1_box_soon",
+          "effects": {
+            "flags": {
+              "soon_promise": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "c1_box_cal",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "…خمسة وخمسين، ستة وخمسين، سبعة وخمسين! سبعة وخمسين ورقة.",
+      "lead": "هدى وقفت على الكرسي، وقلبت ورق النتيجة ورقة ورقة.",
+      "next": "c1_box_write",
+      "expr": "focused"
+    },
+    {
+      "id": "c1_box_honest",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "بس جاي. ماما مابتقولش حاجة وماتعملهاش.",
+      "next": "c1_box_write",
+      "expr": "neutral"
+    },
+    {
+      "id": "c1_box_soon",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "قريب قد إيه؟ بكرة؟",
+      "next": "c1_box_write",
+      "expr": "surprised"
+    },
+    {
+      "id": "c1_box_write",
+      "type": "line",
+      "speaker": "fatma",
+      "text": "نكتبلها النهارده. عايزة تقوليلها حاجة؟"
+    },
+    {
+      "id": "c1_box_detail",
+      "type": "choice",
+      "options": [
+        {
+          "text": "«اكتبي عن البيض المسلوق.»",
+          "goto": "c1_proof_egg",
+          "effects": {
+            "flags": {
+              "proof_detail": "egg"
+            }
+          }
+        },
+        {
+          "text": "«اكتبي إنك بتعدّي السلالم هنا كمان.»",
+          "goto": "c1_proof_count",
+          "effects": {
+            "flags": {
+              "proof_detail": "count"
+            }
+          }
+        },
+        {
+          "text": "«ارسمي لها الكورة الشراب.»",
+          "goto": "c1_proof_ball",
+          "effects": {
+            "flags": {
+              "proof_detail": "ball"
+            }
+          }
+        },
+        {
+          "text": "«اكتبي عن مشمش.»",
+          "goto": "c1_proof_cat",
+          "effects": {
+            "flags": {
+              "proof_detail": "cat"
+            }
+          },
+          "if": {
+            "flag": "cat"
+          }
+        },
+        {
+          "text": "«اختاري إنتي.»",
+          "goto": "c1_proof_own",
+          "effects": {
+            "flags": {
+              "proof_detail": "sky"
+            },
+            "vars": {
+              "autonomy": 2
+            }
+          }
+        }
+      ],
+      "prompt": "هدى عايزة تكتب حاجة تضحّك ماما."
+    },
+    {
+      "id": "c1_proof_egg",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "«أنا لسه مابحبش البيض المسلوق.» هي هتضحك.",
+      "next": "c1_box_tele",
+      "expr": "laugh"
+    },
+    {
+      "id": "c1_proof_count",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "«عدّيت سلالم البيت الجديد: اتنين وتلاتين.»",
+      "next": "c1_box_tele",
+      "expr": "proud"
+    },
+    {
+      "id": "c1_proof_cat",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "«مشمش لسه بتسرق سمك أم رضا؟» ماما هتعرف إنها أنا.",
+      "next": "c1_box_tele",
+      "expr": "smile"
+    },
+    {
+      "id": "c1_proof_ball",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "رسمت الكورة الشراب بالخياطة الحمرا اللي في نصها، وكتبت تحتها: «اللي إنتي عملتيها».",
+      "next": "c1_box_tele"
+    },
+    {
+      "id": "c1_proof_own",
+      "type": "line",
+      "speaker": "hoda",
+      "text": "«السما هنا كمان بتدخل من الإزاز الأزرق.» دي بتاعة ماما.",
+      "next": "c1_box_tele",
+      "expr": "proud"
+    },
+    {
+      "id": "c1_box_tele",
+      "type": "line",
+      "speaker": "naima",
+      "text": "تلغراف؟ هيستنى في نفس المكتب لأول الشهر، وبيتحسب بالكلمة. الجواب أحسن.",
+      "effects": {
+        "flags": {
+          "hoda_corrected_fatma": true
+        }
+      }
+    },
+    {
+      "id": "c1_box_send",
+      "type": "line",
+      "speaker": "narrator",
+      "text": "هدى صحّحت «المقاول» على الظرف. الطابع لليبيا خد قرشين من علبة الفلوس اللي على الماكينة.",
+      "effects": {
+        "money": -2,
+        "flags": {
+          "search_first_letter": true
+        }
+      }
+    },
+    {
       "id": "c1_m_close",
       "type": "line",
       "speaker": "narrator",
-      "text": "تحت في الشارع، الجرايد وصلت. وهدى بصّت ناحية الباب، زي ما بتبص كل ما حد يعدّي على السلم.",
+      "text": "هدى حطّت جواب ماما في شنطتها، ومحمود نزل بجوابنا البوستة.",
       "variants": [
         {
           "if": {
@@ -4153,21 +4523,93 @@
                 "flag": "bag_promise"
               },
               {
-                "any": [
-                  {
-                    "flag": "bag_peeked"
-                  },
-                  {
-                    "flag": "promise_broken"
-                  },
-                  {
-                    "flag": "bag_latched"
-                  }
-                ]
+                "flag": "bag_peeked"
               }
             ]
           },
-          "text": "وعدتيها إن محدش هيلمس الشنطة… وماوفيتيش."
+          "text": "وعدتيها إن محدش هيلمس الشنطة، وفتحتيها وهي نايمة."
+        },
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "bag_promise"
+              },
+              {
+                "flag": "promise_broken"
+              },
+              {
+                "not": {
+                  "flag": "bag_peeked"
+                }
+              }
+            ]
+          },
+          "text": "وعدتيها إن محدش هيلمس الشنطة، وشلتيها للدولاب."
+        },
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "bag_promise"
+              },
+              {
+                "flag": "bag_latched"
+              },
+              {
+                "not": {
+                  "flag": "bag_peeked"
+                }
+              },
+              {
+                "not": {
+                  "flag": "promise_broken"
+                }
+              }
+            ]
+          },
+          "text": "وعدتيها إن محدش هيلمس الشنطة، وقفلتي قفلها وهي نايمة."
+        },
+        {
+          "if": {
+            "flag": "ball_stairs"
+          },
+          "text": "أول ما شفتيها، كانت بتعدّ السلم بالكورة."
+        },
+        {
+          "if": {
+            "flag": "ball_last",
+            "gte": 6
+          },
+          "text": "الكورة مارقعتش ست مرات ورا بعض."
+        },
+        {
+          "if": {
+            "all": [
+              {
+                "flag": "ball_promised"
+              },
+              {
+                "not": {
+                  "flag": "ball_games"
+                }
+              }
+            ]
+          },
+          "text": "قلتي «بعد العشا»، ومالعبتوش."
+        },
+        {
+          "if": {
+            "flag": "red_button",
+            "eq": "hoda"
+          },
+          "text": "الزرار الأحمر بقى بتاعها."
+        },
+        {
+          "if": {
+            "flag": "hoda_caught_fatma"
+          },
+          "text": "هدى لقطت زرار إنتي حطيتيه غلط."
         },
         {
           "if": {

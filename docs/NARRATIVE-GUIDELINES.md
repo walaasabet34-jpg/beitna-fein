@@ -1,5 +1,7 @@
 # Narrative and interaction guide
 
+> Updated 26 October 2026 by the shared-life revision: STORY-BIBLE.md is now the canon for people, abilities, the contact chain and object states; DESIGN-SHARED-LIFE.md for the rituals. Where this file disagrees, those win.
+
 Approved implementation: 25 October 2026. This guide supersedes older exposition and the earlier mother-contact outline. The later Claude review proposing a Suez blockade and a 1974 finale is an alternative proposal, not adopted canon.
 
 ## Canon

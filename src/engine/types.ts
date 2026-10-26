@@ -9,7 +9,8 @@ export type FlagVal = boolean | number | string;
 
 export type Expr =
   | 'neutral' | 'guarded' | 'sad' | 'worried' | 'smile'
-  | 'laugh' | 'surprised' | 'upset' | 'sleepy' | 'focused';
+  | 'laugh' | 'surprised' | 'upset' | 'sleepy' | 'focused'
+  | 'bored' | 'tired' | 'proud' | 'sick';
 
 export type Condition =
   | { all: Condition[] }
@@ -61,6 +62,8 @@ export interface LineNode extends NodeBase {
   type: 'line';
   speaker: string;
   text: string;
+  /** A short piece of narration shown above the line on the same screen (what we see as she speaks). */
+  lead?: string;
   expr?: Expr;
   variants?: Variant[];
   next?: string;
@@ -110,8 +113,8 @@ export interface HubNode extends NodeBase {
 
 export interface ActivityNode extends NodeBase {
   type: 'activity';
-  activity: 'kitchen' | 'bed';
-  params: KitchenParams | BedParams;
+  activity: 'kitchen' | 'bed' | 'ball' | 'buttons' | 'dress' | 'comb';
+  params: KitchenParams | BedParams | BallParams | ButtonsParams | DressParams | CombParams;
   next?: string;
 }
 
@@ -164,6 +167,83 @@ export interface BedOption {
   resolve?: { if: Condition; value: string }[];   // "ask Hoda" options
   resolveDefault?: string;
 }
+// ── Shared rituals (played on the stage; the engine only scores the outcome) ──
+/** Sock-ball catch. `variant` changes the rules Hoda plays by; `alone` is the game after she is gone. */
+export type BallVariant = 'stairs' | 'count' | 'crossing' | 'wall' | 'bed' | 'alone';
+export interface BallParams {
+  variant: BallVariant;
+  /** Throws Hoda makes before the game ends on its own (the player can also stop). */
+  rounds: number;
+  /** Applied once when the game is played with Hoda (not for 'alone'). */
+  effects?: Effect;
+}
+export interface BallResult {
+  catches: number;          // catches by the player
+  hodaCatches: number;      // catches by Hoda
+  best: number;             // longest unbroken count this game
+  high: number;             // throws aimed high (her favourite once she discovers it)
+  stoppedEarly?: boolean;   // the player put the ball down
+}
+
+/** Sorting buttons for the current sewing order, with or without Hoda. */
+export interface ButtonsParams {
+  order: string;            // short label of the order shown on the tray
+  /** 'hoda' = she sorts beside you; 'bed' = she can only do a few from bed; 'none' = Fatma alone. */
+  helper: 'hoda' | 'bed' | 'none';
+  /** How many of her picks are correct (0..1) — she gets better across chapters. */
+  skill: number;
+  /** Money paid when this order is delivered (already applied by the node's own effects if 0). */
+  pay?: number;
+  effects?: Effect;
+  /** Short labels for the two bowls and an optional line when the red button turns up without her. */
+  bowls?: [string, string];
+  redLine?: string;
+}
+export interface ButtonsResult {
+  hodaPlaced: number;       // buttons Hoda sorted
+  hodaWrong: number;        // wrong ones she put in
+  fixedQuietly: number;     // wrong ones the player moved back without a word
+  showedHer: number;        // wrong ones the player showed her
+  caughtFatma: number;      // the player's own mistakes that Hoda spotted
+  keptRed: boolean;         // Hoda kept the red button she set aside
+  leftWrong?: number;       // wrong buttons that went onto the garment anyway
+}
+
+/** Dressing Hoda, mending, or (mode 'pack') folding her things into the suitcase. */
+export interface DressParams {
+  mode: 'dress' | 'pack';
+  /** What today needs: school uniform, warmth. Shown on screen; Hoda reacts to it. */
+  school?: boolean;
+  cold?: boolean;
+  /** A day that deserves the red ribbon (she refuses it otherwise). */
+  special?: boolean;
+  /** One line describing the day, shown on the screen ("مدرسة · الصبح برد"). */
+  today?: string;
+  effects?: Effect;
+  /** Pack mode: what each folded item brings back, chosen by condition (first match). */
+  captions?: { item: string; if?: Condition; text: string }[];
+}
+export interface DressResult {
+  outfit: 'yellow' | 'navy';
+  layer: 'none' | 'cardigan';
+  ribbon: 'old' | 'red';
+  mended: string[];         // item ids mended this time (each uses thread)
+  insisted?: boolean;       // the player overrode Hoda's own pick
+  packed?: string[];        // mode 'pack'
+}
+
+/** Combing and braiding her hair in the morning. Gentle strokes get her talking; hurried ones hurt. */
+export interface CombParams {
+  /** What she says while her hair is being done, one line every two gentle strokes (her own stories). */
+  lines: string[];
+  strokes?: number;
+  /** When true she braids herself and the player holds the mirror (early, before she trusts Fatma's hands). */
+  selfIf?: Condition;
+  special?: boolean;
+  effects?: Effect;
+}
+export interface CombResult { gentle: number; rough: number; heard: number; ribbon: 'old' | 'red'; self?: boolean }
+
 export interface BedGroup { id: string; label: string; options: BedOption[] }
 export interface BedParams { groups: BedGroup[] }
 

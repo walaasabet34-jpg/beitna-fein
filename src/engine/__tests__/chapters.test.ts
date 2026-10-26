@@ -54,7 +54,7 @@ describe('save migration', () => {
   it('upgrades a v1 save from the deployed build', () => {
     const v1 = { version: 1, chapter: 'ch1', node: 'c1_hub', scene: 'living', day: 1, slot: 2, money: 30, vars: { trust: 20, safety: 20, openness: 10, autonomy: 50, distress: 50 }, flags: { greet: 'kneel' }, likes: [], dislikes: [], visited: [] };
     const m = migrateSave(v1)!;
-    expect(m.version).toBe(2); expect(m.completed).toEqual([]); expect(m.flags.greet).toBe('kneel'); expect(m.slot).toBe(2);
+    expect(m.version).toBe(3); expect(m.flags.thread).toBe(2); expect(m.completed).toEqual([]); expect(m.flags.greet).toBe('kneel'); expect(m.slot).toBe(2);
   });
   it('maps the old 6-period night (5) onto the new night (4)', () => {
     expect(migrateSave({ version: 1, chapter: 'ch1', node: 'c1_evening', vars: {}, slot: 5 })!.slot).toBe(4);
