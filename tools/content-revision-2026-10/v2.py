@@ -365,3 +365,15 @@ d=load('ch5-elshanta'); ns=d['nodes']
 T(ns,'g_burial','استنّوها لحد الضهر. دفنوها، ووصلت والناس راجعين، وشنطتها في إيدها. نعيمة راحت لها. إنتي ماقدرتيش تقربي.')
 n=get(ns,'g_contact'); n['lead']='تاني يوم، نعيمة: «أمها نامت عندي. المقاول ركّبها أول طيارة.»'; n['text']='عايزة حاجات بنتها، وعايزة تسمع منك. وبعد بكرة مسافرة الفيوم عند سنية.'
 save('ch5-elshanta',d)
+
+# ───────────── her list for her mother (sickbed → the handover) ─────────────
+d=load('ch4-lamma-tergaai'); ns=d['nodes']
+n=get(ns,'sick_letter'); n.update({'speaker':'hoda','expr':'sick','text':'اكتبي: أول ما ماما تيجي، هوريها الكورة، والكراسة، والنتيجة.','next':'sick_letter2','variants':[
+ V(F('new_thimble'),'اكتبي: أول ما ماما تيجي، هوريها الكستبان اللي اشتريته لخالتي فاطمة. والكورة.'),
+ V(F('red_button',eq='hoda'),'اكتبي: أول ما ماما تيجي، هوريها الزرار الأحمر اللي على شريطتي. والكورة.'),
+ V(F('fatma_counts'),'اكتبي: أول ما ماما تيجي، هوريها إن خالتي فاطمة بقت تعدّ بالاتنين.')]})
+insert_after(ns,'sick_letter',[N('sick_letter2','كتبتي اللي قالته. طبّقت الورقة، وكتبت على الوش بخطها: «لماما».',next='s_company')])
+save('ch4-lamma-tergaai',d)
+d=load('ch5-elshanta'); ns=d['nodes']
+T(ns,'final_letter','الأم فتحت الورقة وقرت بصوت عالي: «أول ما ماما تيجي…» ووقفت. حطّتها فوق الهدوم. ناولتيها الشنطة، ونعيمة فتحت لها الباب.')
+save('ch5-elshanta',d)
