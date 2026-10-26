@@ -40,3 +40,20 @@ What we took: a few repeatable actions that change over time; reactions shown on
 - Prices other than bread remain game values, not historical data (RESEARCH-FLAGS #9).
 - Telegram availability and train times in 1973 are plausible but not sourced specifically (one source gives about 3 hours for the Cairo–Alexandria express; the mother takes the first morning train).
 - The rig is a large step from the old shapes but is still vector illustration, not painted art; a human illustrator could repaint parts one at a time.
+
+## Reading, measured
+
+Measured with `tools/transcript/word-cost.ts` (300 simulated full routes mixing random, kind and harsh choices), on the same routes for the base commit and this revision:
+
+| | Base `d2a1514` | This revision |
+|---|---|---|
+| Words read per full route | 1,977 | ≈1,600 (−19%) |
+| Text screens ("كمّلي") per route | 210 | ≈183 (−13%) |
+| Played activities per route (ball, sorting, clothes, kitchen, bed…) | 2 | 11 |
+| Choices per route | 53 | 59 |
+
+The first version of this revision *increased* reading (2,221 words) because the search steps and the ritual set-ups added lines. Cut by measurement: lines the stage already shows were dropped, letters were shortened, same-speaker lines that always follow each other were merged, and narration directly before a character's line became that line's `lead` (shown above it on the same screen, one tap). Every removed node id is mapped for old saves (`src/engine/removed-nodes.json`).
+
+## Independent review
+
+A separate reviewer read three complete simulated routes (kind, harsh, random) against STORY-BIBLE.md and reported 25 concrete continuity problems. All were fixed in `tools/content-revision-2026-10/fixes.py`. Examples: the suitcase in two places at once; Nadia referred to before she was named; a "real address" as vague as the failed one; isolation ordered before the diagnosis; cold hands followed by fever the same night, which read as cause and effect, now given an outside cause; the embroidered name never set up.

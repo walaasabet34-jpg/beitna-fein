@@ -139,12 +139,23 @@ export function enter(ic: IndexedChapter, s: GameState, id: string, depth = 0): 
   if (node.type === 'hub' && node.exitWhen && evaluate(node.exitWhen, n)) {
     return enter(ic, n, node.exit, depth + 1);
   }
+  // A day with nothing left that takes time ends on its own (never strand the player in a room).
+  if (node.type === 'hub' && node.exitWhen && node.hotspots.some((h) => h.takesTime) && !visibleHotspots(node, n).some((h) => h.takesTime)) {
+    return enter(ic, n, node.exit, depth + 1);
+  }
   if (node.type === 'hub' && node.events) {
     const ev = node.events.find((e) => !n.flags[`ev:${e.id}`] && evaluate(e.if, n));
     if (ev) return enter(ic, { ...applyEffect(n, { flags: { [`ev:${ev.id}`]: true } }), lastLine: undefined }, ev.goto, depth + 1);
   }
   if (node.type === 'line') n.lastExpr = resolveLine(node, n).expr ?? n.lastExpr;
   return n;
+}
+
+/** A loaded save may point at a routing node (a branch, or a hub that should already have exited): settle it. */
+export function resume(ic: IndexedChapter, s: GameState): GameState {
+  const n = getNode(ic, s.node);
+  if (n.type === 'branch' || (n.type === 'hub' && n.exitWhen && evaluate(n.exitWhen, s))) return enter(ic, s, s.node);
+  return s;
 }
 
 export function advance(ic: IndexedChapter, s: GameState): GameState {

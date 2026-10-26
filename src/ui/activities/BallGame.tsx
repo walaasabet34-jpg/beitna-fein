@@ -253,12 +253,13 @@ export function BallGame({ p, s }: { p: BallParams; s: GameState }) {
       <RitualFrame s={s} label="لعب الكورة الشراب" onTap={() => tryCatch()}>
         {p.variant === 'stairs' ? <LandingBackdrop /> : null}
         <RoomShell s={s} slot={Math.min(s.slot, 3)} hidden={p.variant === 'stairs'}>
-          {p.variant === 'crossing' && <g><rect x="380" y="560" width="440" height="26" rx="8" fill="#6b8fb0" opacity=".55" /><text x="600" y="552" textAnchor="middle" fontFamily="'Aref Ruqaa', serif" fontSize="26" fill="#3a2a1e" opacity=".7">القناة</text></g>}
+          
           {!alone && <HodaFigure pose={POSES[pose]} expr={expr} outfit={outfit} bed={bed} />}
           {alone && phase === 'ready' && <SockBall x={170} y={650} r={16} />}
           {!alone && (phase === 'aim' || phase === 'wind') && phase === 'wind' && <SockBall x={handPos()[0]} y={handPos()[1]} r={13} />}
         </RoomShell>
         {(phase === 'aim' || phase === 'caught') && <SockBall x={CATCH[0]} y={CATCH[1] - 10} r={32} />}
+        {p.variant === 'crossing' && <g><path d="M300 652 Q600 636 900 652 L900 676 Q600 662 300 676Z" fill="#6b8fb0" opacity=".6" /><path d="M340 664 q20 -6 40 0 t40 0 M560 660 q20 -6 40 0 t40 0 M760 664 q20 -6 40 0" stroke="#dfe9f2" strokeWidth="2" fill="none" opacity=".7" /><text x="880" y="640" textAnchor="middle" fontFamily="'Aref Ruqaa', serif" fontSize="26" fill="#3a2a1e" opacity=".75">القناة</text></g>}
         <FlyingBall flight={flight} onDone={arrived} />
         {bubble && !alone && <Bubble x={head[0] + 40} y={head[1] - 20} text={bubble} />}
         {!alone && count > 0 && <text x="1160" y="770" textAnchor="end" fontFamily="'Aref Ruqaa', serif" fontSize="46" fill="#fff6e0" stroke="#2b2118" strokeWidth="1.5" opacity=".9" data-ball-count={count}>{arNum(count)}</text>}

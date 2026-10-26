@@ -42,7 +42,7 @@ describe('chapter 3 continuity', () => {
   });
 
   it('shows evening, then night on day 1, and advances to day 2 only with the morning text', () => {
-    let s = enter(c3, newGame(c3), 'c3_evening');
+    let s = enter(c3, newGame(c3), 'c3_bag1');
     expect([s.day, s.slot]).toEqual([1, 3]);
     for (const id of ['c3_answer_honest', 'c3_answer_soft', 'c3_answer_avoid']) {
       s = advance(c3, enter(c3, s, id));

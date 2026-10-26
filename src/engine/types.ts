@@ -62,6 +62,8 @@ export interface LineNode extends NodeBase {
   type: 'line';
   speaker: string;
   text: string;
+  /** A short piece of narration shown above the line on the same screen (what we see as she speaks). */
+  lead?: string;
   expr?: Expr;
   variants?: Variant[];
   next?: string;

@@ -13,7 +13,7 @@ for (const id of CHAPTER_ORDER) {
   let prev = start;
   const show = (st: GameState) => {
     const n = getNode(ic, st.node);
-    if (n.type === 'line') { const r = resolveLine(n, st); words += r.text.split(/\s+/).length; console.log(`${r.speaker === 'narrator' ? '   ' : (CHARACTERS[r.speaker]?.name ?? r.speaker) + ': '}${r.text}`); }
+    if (n.type === 'line') { const r = resolveLine(n, st); if (n.lead) { words += n.lead.split(/\s+/).length; console.log('   ' + n.lead); } words += r.text.split(/\s+/).length; console.log(`${r.speaker === 'narrator' ? '   ' : (CHARACTERS[r.speaker]?.name ?? r.speaker) + ': '}${r.text}`); }
     else if (n.type === 'choice') console.log(`  [اختيار] ${n.prompt ?? ''} ${visibleOptions(n, st).map((o) => o.text).join(' / ')}`);
     else if (n.type === 'activity') console.log(`  [فعل: ${n.activity}]`);
     else if (n.type === 'hub') console.log(`  [الأوضة]`);

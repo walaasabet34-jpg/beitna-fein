@@ -25,9 +25,12 @@ page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
 page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
 
 await page.goto(URL);
-await page.evaluate(() => { localStorage.clear(); localStorage.setItem('beitna-fein:settings', JSON.stringify({ textSpeed: 'instant', sound: false, reducedMotion: true })); });
+await page.evaluate((save) => {
+  localStorage.clear(); localStorage.setItem('beitna-fein:settings', JSON.stringify({ textSpeed: 'instant', sound: false, reducedMotion: true }));
+  if (save) localStorage.setItem('beitna-fein:save', save);
+}, process.env.E2E_SAVE ? fs.readFileSync(process.env.E2E_SAVE, 'utf8') : null);
 await page.reload();
-await page.click('[data-new-game]');
+await page.click(process.env.E2E_SAVE ? '[data-continue]' : '[data-new-game]');
 await page.waitForSelector('[data-screen="game"]');
 
 const tap = async (el) => {
@@ -47,7 +50,7 @@ async function ritual() {
   if (ball) {
     const phase = await ball.getAttribute('data-phase');
     if (phase === 'end') { await tap(await page.$('[data-ball-done]')); return 'ball-done'; }
-    if (phase === 'aim') { const aims = await page.$$('[data-aim]'); await tap(aims[pickIdx(aims.length)]); return 'ball-throw'; }
+    if (phase === 'aim' || (phase === 'ready' && await page.$('[data-aim]'))) { const aims = await page.$$('[data-aim]'); await tap(aims[pickIdx(aims.length)]); return 'ball-throw'; }
     if (phase === 'incoming') {
       await page.waitForTimeout(1400 + Math.floor(rnd() * 300));
       const st = await page.$('[data-ritual]');
@@ -126,7 +129,8 @@ while (log.steps < Number(process.env.E2E_MAX ?? 2500)) {
   const choice = await page.$$('[data-choice]');
   if (choice.length) { await tap(choice[pickIdx(choice.length)]); continue; }
   const hubs = await page.$$('[data-hub] [data-hotspot]');
-  if (hubs.length) { await tap(hubs[pickIdx(hubs.length)]); continue; }
+  // In rooms, 'first' rotates through the actions (always taking the first would only ever talk).
+  if (hubs.length) { log.hubTurns = (log.hubTurns ?? 0) + 1; await tap(hubs[POLICY === 'random' ? pickIdx(hubs.length) : (POLICY === 'last' ? hubs.length - 1 - (log.hubTurns % hubs.length) : log.hubTurns % hubs.length)]); continue; }
   // Kitchen and bed are the older menu activities (covered by scripts/e2e.mjs); press them directly.
   const press = (sel) => page.$eval(sel, (e) => e.click());
   if (await page.$('[data-kitchen-item]')) { await press('[data-kitchen-item]'); await press('[data-kitchen-confirm]'); continue; }

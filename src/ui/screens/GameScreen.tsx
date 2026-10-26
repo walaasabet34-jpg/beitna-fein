@@ -63,7 +63,7 @@ export function GameScreen() {
   let panel: React.ReactNode = null;
   if (node.type === 'line') {
     const r = resolveLine(node, s);
-    panel = <DialogueBox nodeId={node.id} speaker={r.speaker} text={r.text} expr={r.expr ?? moodExpr(s.vars)} onNext={next} outfit={outfitOf(s)} />;
+    panel = <DialogueBox nodeId={node.id} lead={node.lead} speaker={r.speaker} text={r.text} expr={r.expr ?? moodExpr(s.vars)} onNext={next} outfit={outfitOf(s)} />;
   } else if (node.type === 'choice') {
     const opts = visibleOptions(node, s, isAired);
     panel = (

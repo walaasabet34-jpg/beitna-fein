@@ -49,7 +49,7 @@
       "id": "c3_a1",
       "type": "line",
       "speaker": "narrator",
-      "text": "الخيط خلص، والطلبية الجديدة لسه في نصها. آخر بكرة لفّة واحدة.",
+      "text": "الخيط خلص، والطلبية في نصها.",
       "scene": "living",
       "cast": [
         "hoda"
@@ -109,7 +109,7 @@
       "type": "line",
       "speaker": "narrator",
       "text": "نزلتي. الخردواتي لفّ البكرة في ورقة جرنال.",
-      "next": "c3_a2"
+      "next": "c3_a4"
     },
     {
       "id": "c3_borrow",
@@ -125,7 +125,7 @@
           "read_for_naima": true
         }
       },
-      "next": "c3_a2"
+      "next": "c3_a4"
     },
     {
       "id": "c3_unpick",
@@ -137,29 +137,13 @@
           "trust": 1
         }
       },
-      "next": "c3_a2"
-    },
-    {
-      "id": "c3_a2",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "تحت عند باب العمارة، البواب نده عليكي.",
-      "scene": "door",
-      "cast": [
-        "doorman"
-      ]
-    },
-    {
-      "id": "c3_a3",
-      "type": "line",
-      "speaker": "doorman",
-      "text": "الحاجة نعيمة سايبة لك الجواب ده. جالها رد."
+      "next": "c3_a4"
     },
     {
       "id": "c3_a4",
       "type": "line",
       "speaker": "narrator",
-      "text": "رد من مشرفة سكن العاملات: «اللي عندنا بالاسم ده عندها بنت ست سنين. وفيه واحدة تانية بنفس الاسم سابت السكن الشهر اللي فات.»",
+      "text": "البواب نده عليكي من تحت، وادّاكي ورقة سايباها نعيمة. المشرفة ردّت: «اللي عندنا بالاسم ده بنتها ست سنين. وواحدة تانية بنفس الاسم سابت السكن.»",
       "scene": "paper",
       "cast": [],
       "effects": {
@@ -213,33 +197,20 @@
       "type": "line",
       "speaker": "narrator",
       "text": "البواب هز راسه: «ابن الحاجة نعيمة جابه من البوستة.»",
-      "next": "c3_sew"
+      "next": "clue_compare"
     },
     {
       "id": "c3_keep",
       "type": "line",
       "speaker": "narrator",
-      "text": "حطيتي الورقة في جيب الجلابية. «ست سنين» فضلت في دماغك.",
-      "next": "c3_sew"
+      "text": "حطيتي الورقة في جيب فستانك عشان تسألي نعيمة الصبح.",
+      "next": "clue_compare"
     },
     {
       "id": "c3_avoid",
       "type": "line",
       "speaker": "narrator",
-      "text": "حطيتي الورقة في جيبك. طول الطريق إيدك فضلت تتحسس مكانها.",
-      "next": "c3_sew"
-    },
-    {
-      "id": "c3_sew",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "رجعتي على الماكينة. الإبرة بتطلع وتنزل، وانتي مش فاكرة آخر غرزة عملتيها.",
-      "scene": "living",
-      "cast": [
-        "hoda"
-      ],
-      "sfx": "sewing",
-      "music": "music_home",
+      "text": "حطيتي الورقة في جيبك. وانتي طالعة السلم، إيدك فضلت تتحسس مكانها.",
       "next": "clue_compare"
     },
     {
@@ -279,7 +250,8 @@
         }
       ],
       "scene": "paper",
-      "cast": []
+      "cast": [],
+      "music": "music_home"
     },
     {
       "id": "clue_age",
@@ -338,7 +310,7 @@
       "id": "c3_history_yes",
       "type": "line",
       "speaker": "narrator",
-      "text": "افتكرتي جواب العلبة: «لقيت أوضة مع اتنين زمايلي». يبقى هي اللي سابت السكن، ولسه شغالة في المصنع.",
+      "text": "جواب العلبة: «لقيت أوضة». يبقى هي اللي سابت السكن، ولسه في المصنع.",
       "next": "c3_notice",
       "effects": {
         "flags": {
@@ -536,7 +508,7 @@
       "id": "c3_proof_alone",
       "type": "line",
       "speaker": "narrator",
-      "text": "كتبتي لوحدك على ضهر الورقة: حاجة تعرّف بيها الأم بنتها."
+      "text": "كتبتي في ورقة جديدة جوه الجواب حاجة تعرّف بيها الأم بنتها. هدى كتبت تحتها اسمها."
     },
     {
       "id": "c3_proof_alone_c",
@@ -586,44 +558,31 @@
       "id": "c3_proof_send",
       "type": "line",
       "speaker": "narrator",
-      "text": "على الظرف للمشرفة: «سلّميه لها في المصنع، إيد بإيد. بنتها تسع سنين، وكانت شغالة عند عم فوزي.»",
+      "text": "الجواب للمشرفة: «سلّميه لها في المصنع، إيد بإيد.»",
       "effects": {
         "flags": {
           "search_second_letter": true
         }
       },
-      "next": "c3_evening"
-    },
-    {
-      "id": "c3_evening",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "المغرب، الماكينة سكتت. سمعتي حركة عند مكان نوم هدى.",
-      "scene": "living",
-      "cast": [],
-      "music": null,
-      "sfx": "sewing",
-      "effects": {
-        "setTime": {
-          "slot": 3
-        }
-      }
+      "next": "c3_bag1"
     },
     {
       "id": "c3_bag1",
       "type": "line",
-      "speaker": "narrator",
-      "text": "دخلتي لقيتيها قاعدة على الأرض، بتطبق الفستان الأصفر وتحطه في الشنطة.",
+      "speaker": "fatma",
+      "text": "بتعملي إيه يا هدى؟",
+      "lead": "المغرب. هدى بتطبّق الفستان الأصفر في الشنطة.",
+      "next": "c3_bag3",
+      "effects": {
+        "setTime": {
+          "slot": 3
+        }
+      },
       "scene": "living",
       "cast": [
         "hoda"
-      ]
-    },
-    {
-      "id": "c3_bag2",
-      "type": "line",
-      "speaker": "fatma",
-      "text": "بتعملي إيه يا هدى؟"
+      ],
+      "music": null
     },
     {
       "id": "c3_bag3",
@@ -729,7 +688,7 @@
       "id": "c3_bag_fear",
       "type": "line",
       "speaker": "narrator",
-      "text": "هدى سابت المشط من إيدها. «أنا مش ماشية دلوقتي يا خالتي.»",
+      "text": "هدى سابت الفستان من إيدها. «أنا مش ماشية دلوقتي يا خالتي.»",
       "next": "c3_question"
     },
     {
@@ -810,7 +769,7 @@
       "id": "c3_night",
       "type": "line",
       "speaker": "narrator",
-      "text": "بالليل، رد المشرفة فضل في درج الماكينة، جنب جواب الأم القديم.",
+      "text": "بالليل، الرد في درج الماكينة.",
       "scene": "living",
       "cast": [],
       "music": "music_night",
@@ -823,26 +782,22 @@
     {
       "id": "c3_day2",
       "type": "line",
-      "speaker": "narrator",
-      "text": "الصبح نزلتي للحاجة نعيمة. كانت بتنقّي رز على أول السلم.",
-      "scene": "door",
-      "cast": [
-        "naima"
-      ],
-      "sfx": "steps",
-      "music": null,
+      "speaker": "naima",
+      "text": "ابني حط الجواب في البوستة.",
+      "lead": "الصبح، عند نعيمة على السلم.",
+      "next": "c3_check",
       "effects": {
         "setTime": {
           "day": 2,
           "slot": 0
         }
-      }
-    },
-    {
-      "id": "c3_naima",
-      "type": "line",
-      "speaker": "naima",
-      "text": "ابني حط الجواب في البوستة الصبح، وكتب اسم المشرفة على الظرف."
+      },
+      "scene": "door",
+      "cast": [
+        "naima"
+      ],
+      "music": null,
+      "sfx": "steps"
     },
     {
       "id": "c3_check",
@@ -903,7 +858,7 @@
       "id": "c3_check_home",
       "type": "line",
       "speaker": "narrator",
-      "text": "طلعتي السلم وانتي بتعدّي الأيام لحد الأسبوع.",
+      "text": "طلعتي السلم وانتي بتعدّي الأيام.",
       "next": "c3_return"
     },
     {
@@ -966,7 +921,7 @@
       "id": "c3_final_clear",
       "type": "line",
       "speaker": "narrator",
-      "text": "هدى بصت للفستان، وردّت المشط مكانه. «يعني أسبوع؟»",
+      "text": "هدى بصت للفستان، وردّت المشط مكانه. «يعني هترد قريب؟»",
       "next": "c3_place"
     },
     {
@@ -1097,7 +1052,7 @@
       "id": "c3_end_closed",
       "type": "line",
       "speaker": "narrator",
-      "text": "هدى فطرت في هدوء. قبل المدرسة اتأكدت إن شنطتها في مكانها. ما سألتش تاني عن الورقة.",
+      "text": "هدى فطرت في هدوء. قبل المدرسة اتأكدت إن شنطتها في مكانها. ما سألتش تاني عن ماما.",
       "next": "c3_end"
     },
     {

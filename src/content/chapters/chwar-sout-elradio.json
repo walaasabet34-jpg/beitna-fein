@@ -53,7 +53,7 @@
       "id": "w_oct6",
       "type": "line",
       "speaker": "narrator",
-      "text": "الفستان الأصفر اتغسل ونشف. هدى بتدوّر على مشطها، وطرف كراستها مغطّي نص الترابيزة."
+      "text": "هدى بتدوّر على مشطها تحت الكراسة."
     },
     {
       "id": "w_morning",
@@ -104,34 +104,20 @@
       "type": "line",
       "speaker": "narrator",
       "text": "طلع تحت الكراسة. مشّطت ضفيرتها بإيد وحاولت تقفل الكراسة بالتانية.",
-      "next": "w_afternoon"
+      "next": "war_listen"
     },
     {
       "id": "w_space",
       "type": "line",
       "speaker": "narrator",
       "text": "هدى لقت المشط، وحطت الكراسة على الطرف اللي فضّيتيه لها. صوت الورق فضل جنب صوت الماكينة.",
-      "next": "w_afternoon"
+      "next": "war_listen"
     },
     {
       "id": "w_snap",
       "type": "line",
       "speaker": "narrator",
-      "text": "«أنا بس بسأل.» رجعت تدور من غير ما تحرك الكرسي عشان ما يعملش صوت.",
-      "next": "w_afternoon"
-    },
-    {
-      "id": "w_afternoon",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "الخبر قطع شغلك. رفعتي رجلك من الدوّاسة وقرّبتي الكرسي للراديو.",
-      "music": null,
-      "effects": {
-        "setTime": {
-          "day": 1,
-          "slot": 2
-        }
-      },
+      "text": "«أنا بدوّر على المشط بس.» رجعت تدوّر من غير ما تحرّك الكرسي.",
       "next": "war_listen"
     },
     {
@@ -140,8 +126,8 @@
       "prompt": "",
       "options": [
         {
-          "text": "(ترفعّي صوت الراديو)",
-          "goto": "war_tune",
+          "text": "(ترفعي صوت الراديو)",
+          "goto": "w_radio",
           "effects": {
             "flags": {
               "war_listened": true
@@ -159,14 +145,14 @@
             "vars": {}
           }
         }
-      ]
-    },
-    {
-      "id": "war_tune",
-      "type": "line",
-      "text": "هدى سحبت كرسيّها قريب. سيبتي الصوت واضح.",
-      "speaker": "narrator",
-      "next": "w_radio"
+      ],
+      "effects": {
+        "setTime": {
+          "day": 1,
+          "slot": 2
+        }
+      },
+      "music": null
     },
     {
       "id": "war_door",
@@ -183,20 +169,16 @@
     {
       "id": "w_radio",
       "type": "line",
-      "speaker": "narrator",
-      "text": "من الراديو سمعتي إن قواتنا عبرت قناة السويس. نعيمة عند الباب بتقول: «عبروا يا فاطمة!»",
+      "speaker": "hoda",
+      "text": "يعني الناحية التانية؟",
+      "expr": "surprised",
+      "lead": "الراديو: قواتنا عبرت قناة السويس. ونعيمة من الباب: «عبروا يا فاطمة!»",
+      "next": "w_celebrate",
+      "scene": "living",
       "cast": [
         "hoda",
         "naima"
-      ],
-      "scene": "living"
-    },
-    {
-      "id": "w_hoda",
-      "type": "line",
-      "speaker": "hoda",
-      "text": "يعني الناحية التانية؟",
-      "expr": "surprised"
+      ]
     },
     {
       "id": "w_celebrate",
@@ -217,7 +199,7 @@
           }
         },
         {
-          "text": "«هنرجع قريب، خلاص.»",
+          "text": "«هترجعوا قريب، إن شاء الله.»",
           "goto": "w_promise",
           "effects": {
             "flags": {
@@ -258,7 +240,7 @@
       "id": "w_quiet",
       "type": "line",
       "speaker": "narrator",
-      "text": "سكتت. نعيمة قعدت جنبها وقالتلها إن الجيش عبر القناة. هدى ابتسمت لها، وفضلت عينها عليكي.",
+      "text": "سكتت. نعيمة حكتلها عن العبور، وعين هدى عليكي.",
       "next": "w_flag"
     },
     {
@@ -329,7 +311,7 @@
       "id": "w_cross",
       "type": "line",
       "speaker": "hoda",
-      "text": "نلعب عبور؟ الطبلية هي القناة، والكورة لازم تعدّي من فوق!",
+      "text": "نلعب عبور؟ الطبلية هي القناة!",
       "expr": "laugh"
     },
     {
@@ -402,29 +384,23 @@
     {
       "id": "w_oct7",
       "type": "line",
-      "speaker": "narrator",
-      "text": "تاني يوم الصبح، نعيمة نادت من الباب: «ابني رجع من عند عم فوزي.»",
-      "cast": [
-        "hoda",
-        "naima"
-      ],
+      "speaker": "naima",
+      "text": "أمها راحت مصنع ملابس في إسكندرية. العنوان ماعندوش.",
       "effects": {
+        "flags": {
+          "search_fawzi": true
+        },
         "setTime": {
           "day": 2,
           "slot": 0
         }
-      }
-    },
-    {
-      "id": "w_search",
-      "type": "line",
-      "speaker": "naima",
-      "text": "أمها سابت المحل في الربيع، واشتغلت في مصنع ملابس في إسكندرية. عنوانها ماعندوش.",
-      "effects": {
-        "flags": {
-          "search_fawzi": true
-        }
-      }
+      },
+      "lead": "تاني يوم، نعيمة: «ابني رجع من عند عم فوزي.»",
+      "next": "w_address",
+      "cast": [
+        "hoda",
+        "naima"
+      ]
     },
     {
       "id": "w_address",
@@ -497,7 +473,7 @@
       "id": "w_letter_send",
       "type": "line",
       "speaker": "narrator",
-      "text": "ابن نعيمة خد الجواب للبوستة: اسمها، والمصنع، وإسكندرية. هدى كتبت تحت: «أنا كويسة».",
+      "text": "ابن نعيمة خد الجواب للبوستة.",
       "effects": {
         "flags": {
           "search_factory_letter": true
@@ -507,24 +483,20 @@
     {
       "id": "w_oct16",
       "type": "line",
-      "speaker": "narrator",
-      "text": "الأخبار متفرقة. قوات إسرائيلية بقت غرب القناة، وإنتي بتحاولي تفهمي من النشرة.",
+      "speaker": "hoda",
+      "text": "بس إحنا فرحنا.",
+      "lead": "النشرة: قوات إسرائيلية بقت غرب القناة.",
+      "next": "w_worry_choice",
       "effects": {
         "setTime": {
           "day": 3,
           "slot": 3
         }
       },
+      "scene": "living",
       "cast": [
         "hoda"
-      ],
-      "scene": "living"
-    },
-    {
-      "id": "w_worry",
-      "type": "line",
-      "speaker": "hoda",
-      "text": "بس إحنا فرحنا."
+      ]
     },
     {
       "id": "w_worry_choice",
@@ -561,21 +533,21 @@
       "id": "w_truth",
       "type": "line",
       "speaker": "narrator",
-      "text": "هدى قعدت جنبك. سابت النشرة تكمل، وبعدين سألت إذا كان ينفع تسيب النور شوية.",
+      "text": "هدى قعدت جنبك لحد آخر النشرة.",
       "next": "w_oct22"
     },
     {
       "id": "w_block",
       "type": "line",
       "speaker": "narrator",
-      "text": "هدى قفلت الكراسة وسندت القلم فوقها. وإنتي لقيتي نفسك بتدوّري على نشرة تانية.",
+      "text": "هدى قفلت الكراسة. وإنتي دوّرتي على نشرة تانية.",
       "next": "w_oct22"
     },
     {
       "id": "w_oct22",
       "type": "line",
       "speaker": "narrator",
-      "text": "النشرة جابت خبر الدعوة لوقف إطلاق النار. وبعدها نعيمة طلعت ومعاها علبة صفيح: حاجة سنية من عند صاحب البيت.",
+      "text": "وقف النار في النشرة. ونعيمة طلعت بعلبة صفيح: حاجة سنية.",
       "cast": [
         "hoda",
         "naima"
@@ -593,14 +565,10 @@
     {
       "id": "w_box",
       "type": "line",
-      "speaker": "narrator",
-      "text": "جوه العلبة جوابات بخط واحد. آخر جواب لسه مقفول، وعليه اسم سنية."
-    },
-    {
-      "id": "w_box_naima",
-      "type": "line",
       "speaker": "naima",
-      "text": "اقري إنتي يا فاطمة. أنا مابعرفش أقرا."
+      "text": "اقري إنتي يا فاطمة. أنا مابعرفش أقرا.",
+      "lead": "جوابات بخط واحد. آخرهم لسه مقفول.",
+      "next": "w_box_c"
     },
     {
       "id": "w_box_c",
@@ -672,7 +640,7 @@
       "id": "w_letter",
       "type": "line",
       "speaker": "narrator",
-      "text": "«يا سنية، المصنع شغال ورديتين والإجازات واقفة. لقيت أوضة مع اتنين زمايلي، وأول ما أقبض هاجي آخد هدى. بوسيها. — زينب»",
+      "text": "«يا سنية، المصنع شغال ورديتين والإجازات واقفة. لقيت أوضة مع زمايلي، وأول ما أقبض هاجي آخد هدى. — زينب»",
       "scene": "paper",
       "cast": [],
       "effects": {
@@ -685,7 +653,7 @@
       "id": "w_hostel",
       "type": "line",
       "speaker": "narrator",
-      "text": "على ضهر الظرف: «سكن العاملات، مصنع الملابس». أول عنوان بجد.",
+      "text": "على ضهر الظرف: «سكن العاملات، جنب ترعة المحمودية، كرموز، إسكندرية». أول عنوان بجد.",
       "scene": "living",
       "cast": [
         "hoda",
@@ -729,8 +697,8 @@
       "id": "w_reply_hoda",
       "type": "line",
       "speaker": "hoda",
-      "text": "اكتبي… لأ، أنا هكتب: «أنا عند خالتي فاطمة، وبعدّ السلالم هنا كمان. سبعة وتمانين.»",
-      "next": "w_reply_sent",
+      "text": "أنا هكتب: «أنا عند خالتي فاطمة، وبعدّ السلالم هنا كمان.»",
+      "next": "w_question",
       "expr": "focused"
     },
     {
@@ -738,25 +706,18 @@
       "type": "line",
       "speaker": "narrator",
       "text": "كتبتي عنوانك بخط كبير، وهي كتبت اسمها، وتحته رسمت كورة صغيرة.",
-      "next": "w_reply_sent"
+      "next": "w_question"
     },
     {
-      "id": "w_reply_sent",
+      "id": "w_question",
       "type": "line",
-      "speaker": "narrator",
-      "text": "ابن نعيمة خد الجواب على البوستة تاني يوم.",
+      "speaker": "hoda",
+      "text": "«الجواب وصل ماما؟»",
+      "expr": "worried",
       "effects": {
         "flags": {
           "search_hostel_letter": true
-        }
-      }
-    },
-    {
-      "id": "w_oct25",
-      "type": "line",
-      "speaker": "narrator",
-      "text": "فيه دعوة جديدة لوقف النار. «لسه؟» سألت نعيمة، وإنتي بتلمّي الزراير.",
-      "effects": {
+        },
         "setTime": {
           "day": 5,
           "slot": 3
@@ -764,17 +725,10 @@
       }
     },
     {
-      "id": "w_question",
-      "type": "line",
-      "speaker": "hoda",
-      "text": "«الجواب وصل ماما؟»",
-      "expr": "worried"
-    },
-    {
       "id": "w_answer",
       "type": "line",
       "speaker": "narrator",
-      "text": "«لسه. لما يوصل، هترد.» هدى عدّت على صوابعها الأيام من ساعة ما ابن نعيمة نزل بيه."
+      "text": "«لسه.» هدى عدّت الأيام على صوابعها."
     },
     {
       "id": "w_end",

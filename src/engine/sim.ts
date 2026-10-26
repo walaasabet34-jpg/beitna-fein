@@ -2,7 +2,7 @@
 import type { ActivityNode, BallParams, BedParams, GameState, KitchenParams } from './types';
 import {
   IndexedChapter, newGame, getNode, advance, visibleOptions, choose, visibleHotspots, useHotspot,
-  resolveKitchen, resolveBed, kitchenValid, resolveBall, resolveButtons, resolveDress, canMend,
+  resolveKitchen, resolveBed, kitchenValid, resolveBall, resolveButtons, resolveDress, canMend, resume,
 } from './core';
 
 export function rng(seed: number) {
@@ -23,7 +23,7 @@ export function simulate(ic: IndexedChapter, seed: number, maxSteps = 2000, poli
     const sorted = [...a].sort((x, y) => score(y.effects) - score(x.effects) || r() - 0.5);
     return policy === 'kind' ? sorted[0] : sorted[sorted.length - 1];
   };
-  let s: GameState = start ?? newGame(ic);
+  let s: GameState = resume(ic, start ?? newGame(ic));
   const path: string[] = [s.node];
   for (let i = 0; i < maxSteps; i++) {
     const n = getNode(ic, s.node);

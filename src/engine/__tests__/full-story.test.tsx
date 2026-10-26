@@ -36,7 +36,7 @@ describe('complete story', () => {
       last = date;
     }
     const war = indexed.chwar;
-    for (const [id, date, slot] of [['w_afternoon', '1973-10-06', 2], ['w_oct7', '1973-10-07', 0], ['w_oct16', '1973-10-16', 3], ['w_oct22', '1973-10-22', 3], ['w_oct25', '1973-10-25', 3]] as const) {
+    for (const [id, date, slot] of [['war_listen', '1973-10-06', 2], ['w_oct7', '1973-10-07', 0], ['w_oct16', '1973-10-16', 3], ['w_oct22', '1973-10-22', 3], ['w_question', '1973-10-25', 3]] as const) {
       const s = enter(war, newGame(war), id);
       expect(gameDate(war.chapter, s.day)).toBe(date);
       expect(s.slot).toBe(slot);
@@ -115,8 +115,8 @@ describe('complete story', () => {
       const r = simulate(c5, 5, 3000, 'kind', option(refusal, pick));
       expect(r.state.node).toBe(['g_end_sent', 'g_end_met', 'g_end_hold'][pick]);
     }
-    expect(indexed.ch5.nextOf.get('g_news')).toBe('g_meet');
-    const newsIndex = CHAPTERS.ch5.nodes.findIndex(n => n.id === 'g_news');
+    expect(indexed.ch5.nextOf.get('g_contact')).toBe('g_meet');
+    const newsIndex = CHAPTERS.ch5.nodes.findIndex(n => n.id === 'g_contact');
     expect(CHAPTERS.ch5.nodes[newsIndex + 1].id).toBe('g_meet');
   });
 
