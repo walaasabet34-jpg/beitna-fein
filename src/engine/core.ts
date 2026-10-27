@@ -309,7 +309,7 @@ export function resolveButtons(ic: IndexedChapter, s: GameState, r: ButtonsResul
 export function wardrobe(s: GameState) {
   return {
     yellow: String(s.flags.cl_yellow ?? (s.flags.clothes_out || s.chapter !== 'ch1' ? 'clean' : 'dusty')),
-    navy: String(s.flags.cl_navy ?? (s.flags.c2_outfit === 'navy' ? 'fitted' : 'loose')),
+    navy: String(s.flags.cl_navy ?? 'loose'),
     cardigan: s.flags.cl_cardigan === 'made',
     redRibbon: true,
   };
