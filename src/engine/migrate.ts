@@ -62,5 +62,7 @@ export function migrateSave(raw: unknown): GameState | null {
     delete flags.belongings_delivery;
     s = { ...s, flags };
   }
+  // Restart Chapter restores this snapshot directly, so it needs the same upgrades as the active save.
+  if (s.chapterStart) s = { ...s, chapterStart: migrateSave(s.chapterStart) ?? undefined };
   return s;
 }
